@@ -18,6 +18,14 @@ from django.http import JsonResponse
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
+# Import ML model for enhanced accuracy
+try:
+    from ml_training import ConstructionCostPredictor
+    ML_MODEL_AVAILABLE = True
+except ImportError:
+    ML_MODEL_AVAILABLE = False
+    print("ML model not available. Using AI-only approach.")
+
 
 API_KEY = "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"
 client = openai.OpenAI(api_key=API_KEY)
@@ -31,6 +39,23 @@ equipment_sum = 0
 labor_sum = 0
 total_sum = 0
 row = []
+
+# Initialize ML model if available
+ml_predictor = None
+if ML_MODEL_AVAILABLE:
+    try:
+        ml_predictor = ConstructionCostPredictor()
+        # Try to load pre-trained models
+        model_dir = os.path.join(os.path.dirname(__file__), 'models')
+        if os.path.exists(model_dir):
+            ml_predictor.load_models(model_dir)
+            print("ML model loaded successfully!")
+        else:
+            print("No pre-trained ML model found. Using AI-only approach.")
+            ml_predictor = None
+    except Exception as e:
+        print(f"Failed to load ML model: {e}")
+        ml_predictor = None
 
 def notify_frontend(pdf_url, excel_url):
     channel_layer = get_channel_layer()
@@ -130,7 +155,7 @@ def extract_text_from_cad(image_path):
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             return pytesseract.image_to_string(gray)
         except:
-            return ""
+        return ""
 def preprocess_cad_text(cad_text):
     """Preprocess CAD text to improve AI analysis accuracy"""
     if not cad_text or len(cad_text.strip()) < 10:
@@ -154,8 +179,40 @@ def preprocess_cad_text(cad_text):
     
     return cleaned_text
 
-def get_construction_jobs(cad_text):
-    print("Starting construction jobs analysis...")
+def get_construction_jobs_hybrid(cad_text, image_path=None):
+    """
+    Hybrid approach combining ML predictions with AI analysis for maximum accuracy.
+    """
+    print("Starting hybrid construction jobs analysis...")
+    
+    # Preprocess the CAD text for better analysis
+    processed_cad_text = preprocess_cad_text(cad_text)
+    
+    # Get ML predictions if model is available and image path is provided
+    ml_predictions = None
+    if ml_predictor and image_path and os.path.exists(image_path):
+        try:
+            print("Getting ML predictions...")
+            ml_predictions = ml_predictor.predict_costs(image_path)
+            print(f"ML predictions: {ml_predictions}")
+        except Exception as e:
+            print(f"ML prediction failed: {e}")
+            ml_predictions = None
+    
+    # Get AI analysis
+    ai_response = get_construction_jobs_ai_only(processed_cad_text)
+    
+    # Combine ML and AI results if both are available
+    if ml_predictions and ai_response:
+        return combine_ml_ai_results(ai_response, ml_predictions, processed_cad_text)
+    elif ml_predictions:
+        return convert_ml_predictions_to_json(ml_predictions)
+    else:
+        return ai_response
+
+def get_construction_jobs_ai_only(cad_text):
+    """Original AI-only approach for construction jobs analysis."""
+    print("Starting AI-only construction jobs analysis...")
     
     # Preprocess the CAD text for better analysis
     processed_cad_text = preprocess_cad_text(cad_text)
@@ -391,6 +448,85 @@ Include only the most obvious construction activities. Keep it simple and accura
         # Return minimal valid response
         return '[{"CSI code": "00 00 00", "Category": "General", "Job Activity": "Project Setup", "Quantity": 1, "Unit": "EA", "Rate": 1000, "Material Cost": 500, "Equipment Cost": 200, "Labor Cost": 300, "Total Cost": 1000}]'
 
+def combine_ml_ai_results(ai_response, ml_predictions, cad_text):
+    """
+    Combine ML predictions with AI analysis for enhanced accuracy.
+    """
+    try:
+        # Parse AI response
+        clean_json = extract_json_from_response(ai_response)
+        if not clean_json:
+            return convert_ml_predictions_to_json(ml_predictions)
+        
+        ai_data = json.loads(clean_json)
+        if not isinstance(ai_data, list) or len(ai_data) == 0:
+            return convert_ml_predictions_to_json(ml_predictions)
+        
+        # Use ML predictions to validate and adjust AI results
+        ml_total = ml_predictions.get('total_cost', 0)
+        ai_total = sum(float(item.get('Total Cost', 0)) for item in ai_data)
+        
+        # Calculate adjustment factor
+        if ai_total > 0 and ml_total > 0:
+            adjustment_factor = ml_total / ai_total
+            print(f"Adjusting AI results by factor: {adjustment_factor:.3f}")
+            
+            # Apply adjustment to AI results
+            for item in ai_data:
+                for cost_field in ['Material Cost', 'Equipment Cost', 'Labor Cost', 'Total Cost']:
+                    if cost_field in item:
+                        original_cost = float(item[cost_field])
+                        adjusted_cost = original_cost * adjustment_factor
+                        item[cost_field] = round(adjusted_cost, 2)
+                
+                # Recalculate rate
+                if 'Quantity' in item and 'Total Cost' in item:
+                    quantity = float(item['Quantity'])
+                    if quantity > 0:
+                        item['Rate'] = round(float(item['Total Cost']) / quantity, 2)
+        
+        return json.dumps(ai_data)
+        
+    except Exception as e:
+        print(f"Error combining ML and AI results: {e}")
+        return convert_ml_predictions_to_json(ml_predictions)
+
+def convert_ml_predictions_to_json(ml_predictions):
+    """
+    Convert ML predictions to the expected JSON format.
+    """
+    try:
+        # Create a basic construction job entry from ML predictions
+        ml_data = [{
+            "CSI code": "00 00 00",
+            "Category": "General Construction",
+            "Job Activity": "Complete Project",
+            "Quantity": 1,
+            "Unit": "EA",
+            "Rate": ml_predictions.get('total_cost', 0),
+            "Material Cost": ml_predictions.get('material_cost', 0),
+            "Equipment Cost": ml_predictions.get('equipment_cost', 0),
+            "Labor Cost": ml_predictions.get('labor_cost', 0),
+            "Total Cost": ml_predictions.get('total_cost', 0)
+        }]
+        
+        return json.dumps(ml_data)
+        
+    except Exception as e:
+        print(f"Error converting ML predictions: {e}")
+        return '[{"CSI code": "00 00 00", "Category": "General", "Job Activity": "Project Setup", "Quantity": 1, "Unit": "EA", "Rate": 1000, "Material Cost": 500, "Equipment Cost": 200, "Labor Cost": 300, "Total Cost": 1000}]'
+
+# Keep the original function name for backward compatibility
+def get_construction_jobs(cad_text, image_path=None):
+    """
+    Main function for construction jobs analysis.
+    Uses hybrid approach if ML model is available, otherwise falls back to AI-only.
+    """
+    if ml_predictor and image_path:
+        return get_construction_jobs_hybrid(cad_text, image_path)
+    else:
+        return get_construction_jobs_ai_only(cad_text)
+
 def check_json_format(data):
     """
     Check if JSON data is in the format:
@@ -418,7 +554,7 @@ def process_cad_drawing(image_path, output_excel, pdf_output_path):
     global material_sum, equipment_sum, labor_sum, total_sum, row
     print("image_path", image_path, output_excel, pdf_output_path)
     cad_text = extract_text_from_cad(image_path)
-    job_data = get_construction_jobs(cad_text)
+    job_data = get_construction_jobs(cad_text, image_path)
     
      # print("job_data===============>",job_data)
     # job_data_parsed = pd.read_json(job_data)  # Assuming OpenAI returns JSON

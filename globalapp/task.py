@@ -61,7 +61,7 @@ def extract_json_from_response(response_text):
 #         print("OCR Exception  {e}")
 #     return text
 def extract_text_from_cad(image_path):
-    print(f"Entered OCR function: {image_path}")
+    print(f"Entered enhanced OCR function: {image_path}")
     
     if not os.path.exists(image_path):
         print(f"Error: Image file not found - {image_path}")
@@ -73,35 +73,323 @@ def extract_text_from_cad(image_path):
             print(f"Error: cv2.imread failed - {image_path}")
             return ""
 
+        # Enhanced image preprocessing for better OCR accuracy
+        processed_text = ""
+        
+        # Method 1: Standard grayscale processing
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        text = pytesseract.image_to_string(gray)
-        print("OCR text output:", text[:200])  # Print first 200 characters for debugging
-        return text
+        text1 = pytesseract.image_to_string(gray, config='--psm 6 -c tessedit_char_whitelist=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,-()[]{}:; ')
+        
+        # Method 2: Enhanced contrast and noise reduction
+        enhanced = cv2.convertScaleAbs(gray, alpha=1.5, beta=30)  # Increase contrast
+        denoised = cv2.medianBlur(enhanced, 3)  # Reduce noise
+        text2 = pytesseract.image_to_string(denoised, config='--psm 6')
+        
+        # Method 3: Adaptive thresholding for better text detection
+        thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+        text3 = pytesseract.image_to_string(thresh, config='--psm 6')
+        
+        # Combine and clean the results
+        all_texts = [text1, text2, text3]
+        
+        # Select the best result based on length and content quality
+        best_text = ""
+        max_score = 0
+        
+        for text in all_texts:
+            if text and len(text.strip()) > 0:
+                # Score based on length and presence of construction-related keywords
+                score = len(text.strip())
+                construction_keywords = ['concrete', 'steel', 'foundation', 'wall', 'floor', 'roof', 'beam', 'column', 'footing', 'slab', 'dimension', 'length', 'width', 'height', 'thickness', 'diameter', 'area', 'volume']
+                keyword_count = sum(1 for keyword in construction_keywords if keyword.lower() in text.lower())
+                score += keyword_count * 10
+                
+                if score > max_score:
+                    max_score = score
+                    best_text = text
+        
+        # Clean and format the text
+        if best_text:
+            # Remove excessive whitespace and clean up
+            cleaned_text = re.sub(r'\s+', ' ', best_text.strip())
+            # Remove common OCR artifacts
+            cleaned_text = re.sub(r'[^\w\s.,-()\[\]{}:;]', '', cleaned_text)
+            
+            print(f"OCR extracted {len(cleaned_text)} characters")
+            print("OCR text sample:", cleaned_text[:300])  # Print first 300 characters
+            
+            return cleaned_text
+        else:
+            print("No text extracted from image")
+            return ""
 
     except Exception as e:
-        print(f"OCR Exception: {e}")
-        return ""
+        print(f"Enhanced OCR Exception: {e}")
+        # Fallback to simple OCR
+        try:
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            return pytesseract.image_to_string(gray)
+        except:
+            return ""
+def preprocess_cad_text(cad_text):
+    """Preprocess CAD text to improve AI analysis accuracy"""
+    if not cad_text or len(cad_text.strip()) < 10:
+        return "CAD drawing contains minimal text. Please provide estimates for common construction elements: foundation, walls, roof, and basic finishes."
+    
+    # Clean and structure the text
+    cleaned_text = re.sub(r'\s+', ' ', cad_text.strip())
+    
+    # Check if text contains construction-related content
+    construction_indicators = [
+        'concrete', 'steel', 'foundation', 'wall', 'floor', 'roof', 'beam', 'column', 
+        'footing', 'slab', 'dimension', 'length', 'width', 'height', 'thickness', 
+        'diameter', 'area', 'volume', 'square', 'cubic', 'linear', 'feet', 'inches',
+        'construction', 'building', 'structure', 'material', 'specification'
+    ]
+    
+    has_construction_content = any(indicator.lower() in cleaned_text.lower() for indicator in construction_indicators)
+    
+    if not has_construction_content:
+        return f"CAD drawing text: {cleaned_text}\n\nNote: Limited construction-specific information detected. Please provide estimates for standard building components based on typical construction practices."
+    
+    return cleaned_text
+
 def get_construction_jobs(cad_text):
-    print("here is construction jobs")
-    prompt = f"""
-    Analyze the following CAD drawing and extract all relevant construction job categories and activities based on the latest MasterFormat standards to complete . Provide estimated material, labor, and equipment costs to complete the work in cad drawing in the USA.
-    reference the lastest MasterFormat standards while analyzing the following CAD drawing.
-    Cost must consider the quantities, sizes or volumes of each item.
-    Unit must be short form like SF, CY, LF, EA, etc.
-    No include any narrative like  // hypothetical cost, // example USD per SF, //example quantity etc.
-    No include any description at the start or end in json response like // More categories and activities would follow here based on detailed project data, etc.
-    {cad_text}
+    print("Starting construction jobs analysis...")
     
-    Output should be formatted as a structured JSON with fields: CSI code, Category, Job Activity, Quantity,  Unit, Rate,  Material Cost, Equipment Cost, Labor Cost, Total Cost(Material Cost + Equipment Cost + Labor Cost).
-    """
+    # Preprocess the CAD text for better analysis
+    processed_cad_text = preprocess_cad_text(cad_text)
     
+    # Enhanced system prompt with specific instructions
+    system_prompt = """You are a professional construction estimator with 20+ years of experience. Your task is to analyze CAD drawings and provide accurate cost estimates following these strict guidelines:
+
+1. ACCURACY REQUIREMENTS:
+   - Use 2024 MasterFormat standards (CSI codes)
+   - Base costs on current US market rates (RSMeans data)
+   - Consider regional variations (use national average if location unknown)
+   - Provide realistic quantities based on drawing dimensions
+
+2. REQUIRED OUTPUT FORMAT:
+   - EXACTLY this JSON structure: [{"CSI code": "03 30 00", "Category": "Concrete", "Job Activity": "Foundation", "Quantity": 150, "Unit": "CY", "Rate": 125.50, "Material Cost": 12000, "Equipment Cost": 3000, "Labor Cost": 4500, "Total Cost": 19500}]
+   - NO additional text, explanations, or comments
+   - NO markdown formatting or code blocks
+   - ALL fields must be present and properly formatted
+
+3. COST ESTIMATION RULES:
+   - Material Cost: 60-70% of total cost
+   - Labor Cost: 25-35% of total cost  
+   - Equipment Cost: 5-15% of total cost
+   - Rates should reflect current market conditions
+   - Quantities must be realistic based on drawing scale
+
+4. VALIDATION CHECKLIST:
+   - CSI codes must be valid MasterFormat codes
+   - Quantities must be positive numbers
+   - All costs must be positive numbers
+   - Units must be standard construction units (SF, CY, LF, EA, etc.)
+   - Total Cost = Material Cost + Equipment Cost + Labor Cost
+
+If the CAD text is unclear or insufficient, provide estimates for common construction elements that would typically be found in the type of project indicated."""
+
+    # Enhanced user prompt with better structure
+    user_prompt = f"""Analyze this CAD drawing text and extract construction activities with accurate cost estimates:
+
+CAD DRAWING TEXT:
+{processed_cad_text}
+
+REQUIRED ANALYSIS:
+1. Identify all construction activities visible in the drawing
+2. Determine appropriate quantities based on dimensions/text
+3. Assign correct CSI codes from MasterFormat
+4. Calculate realistic costs using 2024 US market rates
+5. Ensure all mathematical relationships are correct
+
+OUTPUT: Return ONLY a valid JSON array with the exact structure specified above. No additional text or formatting."""
+
+    try:
+        # First attempt with enhanced prompt
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=0.1,  # Lower temperature for more consistent results
+            max_tokens=4000
+        )
+        
+        response_text = response.choices[0].message.content
+        print("Initial AI response received")
+        
+        # Validate and potentially retry if response is poor
+        validated_response = validate_and_improve_response(response_text, processed_cad_text)
+        
+        return validated_response
+        
+    except Exception as e:
+        print(f"Error in get_construction_jobs: {e}")
+        # Fallback to simpler prompt if main approach fails
+        return get_construction_jobs_fallback(processed_cad_text)
+
+def validate_and_improve_response(response_text, cad_text):
+    """Validate AI response and improve if necessary"""
+    try:
+        # Try to extract and parse JSON
+        clean_json = extract_json_from_response(response_text)
+        if not clean_json:
+            print("No JSON found in response, attempting to extract...")
+            # Try to find JSON without code blocks
+            import re
+            json_match = re.search(r'\[.*\]', response_text, re.DOTALL)
+            if json_match:
+                clean_json = json_match.group(0)
+        
+        if clean_json:
+            parsed_data = json.loads(clean_json)
+            
+            # Validate the data structure and content
+            validation_result = validate_construction_data(parsed_data)
+            
+            if validation_result["is_valid"]:
+                print(f"Response validation passed: {validation_result['score']}/100")
+                return response_text
+            else:
+                print(f"Response validation failed: {validation_result['errors']}")
+                # Try to improve the response
+                return improve_response_with_feedback(response_text, validation_result, cad_text)
+        else:
+            print("Could not extract valid JSON, using fallback...")
+            return get_construction_jobs_fallback(cad_text)
+            
+    except Exception as e:
+        print(f"Validation error: {e}")
+        return get_construction_jobs_fallback(cad_text)
+
+def validate_construction_data(data):
+    """Validate construction data for accuracy and completeness"""
+    errors = []
+    score = 100
+    
+    if not isinstance(data, list):
+        errors.append("Data is not a list")
+        return {"is_valid": False, "errors": errors, "score": 0}
+    
+    if len(data) == 0:
+        errors.append("No construction activities found")
+        return {"is_valid": False, "errors": errors, "score": 0}
+    
+    required_fields = ["CSI code", "Category", "Job Activity", "Quantity", "Unit", "Rate", "Material Cost", "Equipment Cost", "Labor Cost", "Total Cost"]
+    
+    for i, item in enumerate(data):
+        if not isinstance(item, dict):
+            errors.append(f"Item {i} is not a dictionary")
+            score -= 20
+            continue
+            
+        # Check required fields
+        for field in required_fields:
+            if field not in item:
+                errors.append(f"Item {i} missing field: {field}")
+                score -= 5
+        
+        # Validate numeric fields
+        numeric_fields = ["Quantity", "Rate", "Material Cost", "Equipment Cost", "Labor Cost", "Total Cost"]
+        for field in numeric_fields:
+            if field in item:
+                try:
+                    value = float(item[field])
+                    if value <= 0:
+                        errors.append(f"Item {i} {field} must be positive")
+                        score -= 3
+                except (ValueError, TypeError):
+                    errors.append(f"Item {i} {field} is not a valid number")
+                    score -= 5
+        
+        # Validate cost relationships
+        if all(field in item for field in ["Material Cost", "Equipment Cost", "Labor Cost", "Total Cost"]):
+            try:
+                calculated_total = float(item["Material Cost"]) + float(item["Equipment Cost"]) + float(item["Labor Cost"])
+                actual_total = float(item["Total Cost"])
+                if abs(calculated_total - actual_total) > 0.01:  # Allow small rounding differences
+                    errors.append(f"Item {i} total cost doesn't match sum of components")
+                    score -= 10
+            except (ValueError, TypeError):
+                pass
+        
+        # Validate CSI code format
+        if "CSI code" in item:
+            csi_code = str(item["CSI code"])
+            if not re.match(r'^\d{2}\s\d{2}\s\d{2}$', csi_code):
+                errors.append(f"Item {i} has invalid CSI code format: {csi_code}")
+                score -= 5
+    
+    is_valid = score >= 70 and len(errors) <= 3
+    return {"is_valid": is_valid, "errors": errors, "score": score}
+
+def improve_response_with_feedback(original_response, validation_result, cad_text):
+    """Improve AI response based on validation feedback"""
+    feedback_prompt = f"""The previous response had these issues: {validation_result['errors']}
+
+Please provide a corrected response that addresses these problems. Focus on:
+1. Ensuring all required fields are present
+2. Making sure all costs are positive numbers
+3. Verifying that Total Cost = Material Cost + Equipment Cost + Labor Cost
+4. Using proper CSI code format (XX XX XX)
+5. Providing realistic quantities and costs
+
+Original CAD text: {cad_text}
+
+Return ONLY a valid JSON array with the exact structure specified in the system prompt."""
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": "You are a professional construction estimator. Fix the previous response based on the feedback provided."},
+                {"role": "user", "content": feedback_prompt}
+            ],
+            temperature=0.1,
+            max_tokens=4000
+        )
+        
+        improved_response = response.choices[0].message.content
+        print("Improved response generated based on feedback")
+        return improved_response
+        
+    except Exception as e:
+        print(f"Error improving response: {e}")
+        return get_construction_jobs_fallback(cad_text)
+
+def get_construction_jobs_fallback(cad_text):
+    """Fallback method with simpler, more reliable approach"""
+    print("Using fallback method for construction jobs...")
+    
+    fallback_prompt = f"""Based on this CAD drawing text, provide a simple list of common construction activities with basic cost estimates:
+
+{cad_text}
+
+Return a JSON array with this exact format:
+[{{"CSI code": "03 30 00", "Category": "Concrete", "Job Activity": "Foundation", "Quantity": 100, "Unit": "CY", "Rate": 120, "Material Cost": 8000, "Equipment Cost": 2000, "Labor Cost": 2000, "Total Cost": 12000}}]
+
+Include only the most obvious construction activities. Keep it simple and accurate."""
+
+    try:
     response = client.chat.completions.create(
         model="gpt-4o",
-        messages=[{"role": "system", "content": "You are an expert in construction estimating."},
-                  {"role": "user", "content": prompt}]
-    )
-    print("response===============>",response)  
+            messages=[
+                {"role": "system", "content": "You are a construction estimator. Provide simple, accurate cost estimates."},
+                {"role": "user", "content": fallback_prompt}
+            ],
+            temperature=0.1,
+            max_tokens=2000
+        )
+        
     return response.choices[0].message.content
+        
+    except Exception as e:
+        print(f"Fallback method also failed: {e}")
+        # Return minimal valid response
+        return '[{"CSI code": "00 00 00", "Category": "General", "Job Activity": "Project Setup", "Quantity": 1, "Unit": "EA", "Rate": 1000, "Material Cost": 500, "Equipment Cost": 200, "Labor Cost": 300, "Total Cost": 1000}]'
 
 def check_json_format(data):
     """

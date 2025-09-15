@@ -1,94 +1,53 @@
 import os
-import threading
-import time
-import pandas as pd
-from pdf2image import convert_from_path
-import openai
-from django.core.cache import cache
-from django.conf import settings
-import pytesseract
-import cv2
-import openpyxl
 import re
 import json
+import cv2
+import pytesseract
+import openai
+import openpyxl
+from concurrent.futures import ThreadPoolExecutor
+from pdf2image import convert_from_path
+from PyPDF2 import PdfReader
 from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter, landscape, A3
+from reportlab.lib.pagesizes import A3, landscape
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
-from django.http import JsonResponse
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
-
-API_KEY = "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"
+# =================== CONFIG ===================
+API_KEY = "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"
 client = openai.OpenAI(api_key=API_KEY)
-active_threads = []
-lock = threading.Lock()
-pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
-#pytesseract.pytesseract.tesseract_cmd = r"\var\Django\Tesseract-OCR\tesseract.exe"
-table_data= [["CSI code", "Category", "Job Activity", "Quantity", "Unit", "Rate", "Material Cost", "Equipment Cost", "Labor Cost", "Total Cost"]]
-material_sum = 0
-equipment_sum = 0
-labor_sum = 0
-total_sum = 0
-row = []
+pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"  # Linux
+# pytesseract.pytesseract.tesseract_cmd = r"C:\Path\To\tesseract.exe"  # Windows
+MAX_WORKERS = 4
 
-def notify_frontend(pdf_url, excel_url):
+# =================== FRONTEND NOTIFY ===================
+def notify_frontend(event_type, **kwargs):
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
-        "pdf_processing", 
-        {
-            "type": "notify_completion",
-            "pdf_url": pdf_url,
-            "excel_url": excel_url,
-        }
+        "pdf_processing",
+        {"type": event_type, **kwargs}
     )
-    
-def extract_json_from_response(response_text):
-    """Extracts JSON content from OpenAI's response."""
-    match = re.search(r"```json\n(.*?)\n```", response_text, re.DOTALL)
-    if match:
-        return match.group(1)  # Extract JSON part
-    return None  # Handle case if no JSON is found
 
-# def extract_text_from_cad(image_path):
-#     print("entered in ocr", image_path)
-#     try:
-#         img = cv2.imread(image_path)
-#         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-#         text = pytesseract.image_to_string(gray)
-#         print("ocr rext", text)
-#     except Exception as e:
-#         print("OCR Exception  {e}")
-#     return text
-def extract_text_from_cad(image_path):
-    print(f"Entered enhanced OCR function: {image_path}")
-    
-    if not os.path.exists(image_path):
-        print(f"Error: Image file not found - {image_path}")
-        return ""
-
+# =================== OCR ===================
+def extract_text_from_image(image_path: str) -> str:
+    print(f"Entered OCR function: {image_path}")
     try:
+        if not os.path.exists(image_path):
+            return ""
         img = cv2.imread(image_path)
         if img is None:
-            print(f"Error: cv2.imread failed - {image_path}")
             return ""
-
-        # Enhanced image preprocessing for better OCR accuracy
-        processed_text = ""
-        
-        # Method 1: Standard grayscale processing
+        print(f"Processing OCR function...: {image_path}")
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        text1 = pytesseract.image_to_string(gray, config='--psm 6 -c tessedit_char_whitelist=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,-()[]{}:; ')
-        
-        # Method 2: Enhanced contrast and noise reduction
-        enhanced = cv2.convertScaleAbs(gray, alpha=1.5, beta=30)  # Increase contrast
-        denoised = cv2.medianBlur(enhanced, 3)  # Reduce noise
+        text1 = pytesseract.image_to_string(gray, config='--psm 6')
+        enhanced = cv2.convertScaleAbs(gray, alpha=1.5, beta=30)
+        denoised = cv2.medianBlur(enhanced, 3)
         text2 = pytesseract.image_to_string(denoised, config='--psm 6')
-        
-        # Method 3: Adaptive thresholding for better text detection
-        thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+        thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                       cv2.THRESH_BINARY, 11, 2)
         text3 = pytesseract.image_to_string(thresh, config='--psm 6')
-        
+
         # Combine and clean the results
         all_texts = [text1, text2, text3]
         
@@ -100,7 +59,12 @@ def extract_text_from_cad(image_path):
             if text and len(text.strip()) > 0:
                 # Score based on length and presence of construction-related keywords
                 score = len(text.strip())
-                construction_keywords = ['concrete', 'steel', 'foundation', 'wall', 'floor', 'roof', 'beam', 'column', 'footing', 'slab', 'dimension', 'length', 'width', 'height', 'thickness', 'diameter', 'area', 'volume']
+                construction_keywords = [
+                    'concrete', 'steel', 'foundation', 'wall', 'floor', 'roof', 'beam', 'column', 
+                    'footing', 'slab', 'dimension', 'length', 'width', 'height', 'thickness', 
+                    'diameter', 'area', 'volume', 'square', 'cubic', 'linear', 'feet', 'inches',
+                    'construction', 'building', 'structure', 'material', 'specification'
+                ]
                 keyword_count = sum(1 for keyword in construction_keywords if keyword.lower() in text.lower())
                 score += keyword_count * 10
                 
@@ -113,31 +77,18 @@ def extract_text_from_cad(image_path):
             # Remove excessive whitespace and clean up
             cleaned_text = re.sub(r'\s+', ' ', best_text.strip())
             # Remove common OCR artifacts
-            cleaned_text = re.sub(r'[^\w\s.,-()\[\]{}:;]', '', cleaned_text)
-            
-            print(f"OCR extracted {len(cleaned_text)} characters")
-            print("OCR text sample:", cleaned_text[:300])  # Print first 300 characters
+            cleaned_text = re.sub(r'[^\w\s.,(){}\[\]:;-]', '', cleaned_text)
             
             return cleaned_text
-        else:
-            print("No text extracted from image")
-            return ""
-
     except Exception as e:
-        print(f"Enhanced OCR Exception: {e}")
-        # Fallback to simple OCR
-        try:
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            return pytesseract.image_to_string(gray)
-        except:
-            return ""
+        print(f"OCR error for {image_path}: {e}")
+        return ""
+
+# =================== AI COST ESTIMATION ===================
 def preprocess_cad_text(cad_text):
     """Preprocess CAD text to improve AI analysis accuracy"""
     if not cad_text or len(cad_text.strip()) < 10:
         return "CAD drawing contains minimal text. Please provide estimates for common construction elements: foundation, walls, roof, and basic finishes."
-    
-    # Clean and structure the text
-    cleaned_text = re.sub(r'\s+', ' ', cad_text.strip())
     
     # Check if text contains construction-related content
     construction_indicators = [
@@ -147,12 +98,21 @@ def preprocess_cad_text(cad_text):
         'construction', 'building', 'structure', 'material', 'specification'
     ]
     
-    has_construction_content = any(indicator.lower() in cleaned_text.lower() for indicator in construction_indicators)
+    has_construction_content = any(indicator.lower() in cad_text.lower() for indicator in construction_indicators)
     
     if not has_construction_content:
-        return f"CAD drawing text: {cleaned_text}\n\nNote: Limited construction-specific information detected. Please provide estimates for standard building components based on typical construction practices."
+        return f"CAD drawing text: {cad_text}\n\nNote: Limited construction-specific information detected. Please provide estimates for standard building components based on typical construction practices."
     
-    return cleaned_text
+    return cad_text
+
+def extract_json_from_response(response_text: str):
+    match = re.search(r"```json\n(.*?)\n```", response_text, re.DOTALL)
+    if match: return match.group(1)
+    match2 = re.search(r'\[.*\]', response_text, re.DOTALL)
+    return match2.group(0) if match2 else None
+
+def validate_data(data: list) -> bool:
+    return isinstance(data, list) and len(data) > 0
 
 def get_construction_jobs(cad_text):
     print("Starting construction jobs analysis...")
@@ -171,6 +131,11 @@ def get_construction_jobs(cad_text):
 
 2. REQUIRED OUTPUT FORMAT:
    - EXACTLY this JSON structure: [{"CSI code": "03 30 00", "Category": "Concrete", "Job Activity": "Foundation", "Quantity": 150, "Unit": "CY", "Rate": 125.50, "Material Cost": 12000, "Equipment Cost": 3000, "Labor Cost": 4500, "Total Cost": 19500}]
+   - Job Activities  must be more clearly defined including such size and type etc. 
+    For example, If this is electrical it should have on the drawing description of specifications page. 
+    Otherwise, assume based on building power divces. 
+    So for power to plugs and light, use #12 AWG and for power load 20Amp. 
+    For Air Conditioning, use # 10AWG for 30Amp load
    - NO additional text, explanations, or comments
    - NO markdown formatting or code blocks
    - ALL fields must be present and properly formatted
@@ -219,7 +184,7 @@ OUTPUT: Return ONLY a valid JSON array with the exact structure specified above.
         )
         
         response_text = response.choices[0].message.content
-        print("Initial AI response received")
+        print(f"Initial AI response received:: {response_text}")
         
         # Validate and potentially retry if response is poor
         validated_response = validate_and_improve_response(response_text, processed_cad_text)
@@ -252,7 +217,7 @@ def validate_and_improve_response(response_text, cad_text):
             
             if validation_result["is_valid"]:
                 print(f"Response validation passed: {validation_result['score']}/100")
-                return response_text
+                return parsed_data
             else:
                 print(f"Response validation failed: {validation_result['errors']}")
                 # Try to improve the response
@@ -353,8 +318,10 @@ Return ONLY a valid JSON array with the exact structure specified in the system 
         )
         
         improved_response = response.choices[0].message.content
+        validated_response = validate_and_improve_response(improved_response, cad_text)
+        
         print("Improved response generated based on feedback")
-        return improved_response
+        return validated_response
         
     except Exception as e:
         print(f"Error improving response: {e}")
@@ -374,8 +341,8 @@ Return a JSON array with this exact format:
 Include only the most obvious construction activities. Keep it simple and accurate."""
 
     try:
-    response = client.chat.completions.create(
-        model="gpt-4o",
+        response = client.chat.completions.create(
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": "You are a construction estimator. Provide simple, accurate cost estimates."},
                 {"role": "user", "content": fallback_prompt}
@@ -384,178 +351,135 @@ Include only the most obvious construction activities. Keep it simple and accura
             max_tokens=2000
         )
         
-    return response.choices[0].message.content
+        return response.choices[0].message.content
         
     except Exception as e:
         print(f"Fallback method also failed: {e}")
-        # Return minimal valid response
-        return '[{"CSI code": "00 00 00", "Category": "General", "Job Activity": "Project Setup", "Quantity": 1, "Unit": "EA", "Rate": 1000, "Material Cost": 500, "Equipment Cost": 200, "Labor Cost": 300, "Total Cost": 1000}]'
+        # Return error message instead of default data
+        return f'{{"error": "AI analysis failed: {str(e)}", "message": "Unable to process CAD drawing for cost estimation. Please check your OpenAI API key and try again."}}'
 
-def check_json_format(data):
-    """
-    Check if JSON data is in the format:
-    1. A list of dictionaries: [{ "category": "cat1", "cost": "4223" }, {...}, {...}]
-    2. A dictionary with a single key mapping to a list of dictionaries: { "item": [{...}, {...}] }
-    
-    Returns:
-        "list_format" if it's a list of dictionaries.
-        "dict_format" if it's a dictionary containing a key with a list of dictionaries.
-        "invalid_format" otherwise.
-    """
-    if isinstance(data, list):
-        if all(isinstance(item, dict) for item in data):
-            return "list_format", data
+# =================== PDF PAGE PROCESSING ===================
+def convert_pdf_page_to_image(pdf_path: str, page_number: int) -> str:
+    images = convert_from_path(pdf_path, dpi=200, first_page=page_number, last_page=page_number, poppler_path="/usr/bin")
+    if not images: return ""
+    directory = os.path.dirname(pdf_path)
+    image_path = os.path.join(directory, f"page_{page_number}.png")
+    images[0].save(image_path, "PNG")
+    return image_path
 
-    if isinstance(data, dict):
-        for key, value in data.items():
-            if isinstance(value, list) and all(isinstance(item, dict) for item in value):
-                return "dict_format", value  # Extract the list from the dictionary
+# =================== OUTPUT GENERATION ===================
+def generate_outputs(jobs_list: list, output_pdf: str, output_excel: str):
+    print(f"Generating outputs...")
+    headers = [
+        "CSI code","Category","Job Activity","Quantity","Unit","Rate",
+        "Material Cost","Equipment Cost","Labor Cost","Total Cost"
+    ]
+    table_data = [headers]
 
-    return "invalid_format", None
+    material_sum = equipment_sum = labor_sum = total_sum = 0
 
-# Main processing function
-def process_cad_drawing(image_path, output_excel, pdf_output_path):
-    global material_sum, equipment_sum, labor_sum, total_sum, row
-    print("image_path", image_path, output_excel, pdf_output_path)
-    cad_text = extract_text_from_cad(image_path)
-    job_data = get_construction_jobs(cad_text)
-    
-     # print("job_data===============>",job_data)
-    # job_data_parsed = pd.read_json(job_data)  # Assuming OpenAI returns JSON
-    # save_to_excel(job_data_parsed, output_excel)
-    clean_json_str = extract_json_from_response(job_data)
-    # cost_estimation_elements = clean_json_str[0]
-    # print("cost_estimation_elements===============>", cost_estimation_elements)
-    
-    if clean_json_str:
+    for item in jobs_list:
+        # Safe parsing
         try:
-            job_data_parsed = json.loads(clean_json_str)
-            print("job_data_parsed===============>",job_data_parsed)
-            # Convert JSON string to Python object
-            data_type, data_list = check_json_format(job_data_parsed)
-            # data_list = job_data_parsed
-            
-            # Convert JSON data to a list of lists (table data) including header row.
-            if data_list:
-                # headers = list(data_list[0].keys())
-                # table_data = [headers]  # header row
-                for item in data_list:
-                    # row = [item.get(header, "") for header in headers]
-                    rate = float(item.get("Total Cost"))/float(item.get("Quantity"))
-                    fixed_rate = round(rate, 2)
-                    formatted_rate = f"{fixed_rate:,.2f}"
-                    quantity = int(item.get("Quantity", ""))
-                    formatted_quantity = format(quantity, ",")
-                    material_cost = round(float(item.get("Material Cost", 0)), 2)
-                    formatted_material_cost = f"{material_cost:,.2f}"
-                    equip_cost = round(float(item.get("Equipment Cost", 0)), 2)
-                    formatted_equip_cost = f"{equip_cost:,.2f}"
-                    labor_cost = round(float(item.get("Labor Cost", 0)), 2)
-                    formatted_labor_cost = f"{labor_cost:,.2f}"
-                    total_cost = round(float(item.get("Total Cost", 0)), 2)
-                    formatted_total_cost = f"{total_cost:,.2f}"
-                    with lock:
-                        row = [item.get("CSI code"), item.get("Category", ""), item.get("Job Activity", ""), formatted_quantity, item.get("Unit", ""), f'${formatted_rate}',
-                          f'${formatted_material_cost}', f'${formatted_equip_cost}', f'${formatted_labor_cost}', f'${formatted_total_cost}']
-                    # table_data.append(row)
-                    # material_sum += item.get("Material Cost", 0)
-                    # equipment_sum += item.get("Equipment Cost", 0)
-                    # labor_sum += item.get("Labor Cost", 0)
-                    # total_sum += item.get("Total Cost", 0)
-                    
-                        table_data.append(row)
-                        material_sum += float(item.get("Material Cost", 0))
-                        equipment_sum += float(item.get("Equipment Cost", 0))
-                        labor_sum += float(item.get("Labor Cost", 0))
-                        total_sum += float(item.get("Total Cost", 0))
-            # else:
-            #     table_data = [["No Data"]]
-            # material_sum = round(material_sum, 2)
-            # equipment_sum = round(equipment_sum, 2)
-            # labor_sum = round(labor_sum, 2)
-            # total_sum = round(total_sum, 2)
-            
-            # Define the PDF output file name
-            # pdf_file = "construction_jobs.pdf"
-            
-            # Create a PDF document with landscape orientation
-                
-        except json.JSONDecodeError as e:
-            print("Error parsing JSON response:", e)
-    else:
-        print("No valid JSON found in the response.")
+            quantity = int(item.get("Quantity") or 0)
+        except Exception:
+            quantity = 0
 
-def process_pdf_page(pdf_path, page_number, output_excel, output_pdf):
-    try:
-        images = convert_from_path(pdf_path, first_page=page_number, last_page=page_number, dpi=500, poppler_path="/usr/bin")
-        
-        if not images:
-            return
-        image = images[0]
-        directory_path = os.path.dirname(pdf_path)
-        image_path = f"{directory_path}/page_{page_number}.png"
-        image.save(image_path, "PNG")
-        print("image_path===>", image_path)
-        process_cad_drawing(image_path, output_excel, output_pdf)
-        
-    except Exception as e:
-        print(f"Error processing {pdf_path}, page {page_number}: {e} ")
-    finally:
-        with lock:
-            active_threads.remove(threading.current_thread())
-        if not active_threads:
-            
-            print("All PDF page processing threads have completed.")
-            formatted_material_sum = f"{material_sum:,.2f}"
-            formatted_equipment_sum = f"{equipment_sum:,.2f}"
-            formatted_labor_sum = f"{labor_sum:,.2f}"
-            formatted_total_sum = f"{total_sum:,.2f}"
-            table_data.append(["","", "", "", "", "Total", f'${formatted_material_sum}', f'${formatted_equipment_sum}', f'${formatted_labor_sum}', f'${formatted_total_sum}'])
-            doc = SimpleDocTemplate(output_pdf, pagesize=landscape(A3))
-            table = Table(table_data, repeatRows=1)
+        row = [
+            str(item.get("CSI code","")),
+            str(item.get("Category","")),
+            str(item.get("Job Activity","")),
+            f"{quantity:,}",
+            str(item.get("Unit","")),
+            f"${float(item.get('Rate') or 0):,.2f}",
+            f"${float(item.get('Material Cost') or 0):,.2f}",
+            f"${float(item.get('Equipment Cost') or 0):,.2f}",
+            f"${float(item.get('Labor Cost') or 0):,.2f}",
+            f"${float(item.get('Total Cost') or 0):,.2f}",
+        ]
+        table_data.append(row)
 
-                # Add some basic style to the table
-            style = TableStyle([
-                    ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                    ('FONTSIZE', (0, 0), (-1, 0), 12),
-                    ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
-                    ('GRID', (0, 0), (-1, -1), 1, colors.black),
-                    # Special style for the last row ("Total" row)
-                    ('BACKGROUND', (0, -1), (-1, -1), colors.lightgrey),  # Light grey background
-                    ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),  # Bold text
-                    ('TEXTCOLOR', (0, -1), (-1, -1), colors.black),  # Black text
-                ])
-            table.setStyle(style)
+        material_sum += float(item.get('Material Cost') or 0)
+        equipment_sum += float(item.get('Equipment Cost') or 0)
+        labor_sum += float(item.get('Labor Cost') or 0)
+        total_sum += float(item.get('Total Cost') or 0)
 
-            # Build the PDF document
-            doc.build([table])
+    # Safe summary row (auto matches header length)
+    summary_row = [""] * (len(headers) - 5) + [
+        "Total",
+        f"${material_sum:,.2f}",
+        f"${equipment_sum:,.2f}",
+        f"${labor_sum:,.2f}",
+        f"${total_sum:,.2f}"
+    ]
+    table_data.append(summary_row)
 
-            print(f"PDF generated and saved as '{output_pdf}'.")
-            # Create an Excel workbook and sheet
-            wb = openpyxl.Workbook()
-            ws = wb.active
-            ws.title = "Cost Estimation"
+    # Validate row lengths & fix if needed
+    expected_cols = len(headers)
+    for i, row in enumerate(table_data):
+        if len(row) < expected_cols:
+            row.extend([""] * (expected_cols - len(row)))  # pad short rows
+        elif len(row) > expected_cols:
+            row = row[:expected_cols]  # truncate extras
+            table_data[i] = row
 
-            # Write data to the sheet
-            for row in table_data:
-                ws.append(row)
+    # Build PDF
+    doc = SimpleDocTemplate(output_pdf, pagesize=landscape(A3))
+    table = Table(table_data, repeatRows=1)
 
-            # Save the Excel file
-            wb.save(output_excel)
-            print(f"Data saved to {output_excel}")
-            base_path = r"/var/Django/cadProcessor/media"
-            pdf_url=os.path.relpath(output_pdf, base_path).replace("\\", "/")
-            excel_url = os.path.relpath(output_excel, base_path).replace("\\", "/")
-            notify_frontend(pdf_url, excel_url)
-            # return JsonResponse({"success": True, "message": "successfully generated estimation files"})
-def start_pdf_processing(pdf_file, output_excel, output_pdf):
-    global active_threads
-    total_pages = len(convert_from_path(pdf_file, dpi=500, poppler_path="/usr/bin"))
-    for page_number in range(1, total_pages+1):
-        print("thread number ===>", page_number)
-        thread = threading.Thread(target=process_pdf_page, args=(pdf_file, page_number, output_excel, output_pdf))
-        active_threads.append(thread)
-        thread.start()
+    style = TableStyle([
+        ('BACKGROUND', (0,0), (-1,0), colors.grey),
+        ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0,0), (-1,0), 12),
+        ('GRID', (0,0), (-1,-1), 1, colors.black),
+        ('BACKGROUND', (0,-1), (-1,-1), colors.lightgrey),
+        ('FONTNAME', (0,-1), (-1,-1), 'Helvetica-Bold'),
+    ])
+    table.setStyle(style)
+
+    doc.build([table])
+
+    # Excel
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Cost Estimation"
+    for row in table_data:
+        ws.append(row)
+    wb.save(output_excel)
+
+# =================== MAIN PDF PROCESSING WITH LIVE PROGRESS ===================
+def get_page_count(pdf_file):
+    reader = PdfReader(pdf_file)
+    return len(reader.pages)
+def start_pdf_processing(pdf_path: str, output_pdf: str, output_excel: str):
+    total_pages = get_page_count(pdf_path)
+    all_texts = [""] * total_pages
+
+    def process_page(page_num):
+        img_path = convert_pdf_page_to_image(pdf_path, page_num)
+        if img_path:
+            all_texts[page_num-1] = extract_text_from_image(img_path)
+        progress = round((page_num / total_pages) * 100, 2)
+        notify_frontend(
+            "page_processed",
+            page=page_num,
+            total_pages=total_pages,
+            progress=progress
+        )
+
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        executor.map(process_page, range(1, total_pages + 1))
+
+    combined_text = " ".join(all_texts)
+    jobs_list = get_construction_jobs(combined_text)
+
+    if jobs_list:
+        generate_outputs(jobs_list, output_pdf, output_excel)
+        notify_frontend(
+            "pdf_processing_completed",
+            pdf_path=output_pdf,
+            excel_path=output_excel,
+            progress=100
+        )

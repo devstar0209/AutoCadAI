@@ -13,6 +13,7 @@ from reportlab.lib.pagesizes import A3, landscape
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from collections import defaultdict, Counter
 
 # =================== CONFIG ===================
 API_KEY = "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"
@@ -76,8 +77,6 @@ def extract_text_from_image(image_path: str) -> str:
         if best_text:
             # Remove excessive whitespace and clean up
             cleaned_text = re.sub(r'\s+', ' ', best_text.strip())
-            # Remove common OCR artifacts
-            cleaned_text = re.sub(r'[^\w\s.,(){}\[\]:;-]', '', cleaned_text)
             
             return cleaned_text
     except Exception as e:
@@ -85,25 +84,139 @@ def extract_text_from_image(image_path: str) -> str:
         return ""
 
 # =================== AI COST ESTIMATION ===================
-def preprocess_cad_text(cad_text):
-    """Preprocess CAD text to improve AI analysis accuracy"""
+def preprocess_cad_text(cad_text:str) -> str:
+    """Preprocess CAD text to extract structured items for AI and summarize circuits per panel and overall."""
     if not cad_text or len(cad_text.strip()) < 10:
         return "CAD drawing contains minimal text. Please provide estimates for common construction elements: foundation, walls, roof, and basic finishes."
+
+    # --- Step 1: Clean and normalize text ---
+    cleaned_text = re.sub(r'[^\w\s\r\n.,(){}\[\]\\:;×\-]', '', cad_text)
+    text = cleaned_text.replace("\n", " ")
+    text = re.sub(r'\s+', ' ', text)
+    text = re.sub(r'[^A-Za-z0-9\s.,;:()\-\/]', '', text)
+    text = re.sub(r'(.)\1{2,}', r'\1', text)
+    text = text.upper().strip()
+
+    # --- Step 2: Extract Scope of Work ---
+    scope_match = re.search(r'SCOPE OF WORK(.*?)(PANEL|SCHEDULE|MATERIALS|$)', text)
+    scope_raw = scope_match.group(1).strip() if scope_match else ""
     
-    # Check if text contains construction-related content
-    construction_indicators = [
-        'concrete', 'steel', 'foundation', 'wall', 'floor', 'roof', 'beam', 'column', 
-        'footing', 'slab', 'dimension', 'length', 'width', 'height', 'thickness', 
-        'diameter', 'area', 'volume', 'square', 'cubic', 'linear', 'feet', 'inches',
-        'construction', 'building', 'structure', 'material', 'specification'
-    ]
+    # Split into numbered steps
+    scope_steps = []
+    if scope_raw:
+        steps = re.split(r'[.;]\s*', scope_raw)
+        for i, s in enumerate(steps, start=1):
+            s_clean = s.strip()
+            if s_clean:
+                scope_steps.append(f"{i}. {s_clean}")
+    scope_of_work = "\n".join(scope_steps)
+
+    # --- Step 3: Extract Panels, Breakers, Amp Bus, AFC, Circuits per panel ---
+    panels = {}
+    panel_splits = re.split(r'(DISTRIBUTION SWITCHBOARD\s+[A-Z0-9\-]+)', text)
+
+    overall_circuits = defaultdict(int)
+    all_breakers = []
+    all_amp_bus = []
+
+    for i in range(1, len(panel_splits), 2):
+        panel_name = panel_splits[i].strip()
+        panel_block = panel_splits[i+1]
+
+        breakers = list(set(re.findall(r'\d+\s*AF', panel_block)))
+        amp_bus = list(set(re.findall(r'\d+\s*AMP', panel_block)))
+        afc_ratings = list(set(re.findall(r'\d+(\.\d+)?\s*KA', panel_block)))
+
+        # Extract circuits per panel
+        circuits = []
+        for m in re.finditer(r'([A-Z0-9\s\-]+)\s+(\d{2,5})\s+WATTS', panel_block):
+            desc = m.group(1).strip()
+            desc = re.sub(r'\s+', ' ', desc)
+            watts = int(m.group(2))
+            circuits.append({"description": desc, "watts": watts})
+            overall_circuits[desc] += watts
+
+        # Sort circuits descending by watts and keep top 10
+        top_circuits = sorted(circuits, key=lambda x: x["watts"], reverse=True)[:10]
+
+        panels[panel_name] = {
+            "breakers": breakers,
+            "amp_bus": amp_bus,
+            "afc_ratings": afc_ratings,
+            "circuits": circuits,
+            "top_10_circuits": top_circuits
+        }
+
+        all_breakers.extend(breakers)
+        all_amp_bus.extend(amp_bus)
+
+    # Summarize totals
+    breaker_summary = dict(Counter(all_breakers))
+    amp_bus_summary = dict(Counter(all_amp_bus))
+
+    # --- Step 4: Extract Materials ---
+    materials = defaultdict(list)
+
+    # Receptacles
+    for m in re.finditer(r'(\d+)\s+RECEPTACLE', text):
+        materials["receptacles"].append(int(m.group(1)))
+
+    # Conduits
+    for m in re.finditer(r'CONDUIT[^.]*', text):
+        desc = m.group(0).strip()
+        desc = re.sub(r'\s+', ' ', desc)
+        materials["conduits"].append(desc)
+
+    # Panels
+    for p_name in panels.keys():
+        materials["panels"].append(p_name)
+
+    # Add summarized breakers, amp bus, overall circuits
+    materials["breaker_summary"] = breaker_summary
+    materials["amp_bus_summary"] = amp_bus_summary
+    materials["circuit_totals"] = dict(overall_circuits)
+
+    # --- Step 5: Generate AI-readable text ---
+    parts = []
+
+    if scope_of_work:
+        parts.append(f"Scope of Work:\n{scope_of_work}")
+
+    if panels:
+        panel_texts = []
+        for p_name, info in panels.items():
+            panel_texts.append(
+                f"{p_name}: Breakers {', '.join(info['breakers']) if info['breakers'] else 'N/A'}, "
+                f"Amp Bus {', '.join(info['amp_bus']) if info['amp_bus'] else 'N/A'}, "
+                f"AFC Ratings {', '.join(info['afc_ratings']) if info['afc_ratings'] else 'N/A'}"
+            )
+            if info["top_10_circuits"]:
+                circ_text = "\n    ".join([f"{c['description']}: {c['watts']} W" for c in info["top_10_circuits"]])
+                panel_texts.append("  Top 10 Circuits by Load:\n    " + circ_text)
+        parts.append("Panels:\n" + "\n".join(panel_texts))
+
+    if materials:
+        mat_text = ["Materials Summary:"]
+        if materials.get("receptacles"):
+            mat_text.append(f"- Receptacles: {sum(materials['receptacles'])} units")
+        if breaker_summary:
+            breaker_str = "; ".join([f"{k}: {v} units" for k, v in breaker_summary.items()])
+            mat_text.append(f"- Breakers Summary: {breaker_str}")
+        if amp_bus_summary:
+            amp_str = "; ".join([f"{k}: {v} units" for k, v in amp_bus_summary.items()])
+            mat_text.append(f"- Amp Bus Summary: {amp_str}")
+        if materials.get("conduits"):
+            mat_text.append(f"- Conduits: {len(materials['conduits'])} types ({'; '.join(materials['conduits'])})")
+        if overall_circuits:
+            circuit_text = "\n".join([f"  * {desc}: {watts} W total" for desc, watts in overall_circuits.items()])
+            mat_text.append("Circuit Totals Across All Panels:\n" + circuit_text)
+        if materials.get("panels"):
+            mat_text.append(f"- Panels: {', '.join(materials['panels'])}")
+        parts.append("\n".join(mat_text))
+
+    ai_text = "\n\n".join(parts)
     
-    has_construction_content = any(indicator.lower() in cad_text.lower() for indicator in construction_indicators)
-    
-    if not has_construction_content:
-        return f"CAD drawing text: {cad_text}\n\nNote: Limited construction-specific information detected. Please provide estimates for standard building components based on typical construction practices."
-    
-    return cad_text
+    return ai_text
 
 def extract_json_from_response(response_text: str):
     match = re.search(r"```json\n(.*?)\n```", response_text, re.DOTALL)
@@ -115,10 +228,11 @@ def validate_data(data: list) -> bool:
     return isinstance(data, list) and len(data) > 0
 
 def get_construction_jobs(cad_text):
-    print("Starting construction jobs analysis...")
+    print(f"Starting construction jobs analysis...")
     
     # Preprocess the CAD text for better analysis
     processed_cad_text = preprocess_cad_text(cad_text)
+    print(f"Preprocessed text ==> {processed_cad_text}")
     
     # Enhanced system prompt with specific instructions
     system_prompt = """You are a professional construction estimator with 20+ years of experience. Your task is to analyze CAD drawings and provide accurate cost estimates following these strict guidelines:
@@ -131,7 +245,7 @@ def get_construction_jobs(cad_text):
 
 2. REQUIRED OUTPUT FORMAT:
    - EXACTLY this JSON structure: [{"CSI code": "03 30 00", "Category": "Concrete", "Job Activity": "Foundation", "Quantity": 150, "Unit": "CY", "Rate": 125.50, "Material Cost": 12000, "Equipment Cost": 3000, "Labor Cost": 4500, "Total Cost": 19500}]
-   - Job Activities  must be more clearly defined including such size and type etc. 
+   - Job Activities  must be more clearly defined with more detail including size and type etc. 
     For example, If this is electrical it should have on the drawing description of specifications page. 
     Otherwise, assume based on building power divces. 
     So for power to plugs and light, use #12 AWG and for power load 20Amp. 

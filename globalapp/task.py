@@ -103,10 +103,29 @@ def preprocess_cad_text(cad_text: str) -> str:
         "Electrical": ["BREAKER", "PANEL", "RECEPTACLE", "LIGHT", "SWITCH", "CONDUIT", "CIRCUIT", "AMP", "WATT", "BUS", "DIMMER", "FUSE", "TRANSFORMER"], #"AF", "AT", "KA", 
         "HVAC": ["DUCT", "AIR CONDITIONING", "AC", "AHU", "FCU", "FAN", "CHILLER", "HEATER", "VAV", "GRILLE", "DIFFUSER", "TEMPERATURE"],
         "Plumbing": ["PIPE", "DRAIN", "WATER CLOSET", "SINK", "TOILET", "VALVE", "PUMP", "HOT WATER", "COLD WATER", "SANITARY", "VENT"],
-        "Finishes": ["PAINT", "DOOR", "WINDOW", "WALL", "FLOOR", "CEILING", "CARPET", "TILE", "WALL COVERING", "MILLWORK", "TRIM"],
+        "Finishes": ["PAINT", "DOOR", "WINDOW", "FLOOR", "CEILING", "CARPET", "TILE", "WALL COVERING", "MILLWORK", "TRIM"],
         "Fire Protection": ["SPRINKLER", "FIRE ALARM", "HYDRANT", "EXTINGUISHER", "SUPPRESSION", "DETECTOR", "SMOKE", "FIRE HOSE"],
+        "Electrical Safety & Security": [
+            "SMOKE DETECTOR", "HEAT DETECTOR", "MANUAL PULL STATION",
+            "SPRINKLER", "EMERGENCY LIGHT", "EXIT SIGN", "SURGE PROTECTOR",
+            "ACCESS CONTROL", "SECURITY CAMERA", "MOTION SENSOR", "CCTV",
+            "INTRUSION ALARM", "CARD READER", "KEYPAD", "FIRE EXTINGUISHER",
+            "FIRE SUPPRESSION", "SECURITY PANEL", "ALARM PANEL", "NOTIFICATION DEVICE"
+        ],
+        "Thermal & Moisture Protection": [
+            "INSULATION", "VAPOR BARRIER", "ROOF MEMBRANE", "FLASHING", 
+            "WATERPROOFING", "SEALANT", "CAULKING", "MOISTURE BARRIER", 
+            "THERMAL BARRIER", "ROOF INSULATION", "SHEET MEMBRANE", 
+            "TILE UNDERLAYMENT", "DAMP PROOFING", "AIR BARRIER", 
+            "WEATHER BARRIER", "ROOFING FELT", "BITUMEN", "SPRAY FOAM"
+        ],
         "Sitework": ["EXCAVATION", "GRADING", "BACKFILL", "ROADWAY", "CURB", "SIDEWALK", "ASPHALT", "DRAINAGE", "LANDSCAPING"],
         "Equipment": ["GENERATOR", "TRANSFORMER", "ELEVATOR", "CONVEYOR", "CONTROL", "AUTOMATION", "SECURITY", "CAMERA"],
+        "Woods, Plastics & Composites": [
+            "LUMBER", "PLYWOOD", "OSB", "TIMBER", "MDF", "PARTICLE BOARD", "LAMINATE", 
+            "VINYL", "PVC", "PLASTIC PANEL", "COMPOSITE DECKING", "FIBERBOARD", "FIBERGLASS", 
+            "RESIN", "ENGINEERED WOOD", "WOOD PANEL", "WOOD BEAM", "WOOD TRIM"
+        ],
         "Other": []  # fallback
     }
 

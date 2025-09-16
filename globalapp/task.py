@@ -88,6 +88,7 @@ def preprocess_cad_text(cad_text: str) -> str:
     """
     Generalized text structuring for AI prompts.
     - Extracts quantities per unique item/unit
+    - Counts keywords without numbers
     - Categorizes into job categories
     - Builds AI-readable structured text
     """
@@ -99,7 +100,7 @@ def preprocess_cad_text(cad_text: str) -> str:
     categories = {
         "Concrete": ["CONCRETE", "FOUNDATION", "SLAB", "FOOTING", "STEM WALL", "REBAR", "CUBIC YARD", "PAVING"],
         "Masonry": ["BLOCK", "BRICK", "CMU", "MASONRY", "STONE", "MORTAR", "WALL"],
-        "Electrical": ["BREAKER", "PANEL", "RECEPTACLE", "LIGHT", "SWITCH", "CONDUIT", "CIRCUIT", "AMP", "WATT", "AF", "AT", "KA", "BUS", "DIMMER", "FUSE", "TRANSFORMER"],
+        "Electrical": ["BREAKER", "PANEL", "RECEPTACLE", "LIGHT", "SWITCH", "CONDUIT", "CIRCUIT", "AMP", "WATT", "BUS", "DIMMER", "FUSE", "TRANSFORMER"], #"AF", "AT", "KA", 
         "HVAC": ["DUCT", "AIR CONDITIONING", "AC", "AHU", "FCU", "FAN", "CHILLER", "HEATER", "VAV", "GRILLE", "DIFFUSER", "TEMPERATURE"],
         "Plumbing": ["PIPE", "DRAIN", "WATER CLOSET", "SINK", "TOILET", "VALVE", "PUMP", "HOT WATER", "COLD WATER", "SANITARY", "VENT"],
         "Finishes": ["PAINT", "DOOR", "WINDOW", "WALL", "FLOOR", "CEILING", "CARPET", "TILE", "WALL COVERING", "MILLWORK", "TRIM"],
@@ -119,27 +120,36 @@ def preprocess_cad_text(cad_text: str) -> str:
             counter = Counter()
             for m in matches:
                 qty = m[0] or m[1]
-                item_str = f"{qty} {kw}"
-                counter[item_str] += 1
+                if qty:
+                    item_str = f"{qty} {kw}"
+                    counter[item_str] += 1
             for item_str, count in counter.items():
                 structured[cat][item_str] = count
 
-    # --- Keyword spotting without numbers ---
+    # --- Count keyword-only occurrences ---
     for cat, keywords in categories.items():
         for kw in keywords:
-            if kw in text:
-                if not any(kw in key for key in structured[cat]):
-                    structured[cat][kw] = None
+            occurrences = len(re.findall(r'\b' + re.escape(kw) + r'\b', text))
+            # If already counted as number + keyword, subtract those
+            num_kw_with_number = sum(1 for k in structured[cat].keys() if kw in k)
+            qty = occurrences - num_kw_with_number
+            if qty > 0:
+                structured[cat][kw] = qty
+
+    # --- Special Electrical rule ---
+    if "Electrical" in structured:
+        has_amp = any("AMP" in k for k in structured["Electrical"].keys())
+        if has_amp:
+            for kw in ["PANEL", "BUS"]:
+                if kw in structured["Electrical"]:
+                    del structured["Electrical"][kw]
 
     # --- Build AI-readable structured text ---
     parts = []
     for cat, items in structured.items():
         parts.append(f"{cat} Summary:")
         for item, qty in items.items():
-            if qty is not None:
-                parts.append(f"- {item}: {qty}")
-            else:
-                parts.append(f"- {item}")
+            parts.append(f"- {item}: {qty}")
         parts.append("")  # spacing
 
     return "\n".join(parts).strip()

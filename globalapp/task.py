@@ -106,7 +106,7 @@ def preprocess_cad_text(cad_text: str) -> str:
         "Finishes": ["PAINT", "DOOR", "WINDOW", "WALL", "FLOOR", "CEILING", "CARPET", "TILE", "WALL COVERING", "MILLWORK", "TRIM"],
         "Fire Protection": ["SPRINKLER", "FIRE ALARM", "HYDRANT", "EXTINGUISHER", "SUPPRESSION", "DETECTOR", "SMOKE", "FIRE HOSE"],
         "Sitework": ["EXCAVATION", "GRADING", "BACKFILL", "ROADWAY", "CURB", "SIDEWALK", "ASPHALT", "DRAINAGE", "LANDSCAPING"],
-        "Equipment / Special Systems": ["GENERATOR", "TRANSFORMER", "ELEVATOR", "CONVEYOR", "CONTROL", "AUTOMATION", "SECURITY", "CAMERA"],
+        "Equipment": ["GENERATOR", "TRANSFORMER", "ELEVATOR", "CONVEYOR", "CONTROL", "AUTOMATION", "SECURITY", "CAMERA"],
         "Other": []  # fallback
     }
 
@@ -180,10 +180,8 @@ def get_construction_jobs(cad_text):
    - Provide realistic quantities based on drawing dimensions
 
 2. REQUIRED OUTPUT FORMAT:
-   - EXACTLY this JSON structure: [{"CSI code": "03 30 00", "Category": "Concrete", "Job Activity": "Foundation", "Quantity": 150, "Unit": "CY", "Rate": 125.50, "Material Cost": 12000, "Equipment Cost": 3000, "Labor Cost": 4500, "Total Cost": 19500}]
-   - Job Activities  must be more clearly defined with more detail including size and type etc. 
-    For example, If this is electrical it should have on the drawing description of specifications page. 
-    Otherwise, assume based on building power divces.
+   - EXACTLY this JSON structure: [{"CSI code": "03 30 00", "Category": "Concrete", "Job Activity": "Cast-in-place Concrete Slab, 6-inch thick", "Quantity": 150, "Unit": "CY", "Rate": 125.50, "Material Cost": 12000, "Equipment Cost": 3000, "Labor Cost": 4500, "Total Cost": 19500}]
+   - Job Activities must be clearly detailed including type, size, and method (e.g., "Cast-in-place Paving", "Electrical wire work - Conduit installation")
    - NO additional text, explanations, or comments
    - NO markdown formatting or code blocks
    - ALL fields must be present and properly formatted

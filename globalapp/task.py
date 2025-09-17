@@ -100,7 +100,7 @@ def preprocess_cad_text(cad_text: str) -> str:
     categories = {
         "Concrete": ["CONCRETE", "FOUNDATION", "SLAB", "FOOTING", "STEM WALL", "REBAR", "CUBIC YARD", "PAVING"],
         "Masonry": ["BLOCK", "BRICK", "CMU", "MASONRY", "STONE", "MORTAR", "WALL"],
-        "Electrical": ["BREAKER", "PANEL", "RECEPTACLE", "LIGHT", "SWITCH", "CONDUIT", "CIRCUIT", "AMP", "WATT", "BUS", "DIMMER", "FUSE", "TRANSFORMER"], #"AF", "AT", "KA", 
+        "Electrical": ["GENERATOR", "BREAKER", "PANEL", "RECEPTACLE", "LIGHT", "SWITCH", "CIRCUIT", "AMP", "BUS", "DIMMER", "FUSE", "TRANSFORMER", "TRANSF", "KVA"], #"AF", "AT", "KA", "CONDUIT", 
         "HVAC": ["DUCT", "AIR CONDITIONING", "AC", "AHU", "FCU", "FAN", "CHILLER", "HEATER", "VAV", "GRILLE", "DIFFUSER", "TEMPERATURE"],
         "Plumbing": ["PIPE", "DRAIN", "WATER CLOSET", "SINK", "TOILET", "VALVE", "PUMP", "HOT WATER", "COLD WATER", "SANITARY", "VENT"],
         "Finishes": ["PAINT", "DOOR", "WINDOW", "FLOOR", "CEILING", "CARPET", "TILE", "WALL COVERING", "MILLWORK", "TRIM"],
@@ -120,16 +120,41 @@ def preprocess_cad_text(cad_text: str) -> str:
             "WEATHER BARRIER", "ROOFING FELT", "BITUMEN", "SPRAY FOAM"
         ],
         "Sitework": ["EXCAVATION", "GRADING", "BACKFILL", "ROADWAY", "CURB", "SIDEWALK", "ASPHALT", "DRAINAGE", "LANDSCAPING"],
-        "Equipment": ["GENERATOR", "TRANSFORMER", "ELEVATOR", "CONVEYOR", "CONTROL", "AUTOMATION", "SECURITY", "CAMERA"],
+        "Equipment": ["ELEVATOR", "CONVEYOR", "CONTROL", "AUTOMATION", "SECURITY", "CAMERA"],
         "Woods, Plastics & Composites": [
             "LUMBER", "PLYWOOD", "OSB", "TIMBER", "MDF", "PARTICLE BOARD", "LAMINATE", 
             "VINYL", "PVC", "PLASTIC PANEL", "COMPOSITE DECKING", "FIBERBOARD", "FIBERGLASS", 
             "RESIN", "ENGINEERED WOOD", "WOOD PANEL", "WOOD BEAM", "WOOD TRIM"
         ],
+        "Metals": [
+             # Structural Steel
+            "STEEL", "STRUCTURAL", "BEAM", "COLUMN", "WIDE FLANGE", "WF", "HSS", "ANGLE", "CHANNEL", "GIRDER", "JOIST", "TRUSS",
+            # Miscellaneous Metals
+            "HANDRAIL", "GUARDRAIL", "LADDERS", "METAL STAIRS", "GRATING", "METAL DECK", "EMBED", "PLATE", "TREAD", "RISER",
+            # Cold-Formed & Light-Gauge
+            "STUD", "TRACK", "FRAMING", "METAL STUD", "METAL FRAMING",
+            # Metal Fabrications
+            "METAL PAN", "BOLLARD", "BRACKET", "METAL CLIP", "METAL SUPPORT",
+            # Metal Assemblies
+            "CURTAIN WALL", "METAL PANEL", "MULLION",
+            # Ornamental Metals
+            "ORNAMENTAL", "RAILING", "CANOPY", "TRELLIS", "DECORATIVE METAL"
+        ],
         "Other": []  # fallback
     }
 
     structured = defaultdict(dict)
+
+    # --- Electrical: count devices and estimate conduit/cable ---
+    device_defaults = {
+        "RECEPTACLE": 12,  # LF cable per device
+        "SWITCH": 12,
+        "DIMMER": 12,
+        "LIGHT": 12,
+        "TRANSFORMER": 200,
+        "TRANSF": 200,
+        "GENERATOR": 200,
+    }
 
     # --- Extract number + unit combos and count occurrences ---
     for cat, keywords in categories.items():
@@ -157,9 +182,27 @@ def preprocess_cad_text(cad_text: str) -> str:
 
     # --- Special Electrical rule ---
     if "Electrical" in structured:
+        # Estimate cable/conduit lengths based on devices
+        electrical = structured["Electrical"]
+        total_cable_length = 0
+        total_conduit_length = 0
+        for device, lf_per_device in device_defaults.items():
+            count = electrical.get(device, 0)
+            if count > 0:
+                length = count * lf_per_device
+                total_cable_length += length
+                total_conduit_length += length  # conduit runs along cable
+        electrical["CABLE_LF"] = total_cable_length
+        electrical["CONDUIT_LF"] = total_conduit_length
+
         has_amp = any("AMP" in k for k in structured["Electrical"].keys())
         if has_amp:
             for kw in ["PANEL", "BUS"]:
+                if kw in structured["Electrical"]:
+                    del structured["Electrical"][kw]
+        has_kva = any("KVA" in k for k in structured["Electrical"].keys())
+        if has_kva:
+            for kw in ["TRANSFORMER", "TRANSF"]:
                 if kw in structured["Electrical"]:
                     del structured["Electrical"][kw]
 
@@ -204,15 +247,24 @@ def get_construction_jobs(cad_text):
    - NO additional text, explanations, or comments
    - NO markdown formatting or code blocks
    - ALL fields must be present and properly formatted
+3. If any required quantity or dimension is missing from the CAD text, apply reasonable industry-standard benchmarks to infer missing values. Use these defaults unless the drawing or spec gives an explicit value:
+    - Always include electrical devices (e.g., receptacles, switches, panels, lights, transformers) as separate job activities.
+    - Do not replace devices with conduit; both must be listed.
+    - Default device quantity when unspecified: 1.
+    - Typical room areas if not given: Restroom = 60 SF, Typical room = 150 SF, Entry = 100 SF.
+    - Concrete slab default thickness: 6 inches (use CY = area_sf * thickness_in / 12 / 27).
+    - Always calculate CY (Cubic Yards) for concrete-related work (slabs, paving, footings, foundations), even if only SF or dimensions are available.
+    - When dimensions are missing for concrete or masonry work, assume default area = 100 SF for paving and walls unless otherwise stated.
+    Mark any inferred or assumed quantities in your output as derived from industry benchmarks.
 
-3. COST ESTIMATION RULES:
+4. COST ESTIMATION RULES:
    - Material Cost: 60-70% of total cost
    - Labor Cost: 25-35% of total cost  
    - Equipment Cost: 5-15% of total cost
    - Rates should reflect current market conditions
    - Quantities must be realistic based on drawing scale
 
-4. VALIDATION CHECKLIST:
+5. VALIDATION CHECKLIST:
    - CSI codes must be valid MasterFormat codes
    - Quantities must be positive numbers
    - All costs must be positive numbers
@@ -245,7 +297,6 @@ OUTPUT: Return ONLY a valid JSON array with the exact structure specified above.
                 {"role": "user", "content": user_prompt}
             ],
             temperature=0.1,  # Lower temperature for more consistent results
-            max_tokens=4000
         )
         
         response_text = response.choices[0].message.content

@@ -22,11 +22,33 @@ pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"  # Linux
 # pytesseract.pytesseract.tesseract_cmd = r"C:\Path\To\tesseract.exe"  # Windows
 MAX_WORKERS = 4
 
+# CSI division-based keywords
+construction_keywords = {
+    "03 - Concrete": ["concrete", "slab", "footing", "foundation", "column", "beam", "girder", 
+                      "pile", "pier", "rebar", "reinforcement", "formwork", "joint", "curing"],
+    "04 - Masonry": ["masonry", "brick", "block", "cmu", "stone", "veneer", "grout", "mortar", "lintel"],
+    "05 - Metals": ["steel", "weld", "bolt", "plate", "angle", "channel", "pipe", "tube", "joist", "deck"],
+    "06 - Wood": ["wood", "lumber", "timber", "plywood", "osb", "truss", "joist", "stud", "sheathing"],
+    "07 - Thermal & Moisture": ["roof", "roofing", "membrane", "insulation", "vapor barrier", 
+                                "sealant", "flashing", "shingle", "tile"],
+    "08 - Openings": ["door", "window", "frame", "glazing", "curtain wall", "skylight"],
+    "09 - Finishes": ["floor", "ceiling", "tile", "carpet", "paint", "coating", "plaster", 
+                      "gypsum", "drywall", "veneer", "paneling"],
+    "21 - Fire Protection": ["sprinkler", "fire protection", "standpipe", "fire pump", "alarm"],
+    "22 - Plumbing": ["plumbing", "pipe", "valve", "toilet", "sink", "water heater", "drainage", "fixture"],
+    "23 - HVAC": ["hvac", "duct", "chiller", "boiler", "air handler", "diffuser", "damper", "ventilation"],
+    "26 - Electrical": ["electrical", "conduit", "cable", "wire", "panel", "transformer", "lighting", 
+                        "outlet", "switch", "breaker", "generator", "feeder", "grounding", "data", "telecom"],
+    "Measurement Units": ["dimension", "length", "width", "height", "depth", "elevation", "level", "slope",
+                          "thickness", "diameter", "radius", "area", "volume", "square", "cubic", "linear",
+                          "feet", "foot", "inch", "inches", "meter", "millimeter", "centimeter"]
+}
+
 # =================== FRONTEND NOTIFY ===================
 def notify_frontend(event_type, **kwargs):
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
-        "pdf_processing",
+        "pdf_processing", 
         {"type": event_type, **kwargs}
     )
 
@@ -36,275 +58,202 @@ def extract_text_from_image(image_path: str) -> str:
     try:
         if not os.path.exists(image_path):
             return ""
+
         img = cv2.imread(image_path)
         if img is None:
             return ""
         print(f"Processing OCR function...: {image_path}")
+
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        text1 = pytesseract.image_to_string(gray, config='--psm 6')
         enhanced = cv2.convertScaleAbs(gray, alpha=1.5, beta=30)
         denoised = cv2.medianBlur(enhanced, 3)
-        text2 = pytesseract.image_to_string(denoised, config='--psm 6')
         thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
                                        cv2.THRESH_BINARY, 11, 2)
-        text3 = pytesseract.image_to_string(thresh, config='--psm 6')
 
-        # Combine and clean the results
-        all_texts = [text1, text2, text3]
-        
-        # Select the best result based on length and content quality
+        processed_images = [gray, denoised, thresh]
+        all_texts = []
+
+        for proc_img in processed_images:
+            text = pytesseract.image_to_string(proc_img, config="--psm 6")
+            if text and len(text.strip()) > 0:
+                all_texts.append(text)
+        # Select the best result
         best_text = ""
         max_score = 0
-        
+
         for text in all_texts:
-            if text and len(text.strip()) > 0:
-                # Score based on length and presence of construction-related keywords
-                score = len(text.strip())
-                construction_keywords = [
-                    'concrete', 'steel', 'foundation', 'wall', 'floor', 'roof', 'beam', 'column', 
-                    'footing', 'slab', 'dimension', 'length', 'width', 'height', 'thickness', 
-                    'diameter', 'area', 'volume', 'square', 'cubic', 'linear', 'feet', 'inches',
-                    'construction', 'building', 'structure', 'material', 'specification'
-                ]
-                keyword_count = sum(1 for keyword in construction_keywords if keyword.lower() in text.lower())
-                score += keyword_count * 10
-                
-                if score > max_score:
-                    max_score = score
-                    best_text = text
-        
-        # Clean and format the text
+            score = len(text.strip())  # base score: text length
+            text_lower = text.lower()
+            # Add score for keyword matches
+            for division, keywords in construction_keywords.items():
+                for kw in keywords:
+                    if re.search(rf"\b{re.escape(kw.lower())}\b", text_lower):
+                        score += 10
+            if score > max_score:
+                max_score = score
+                best_text = text
+
         if best_text:
-            # Remove excessive whitespace and clean up
-            cleaned_text = re.sub(r'\s+', ' ', best_text.strip())
-            
+            cleaned_text = re.sub(r"\s+", " ", best_text.strip())
             return cleaned_text
+
+        return ""
+
     except Exception as e:
         print(f"OCR error for {image_path}: {e}")
         return ""
 
 # =================== AI COST ESTIMATION ===================
-def preprocess_cad_text(cad_text: str) -> str:
+
+def structure_cad_text_with_ai(cad_text: str):
     """
-    Generalized text structuring for AI prompts.
-    - Extracts quantities per unique item/unit
-    - Counts keywords without numbers
-    - Categorizes into job categories
-    - Builds AI-readable structured text
+    Use AI to convert raw OCR text into a normalized, machine-readable structure
+    grouped by job category. Returns a Python object (list/dict) or None on failure.
+
+    Expected JSON (examples):
+    {
+      "Concrete": [{"item":"SLAB","quantity":150,"unit":"CY"}, {"item":"FOOTING","quantity":80,"unit":"CY"}],
+      "Masonry": [{"item":"CMU WALL","quantity":1200,"unit":"SF"}],
+      ...
+    }
     """
+    try:
+        struct_prompt = (
+            "You are a construction plans takeoff assistant. Read the CAD OCR text and return ONLY valid JSON grouped by job category.\n"
+            "General Rules:\n"
+            "- Categories: Concrete, Masonry, Metals, Finishes, Thermal & Moisture Protection, HVAC, Plumbing, Electrical, Fire Protection, Electrical Safety & Security, Sitework, Equipment.\n"
+            "- Each category is a list of objects: {\"item\": <string>}\n"
+            "- No prose, no markdown, return valid JSON only.\n\n"
+            "- Be exhaustive; preserve exact names; separate entries per name/size/rating"
+            
+            "CATEGORY RULES:\n"
+            "- MASONRY: Include CMU walls, BRICK walls, STONE, BLOCK. Use SF (wall area) or CY if thickness is clear.\n"
+            "- METALS: Include STRUCTURAL STEEL, BEAMS, COLUMNS, STAIRS, HANDRAILS. Units = TONS (weight) or LF/SF.\n"
+            "- FINISHES: Include PAINT (SF), FLOORING (SF), CEILING (SF), DOORS/WINDOWS (EA), MILLWORK.\n"
+            "- THERMAL & MOISTURE PROTECTION: Include ROOFING (SF), INSULATION (SF), WATERPROOFING (SF), VAPOR BARRIER.\n"
+            "- HVAC: Include DUCTS (LF/SF with size if present), FANS, AHUs, FCUs, AC UNITS (tons), DIFFUSERS, GRILLES.\n"
+            "- PLUMBING: Include PIPES (LF, with size/type if present), DRAINS, VENTS, FIXTURES (SINK, TOILET, WATER CLOSET, PUMP).\n"
+            "- ELECTRICAL:\n"
+            "  • Panels and switchboards: PANEL <name>, DISTRIBUTION SWITCHBOARD <name>, SWITCHBOARD <name> (capture AMP if present: 60A–4000A).\n"
+            "  • Breakers if explicit (by frame or rating).\n"
+            "  • Receptacles: DUPLEX, QUAD, GFCI, WEATHERPROOF, FLOOR BOX, etc.\n"
+            "  • Switching: SWITCH, 3-WAY, 4-WAY, DIMMER.\n"
+            "  • Lighting: LIGHT FIXTURE, TROFFER, DOWNLIGHT, HIGH-BAY, EXIT/EMERG LIGHT, STRIP, WALL PACK, POLE LIGHT.\n"
+            "  • Transformers: capture KVA or TRANSF.\n"
+            "  • Generators: GENERATOR.\n"
+            "  • Cabling: BRANCH CABLE (capture size/type if present: #12, #10, THHN, XHHW), FEEDER CABLE (capture conductor count and size: 3#350MCM, 4#4/0, 3C-500kcmil).\n"
+            "  • Conduit: EMT, RGS, PVC; capture size (\"1\"\", 2\"\", 2-1/2\"\"). Units LF.\n"
+            "- CAPTURE PATTERNS (ratings/sizes):\n"
+            "  • AMP rating for panels or switchboards: (\"\\b(\d{2,4})\\s*A(MP)?\\b\").\n"
+            "  • kVA rating: (\"\\b(\d{1,4}(?:\\.\\d+)?)\\s*KVA\\b\").\n"
+            "  • Cable sizes: (#\d{1,2}|\d{1,4}kcmil|MCM|kcmil), with conductor count like 3#350MCM, 4C-500kcmil.\n"
+            "  • Conduit sizes: (\"1/2\"\", 3/4\"\", 1\"\", 1-1/4\"\", 1-1/2\"\", 2\"\", 2-1/2\"\", 3\"\" ...).\n"
+            "- CONCRETE: FOUNDATIONS, SLABS (CY), FOOTINGS (CY/LF), PAVING, CONCRETE PAVING, SIDEWALK, DRIVEWAY (slab-on-grade with 6\" default thickness if unspecified; CY or SF with conversion).\n"
+            "- HVAC: DUCT (LF/SF with size if present), FAN, AHU/FCU, AC units (tonnage if present), GRILLE/DIFFUSER.\n"
+            "- FIRE PROTECTION: Include SPRINKLERS, FIRE ALARMS, HYDRANTS, HOSE CABINETS, SMOKE DETECTORS.\n"
+            "- ELECTRICAL SAFETY & SECURITY: Include CAMERAS, ACCESS CONTROL, ALARMS, CARD READERS, INTERCOMS.\n"
+            "- SITEWORK: Include EXCAVATION, GRADING, BACKFILL, ASPHALT, SIDEWALKS, CURBS, LANDSCAPING.\n"
+            "- EQUIPMENT: Include LEVATORS, LIFTS, etc.\n\n"
 
-    text = cad_text.upper()
-    text = re.sub(r'\s+', ' ', text)
-
-    # General category mapping
-    categories = {
-        "Concrete": ["CONCRETE", "FOUNDATION", "SLAB", "FOOTING", "STEM WALL", "REBAR", "CUBIC YARD", "PAVING"],
-        "Masonry": ["BLOCK", "BRICK", "CMU", "MASONRY", "STONE", "MORTAR", "WALL"],
-        "Electrical": ["GENERATOR", "BREAKER", "PANEL", "RECEPTACLE", "LIGHT", "SWITCH", "CIRCUIT", "AMP", "BUS", "DIMMER", "FUSE", "TRANSFORMER", "KVA"], #"AF", "AT", "KA", "CONDUIT", "TRANSF", 
-        "HVAC": ["DUCT", "AIR CONDITIONING", "AC", "AHU", "FCU", "FAN", "CHILLER", "HEATER", "VAV", "GRILLE", "DIFFUSER", "TEMPERATURE"],
-        "Plumbing": ["PIPE", "DRAIN", "WATER CLOSET", "SINK", "TOILET", "VALVE", "PUMP", "HOT WATER", "COLD WATER", "SANITARY", "VENT"],
-        "Finishes": ["PAINT", "DOOR", "WINDOW", "FLOOR", "CEILING", "CARPET", "TILE", "WALL COVERING", "MILLWORK", "TRIM"],
-        "Fire Protection": ["SPRINKLER", "FIRE ALARM", "HYDRANT", "EXTINGUISHER", "SUPPRESSION", "DETECTOR", "SMOKE", "FIRE HOSE"],
-        "Electrical Safety & Security": [
-            "SMOKE DETECTOR", "HEAT DETECTOR", "MANUAL PULL STATION",
-            "SPRINKLER", "EMERGENCY LIGHT", "EXIT SIGN", "SURGE PROTECTOR",
-            "ACCESS CONTROL", "SECURITY CAMERA", "MOTION SENSOR", "CCTV",
-            "INTRUSION ALARM", "CARD READER", "KEYPAD", "FIRE EXTINGUISHER",
-            "FIRE SUPPRESSION", "SECURITY PANEL", "ALARM PANEL", "NOTIFICATION DEVICE"
-        ],
-        "Thermal & Moisture Protection": [
-            "INSULATION", "VAPOR BARRIER", "ROOF MEMBRANE", "FLASHING", 
-            "WATERPROOFING", "SEALANT", "CAULKING", "MOISTURE BARRIER", 
-            "THERMAL BARRIER", "ROOF INSULATION", "SHEET MEMBRANE", 
-            "TILE UNDERLAYMENT", "DAMP PROOFING", "AIR BARRIER", 
-            "WEATHER BARRIER", "ROOFING FELT", "BITUMEN", "SPRAY FOAM"
-        ],
-        "Sitework": ["EXCAVATION", "GRADING", "BACKFILL", "ROADWAY", "CURB", "SIDEWALK", "ASPHALT", "DRAINAGE", "LANDSCAPING"],
-        "Equipment": ["ELEVATOR", "CONVEYOR", "CONTROL", "AUTOMATION", "SECURITY", "CAMERA"],
-        "Woods, Plastics & Composites": [
-            "LUMBER", "PLYWOOD", "OSB", "TIMBER", "MDF", "PARTICLE BOARD", "LAMINATE", 
-            "VINYL", "PVC", "PLASTIC PANEL", "COMPOSITE DECKING", "FIBERBOARD", "FIBERGLASS", 
-            "RESIN", "ENGINEERED WOOD", "WOOD PANEL", "WOOD BEAM", "WOOD TRIM"
-        ],
-        "Metals": [
-             # Structural Steel
-            "STEEL", "STRUCTURAL", "BEAM", "COLUMN", "WIDE FLANGE", "WF", "HSS", "ANGLE", "CHANNEL", "GIRDER", "JOIST", "TRUSS",
-            # Miscellaneous Metals
-            "HANDRAIL", "GUARDRAIL", "LADDERS", "METAL STAIRS", "GRATING", "METAL DECK", "EMBED", "PLATE", "TREAD", "RISER",
-            # Cold-Formed & Light-Gauge
-            "STUD", "TRACK", "FRAMING", "METAL STUD", "METAL FRAMING",
-            # Metal Fabrications
-            "METAL PAN", "BOLLARD", "BRACKET", "METAL CLIP", "METAL SUPPORT",
-            # Metal Assemblies
-            "CURTAIN WALL", "METAL PANEL", "MULLION",
-            # Ornamental Metals
-            "ORNAMENTAL", "RAILING", "CANOPY", "TRELLIS", "DECORATIVE METAL"
-        ],
-        "Other": []  # fallback
-    }
-
-    structured = defaultdict(dict)
-
-    # --- Electrical: count devices and estimate conduit/cable ---
-    device_defaults = {
-        "RECEPTACLE": 12,  # LF cable per device
-        "SWITCH": 12,
-        "DIMMER": 12,
-        "LIGHT": 12,
-        "TRANSFORMER": 200,
-        "TRANSF": 200,
-        "GENERATOR": 200,
-    }
-
-    # --- Extract number + unit combos and count occurrences ---
-    for cat, keywords in categories.items():
-        for kw in keywords:
-            # Match numbers before or after keyword (e.g., "250 AMP" or "AMP 250")
-            matches = re.findall(r'(\d+(?:\.\d+)?)\s*' + re.escape(kw) + r'|' + re.escape(kw) + r'\s*(\d+(?:\.\d+)?)', text)
-            counter = Counter()
-            for m in matches:
-                qty = m[0] or m[1]
-                if qty:
-                    item_str = f"{qty} {kw}"
-                    counter[item_str] += 1
-            for item_str, count in counter.items():
-                structured[cat][item_str] = count
-
-    # --- Count keyword-only occurrences ---
-    for cat, keywords in categories.items():
-        for kw in keywords:
-            occurrences = len(re.findall(r'\b' + re.escape(kw) + r'\b', text))
-            # If already counted as number + keyword, subtract those
-            num_kw_with_number = sum(1 for k in structured[cat].keys() if kw in k)
-            qty = occurrences - num_kw_with_number
-            if qty > 0:
-                structured[cat][kw] = qty
-
-    # --- Special Electrical rule ---
-    if "Electrical" in structured:
-
-        has_amp = any("AMP" in k for k in structured["Electrical"].keys())
-        if has_amp:
-            for kw in ["PANEL", "BUS"]:
-                if kw in structured["Electrical"]:
-                    del structured["Electrical"][kw]
-        has_kva = any("KVA" in k for k in structured["Electrical"].keys())
-        if has_kva:
-            for kw in ["TRANSFORMER", "TRANSF"]:
-                if kw in structured["Electrical"]:
-                    del structured["Electrical"][kw]
-
-    # --- Build AI-readable structured text ---
-    parts = []
-    for cat, items in structured.items():
-        parts.append(f"{cat} Summary:")
-        for item, qty in items.items():
-            parts.append(f"- {item}: {qty}")
-        parts.append("")  # spacing
-
-    return "\n".join(parts).strip()
-
-def extract_json_from_response(response_text: str):
-    match = re.search(r"```json\n(.*?)\n```", response_text, re.DOTALL)
-    if match: return match.group(1)
-    match2 = re.search(r'\[.*\]', response_text, re.DOTALL)
-    return match2.group(0) if match2 else None
-
-def validate_data(data: list) -> bool:
-    return isinstance(data, list) and len(data) > 0
+            f"CAD_OCR_TEXT:\n{cad_text}"
+        )
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": "Extract structured construction items from OCR text as strict JSON by category."},
+                {"role": "user", "content": struct_prompt}
+            ],
+            temperature=0.1,
+        )
+        text = response.choices[0].message.content
+        clean = extract_json_from_response(text) or text
+        return json.loads(clean)
+    except Exception as e:
+        print(f"Structuring AI failed: {e}")
+        return None
 
 def get_construction_jobs(cad_text):
     print(f"Starting construction jobs analysis...")
     
-    # Preprocess the CAD text for better analysis
+    # First, attempt AI structuring of OCR text
+    structured_items = structure_cad_text_with_ai(cad_text)
+
+    # Preprocess (existing heuristic summary) as supplemental context
     processed_cad_text = preprocess_cad_text(cad_text)
-    print(f"Preprocessed text ==> {processed_cad_text}")
     
-    # Enhanced system prompt with specific instructions
-    system_prompt = """You are a professional construction estimator with 20+ years of experience. Your task is to analyze CAD drawings and provide accurate cost estimates following these strict guidelines:
+    # Build the cost-estimation prompts
+    structured_json_block = json.dumps(structured_items) if structured_items else "{}"
+    print(f"structured_json_block text ==> {structured_json_block}")
+    
+    system_prompt = """You are a professional construction estimator with 20+ years of experience. Analyze CAD text and produce comprehensive cost estimates.
 
 1. ACCURACY REQUIREMENTS:
-   - Use 2024 MasterFormat standards (CSI codes)
-   - Base costs on current US market rates (RSMeans data)
-   - Consider regional variations (use national average if location unknown)
-   - Provide realistic quantities based on drawing dimensions
+   - Use 2024 MasterFormat (CSI) codes
+   - Labor ELECTRICAL, Use 2023 - 2024 Edition NECA
+   - Base costs on current US market rates (RSMeans-like)
+   - Consider regional variation (use national average if unknown)
+   - Quantities must be realistic for the described scope and scale
 
 2. REQUIRED OUTPUT FORMAT:
-   - EXACTLY this JSON structure: [{"CSI code": "03 30 00", "Category": "Concrete", "Job Activity": "Cast-in-place Concrete Slab, 6-inch thick", "Quantity": 150, "Unit": "CY", "Rate": 125.50, "Material Cost": 12000, "Equipment Cost": 3000, "Labor Cost": 4500, "Total Cost": 19500}]
-   - Job Activities must be clearly detailed including type, size, and method (e.g., "Cast-in-place Paving", "Electrical wire work - Conduit installation")
-   - NO additional text, explanations, or comments
-   - NO markdown formatting or code blocks
-   - ALL fields must be present and properly formatted
-3. If any required quantity or dimension is missing from the CAD text, apply reasonable industry-standard benchmarks to infer missing values. Use these defaults unless the drawing or spec gives an explicit value:
-    - Electrical devices (receptacle/switch/outlet/dimmer/generator/transformer): assume cable per device.
-    - Include cable installation job activities.
-        So, for plug wiring allow 25 LF per devices. For light switches , dimmer and lights allow 12 LF per device.
-        For Transformers and Generators allow 200 LF.
-        Transformers and Generators use MCM cables.
-    - Include conduit installation job activities.
-        Conduits are 9% of cables.
-    - Always include electrical devices (e.g., receptacles, switches, panels, lights, transformers) as separate job activities.
-    - Do not replace devices with conduit; both must be listed.
-    - Default device quantity when unspecified: 1.
-    - Typical room areas if not given: Restroom = 60 SF, Typical room = 150 SF, Entry = 100 SF.
-    - Concrete slab default thickness: 6 inches (use CY = area_sf * thickness_in / 12 / 27).
-    - Always calculate CY (Cubic Yards) for concrete-related work (slabs, paving, footings, foundations), even if only SF or dimensions are available.
-    - When dimensions are missing for concrete or masonry work, assume default area = 100 SF for paving and walls unless otherwise stated.
-    Mark any inferred or assumed quantities in your output as derived from industry benchmarks.
+   - EXACT JSON list only, no prose: [{"CSI code":"03 30 00","Category":"Concrete","Job Activity":"Cast-in-place Concrete Slab, 6-inch thick","Quantity":150,"Unit":"CY","Rate":125.5,"Material Cost":12000,"Equipment Cost":3000,"Labor Cost":4500,"Total Cost":19500}]
+   - All fields are mandatory; values must be numbers for costs/quantities/rate
+   - Job Activity MUST be specific and self-contained (type, size, capacity, method). Do NOT embed bracketed notes. Each activity is one line item.
 
-4. COST ESTIMATION RULES:
-   - Material Cost: 60-70% of total cost
-   - Labor Cost: 25-35% of total cost  
-   - Equipment Cost: 5-15% of total cost
-   - Rates should reflect current market conditions
-   - Quantities must be realistic based on drawing scale
+3. COVERAGE AND NAME PRESERVATION (CRITICAL):
+   - Use both the STRUCTURED_ITEMS_JSON and the HUMAN_SUMMARIES as ground truth. Do not omit major categories with strong signals.
+   - PRESERVE EXACT ITEM NAMES from STRUCTURED_ITEMS_JSON for named equipment/devices.
+   - PROPAGATE ATTRIBUTES into the Job Activity text when present in STRUCTURED_ITEMS_JSON:
+       • rating (e.g., 125A, 30 kVA, 250 kW)
+       • size (e.g., 3#250MCM, 1\" conduit)
+   - PRESERVE MULTIPLICITY per distinct name/size/rating: separate rows and correct quantities for each distinct item.
 
-5. VALIDATION CHECKLIST:
-   - CSI codes must be valid MasterFormat codes
-   - Quantities must be positive numbers
-   - All costs must be positive numbers
-   - Units must be standard construction units (SF, CY, LF, EA, etc.)
-   - Total Cost = Material Cost + Equipment Cost + Labor Cost
+4. DERIVATION RULES (APPLY IF MISSING FROM STRUCTURED_ITEMS_JSON):
+   - BRANCH CABLE (LF) = (RECEPTACLE + SWITCH + DIMMER + LIGHT FIXTURE counts) × 12 LF (or 25 LF if long runs are implied). Include as its own line item.
+   - FEEDER CABLE (MCM) (LF) = (PANELS + TRANSFORMERS + GENERATORS) × 200 LF. Include as its own line item.
+   - CONDUIT (LF) ≈ 9% of total cable length (branch + feeder). Include as its own line item.
 
-If the CAD text is unclear or insufficient, provide estimates for common construction elements that would typically be found in the type of project indicated."""
+5. QUANTITY/RATE/COST RULES (CRITICAL):
+   - Total Cost = Material Cost + Labor Cost + Equipment Cost.
+   - Rate = Total Cost / Quantity. If an external Rate is provided, treat it as total unit rate and split costs accordingly.
+   - Component percentage bands: Material 60–70%, Labor 25–35%, Equipment 5–15%.
 
-    # Enhanced user prompt with better structure
-    user_prompt = f"""Analyze this CAD drawing text and extract construction activities with accurate cost estimates:
+6. VALIDATION CHECKLIST:
+   - Cover categories with strong signals (Concrete, Masonry, Metals, Finishes, Thermal/Moisture, HVAC, Plumbing, Electrical, Sitework) if present.
+   - Positive quantities/costs; math consistent; CSI format "XX XX XX".
+   - PRESERVE exact item names, sizes, ratings, and multiplicities for ELECTRICAL equipment/devices/cables/conduit as implied by STRUCTURED_ITEMS_JSON.
+"""
 
-CAD DRAWING TEXT:
+    user_prompt = f"""STRUCTURED_ITEMS_JSON:
+{structured_json_block}
+
+HUMAN_SUMMARIES:
 {processed_cad_text}
 
 REQUIRED ANALYSIS:
-1. Identify all construction activities visible in the drawing
-2. Determine appropriate quantities based on dimensions/text
-3. Assign correct CSI codes from MasterFormat
-4. Calculate realistic costs using 2024 US market rates
-5. Ensure all mathematical relationships are correct
+1) Expand STRUCTURED_ITEMS_JSON into detailed Job Activities across all detected categories.
+2) For each entry in STRUCTURED_ITEMS_JSON, create a corresponding line item that:
+   - Uses the exact item name (no generic renaming), includes rating/size when provided.
+   - Preserves multiplicities per distinct name/size/rating (separate rows or quantities).
+   - Assigns CSI code, realistic quantity/unit, and computes Material/Labor/Equipment/Total costs with Rate.
 
-OUTPUT: Return ONLY a valid JSON array with the exact structure specified above. No additional text or formatting."""
+OUTPUT: ONLY a valid JSON array as specified above, no text.
+"""
 
     try:
-        # First attempt with enhanced prompt
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ],
-            temperature=0.1,  # Lower temperature for more consistent results
+            temperature=0.1,
         )
-        
         response_text = response.choices[0].message.content
         print(f"Initial AI response received:: {response_text}")
-        
-        # Validate and potentially retry if response is poor
         validated_response = validate_and_improve_response(response_text, processed_cad_text)
-        
         return validated_response
-        
     except Exception as e:
         print(f"Error in get_construction_jobs: {e}")
-        # Fallback to simpler prompt if main approach fails
         return get_construction_jobs_fallback(processed_cad_text)
 
 def validate_and_improve_response(response_text, cad_text):
@@ -454,14 +403,14 @@ Include only the most obvious construction activities. Keep it simple and accura
     try:
         response = client.chat.completions.create(
             model="gpt-4o",
-            messages=[
-                {"role": "system", "content": "You are a construction estimator. Provide simple, accurate cost estimates."},
-                {"role": "user", "content": fallback_prompt}
-            ],
-            temperature=0.1,
-            max_tokens=2000
-        )
-        
+                messages=[
+                    {"role": "system", "content": "You are a construction estimator. Provide simple, accurate cost estimates."},
+                    {"role": "user", "content": fallback_prompt}
+                ],
+                temperature=0.1,
+                max_tokens=2000
+            )
+            
         return response.choices[0].message.content
         
     except Exception as e:
@@ -594,3 +543,26 @@ def start_pdf_processing(pdf_path: str, output_pdf: str, output_excel: str):
             excel_path=output_excel,
             progress=100
         )
+
+def preprocess_cad_text(cad_text: str) -> str:
+    """
+    Generalized text structuring for AI prompts.
+    - Extracts quantities per unique item/unit
+    - Counts keywords without numbers
+    - Categorizes into job categories
+    - Builds AI-readable structured text
+    """
+
+    text = cad_text.upper()
+    text = re.sub(r'\s+', ' ', text)
+
+    return text
+
+def extract_json_from_response(response_text: str):
+    match = re.search(r"```json\n(.*?)\n```", response_text, re.DOTALL)
+    if match: return match.group(1)
+    match2 = re.search(r'\[.*\]', response_text, re.DOTALL)
+    return match2.group(0) if match2 else None
+
+def validate_data(data: list) -> bool:
+    return isinstance(data, list) and len(data) > 0

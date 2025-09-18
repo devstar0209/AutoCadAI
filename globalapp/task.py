@@ -100,7 +100,7 @@ def preprocess_cad_text(cad_text: str) -> str:
     categories = {
         "Concrete": ["CONCRETE", "FOUNDATION", "SLAB", "FOOTING", "STEM WALL", "REBAR", "CUBIC YARD", "PAVING"],
         "Masonry": ["BLOCK", "BRICK", "CMU", "MASONRY", "STONE", "MORTAR", "WALL"],
-        "Electrical": ["GENERATOR", "BREAKER", "PANEL", "RECEPTACLE", "LIGHT", "SWITCH", "CIRCUIT", "AMP", "BUS", "DIMMER", "FUSE", "TRANSFORMER", "TRANSF", "KVA"], #"AF", "AT", "KA", "CONDUIT", 
+        "Electrical": ["GENERATOR", "BREAKER", "PANEL", "RECEPTACLE", "LIGHT", "SWITCH", "CIRCUIT", "AMP", "BUS", "DIMMER", "FUSE", "TRANSFORMER", "KVA"], #"AF", "AT", "KA", "CONDUIT", "TRANSF", 
         "HVAC": ["DUCT", "AIR CONDITIONING", "AC", "AHU", "FCU", "FAN", "CHILLER", "HEATER", "VAV", "GRILLE", "DIFFUSER", "TEMPERATURE"],
         "Plumbing": ["PIPE", "DRAIN", "WATER CLOSET", "SINK", "TOILET", "VALVE", "PUMP", "HOT WATER", "COLD WATER", "SANITARY", "VENT"],
         "Finishes": ["PAINT", "DOOR", "WINDOW", "FLOOR", "CEILING", "CARPET", "TILE", "WALL COVERING", "MILLWORK", "TRIM"],
@@ -182,18 +182,6 @@ def preprocess_cad_text(cad_text: str) -> str:
 
     # --- Special Electrical rule ---
     if "Electrical" in structured:
-        # Estimate cable/conduit lengths based on devices
-        electrical = structured["Electrical"]
-        total_cable_length = 0
-        total_conduit_length = 0
-        for device, lf_per_device in device_defaults.items():
-            count = electrical.get(device, 0)
-            if count > 0:
-                length = count * lf_per_device
-                total_cable_length += length
-                total_conduit_length += length  # conduit runs along cable
-        electrical["CABLE_LF"] = total_cable_length
-        electrical["CONDUIT_LF"] = total_conduit_length
 
         has_amp = any("AMP" in k for k in structured["Electrical"].keys())
         if has_amp:
@@ -248,6 +236,13 @@ def get_construction_jobs(cad_text):
    - NO markdown formatting or code blocks
    - ALL fields must be present and properly formatted
 3. If any required quantity or dimension is missing from the CAD text, apply reasonable industry-standard benchmarks to infer missing values. Use these defaults unless the drawing or spec gives an explicit value:
+    - Electrical devices (receptacle/switch/outlet/dimmer/generator/transformer): assume cable per device.
+    - Include cable installation job activities.
+        So, for plug wiring allow 25 LF per devices. For light switches , dimmer and lights allow 12 LF per device.
+        For Transformers and Generators allow 200 LF.
+        Transformers and Generators use MCM cables.
+    - Include conduit installation job activities.
+        Conduits are 9% of cables.
     - Always include electrical devices (e.g., receptacles, switches, panels, lights, transformers) as separate job activities.
     - Do not replace devices with conduit; both must be listed.
     - Default device quantity when unspecified: 1.

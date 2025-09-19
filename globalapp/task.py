@@ -75,6 +75,9 @@ def extract_text_from_image(image_path: str) -> str:
 
         for proc_img in processed_images:
             text = pytesseract.image_to_string(proc_img, config="--psm 6")
+            # rotated = cv2.rotate(proc_img, cv2.ROTATE_90_CLOCKWISE)
+            # rotated_text = pytesseract.image_to_string(rotated, config='--psm 6')
+            # text = origin_text + " " + rotated_text
             if text and len(text.strip()) > 0:
                 all_texts.append(text)
         # Select the best result
@@ -134,20 +137,20 @@ def structure_cad_text_with_ai(cad_text: str):
             "- HVAC: Include DUCTS (LF/SF with size if present), FANS, AHUs, FCUs, AC UNITS (tons), DIFFUSERS, GRILLES.\n"
             "- PLUMBING: Include PIPES (LF, with size/type if present), DRAINS, VENTS, FIXTURES (SINK, TOILET, WATER CLOSET, PUMP).\n"
             "- ELECTRICAL:\n"
-            "  • Panels and switchboards: PANEL <name>, DISTRIBUTION SWITCHBOARD <name>, SWITCHBOARD <name> (capture AMP if present: 60A–4000A).\n"
-            "  • Breakers if explicit (by frame or rating).\n"
+            "  • Panels and switchboards: PANEL <name>, DISTRIBUTION SWITCHBOARD <name>, DISTRIBUTION PANEL <name>, SWITCHBOARD <name> (capture AMP if present: 60A–4000A).\n"
+            "  • Breakers/MCBs if explicit (by frame or rating).\n"
             "  • Receptacles: DUPLEX, QUAD, GFCI, WEATHERPROOF, FLOOR BOX, etc.\n"
             "  • Switching: SWITCH, 3-WAY, 4-WAY, DIMMER.\n"
             "  • Lighting: LIGHT FIXTURE, TROFFER, DOWNLIGHT, HIGH-BAY, EXIT/EMERG LIGHT, STRIP, WALL PACK, POLE LIGHT.\n"
-            "  • Transformers: capture KVA or TRANSF.\n"
-            "  • Generators: GENERATOR.\n"
+            "  • Transformers: capture KVA if present.\n"
+            "  • Generators: capture GENERATOR.\n"
             "  • Cabling: BRANCH CABLE (capture size/type if present: #12, #10, THHN, XHHW), FEEDER CABLE (capture conductor count and size: 3#350MCM, 4#4/0, 3C-500kcmil).\n"
-            "  • Conduit: EMT, RGS, PVC; capture size (\"1\"\", 2\"\", 2-1/2\"\"). Units LF.\n"
+            "  • Conduit: EMT, RGS, PVC (capture size/type if present)\n"
             "- CAPTURE PATTERNS (ratings/sizes):\n"
-            "  • AMP rating for panels or switchboards: (\"\\b(\d{2,4})\\s*A(MP)?\\b\").\n"
+            "  • AMP rating: (\"\\b(\d{2,4})\\s*A(MP)?\\b\").\n"
             "  • kVA rating: (\"\\b(\d{1,4}(?:\\.\\d+)?)\\s*KVA\\b\").\n"
             "  • Cable sizes: (#\d{1,2}|\d{1,4}kcmil|MCM|kcmil), with conductor count like 3#350MCM, 4C-500kcmil.\n"
-            "  • Conduit sizes: (\"1/2\"\", 3/4\"\", 1\"\", 1-1/4\"\", 1-1/2\"\", 2\"\", 2-1/2\"\", 3\"\" ...).\n"
+            "  • Conduit sizes: (C-4#1, 2 1/2\"C-A#4/0, 2°C-4#4/0 ...).\n"
             "- CONCRETE: FOUNDATIONS, SLABS (CY), FOOTINGS (CY/LF), PAVING, CONCRETE PAVING, SIDEWALK, DRIVEWAY (slab-on-grade with 6\" default thickness if unspecified; CY or SF with conversion).\n"
             "- HVAC: DUCT (LF/SF with size if present), FAN, AHU/FCU, AC units (tonnage if present), GRILLE/DIFFUSER.\n"
             "- FIRE PROTECTION: Include SPRINKLERS, FIRE ALARMS, HYDRANTS, HOSE CABINETS, SMOKE DETECTORS.\n"
@@ -185,7 +188,7 @@ def get_construction_jobs(cad_text):
     structured_json_block = json.dumps(structured_items) if structured_items else "{}"
     print(f"structured_json_block text ==> {structured_json_block}")
     
-    system_prompt = """You are a professional construction estimator with 20+ years of experience. Analyze CAD text and produce comprehensive cost estimates.
+    system_prompt = """You are a professional construction estimator with 20+ years of experience. Analyze CAD text and symbols to produce comprehensive cost estimates.
 
 1. ACCURACY REQUIREMENTS:
    - Use 2024 MasterFormat (CSI) codes
@@ -193,10 +196,12 @@ def get_construction_jobs(cad_text):
    - Base costs on current US market rates (RSMeans-like)
    - Consider regional variation (use national average if unknown)
    - Quantities must be realistic for the described scope and scale
+   - Use NRM2 2nd edition UK Oct 2025,  standards method of measurements (if cost estimates is for Caribbean Countries)
 
 2. REQUIRED OUTPUT FORMAT:
    - EXACT JSON list only, no prose: [{"CSI code":"03 30 00","Category":"Concrete","Job Activity":"Cast-in-place Concrete Slab, 6-inch thick","Quantity":150,"Unit":"CY","Rate":125.5,"Material Cost":12000,"Equipment Cost":3000,"Labor Cost":4500,"Total Cost":19500}]
    - All fields are mandatory; values must be numbers for costs/quantities/rate
+   - CSI Code MUST be organized in a progressive, six-digit sequence (with further specificity decimal extension, if required).
    - Job Activity MUST be specific and self-contained (type, size, capacity, method). Do NOT embed bracketed notes. Each activity is one line item.
 
 3. COVERAGE AND NAME PRESERVATION (CRITICAL):
@@ -342,11 +347,11 @@ def validate_construction_data(data):
                 pass
         
         # Validate CSI code format
-        if "CSI code" in item:
-            csi_code = str(item["CSI code"])
-            if not re.match(r'^\d{2}\s\d{2}\s\d{2}$', csi_code):
-                errors.append(f"Item {i} has invalid CSI code format: {csi_code}")
-                score -= 5
+        # if "CSI code" in item:
+        #     csi_code = str(item["CSI code"])
+        #     if not re.match(r'^\d{2}\s\d{2}\s\d{2}$', csi_code):
+        #         errors.append(f"Item {i} has invalid CSI code format: {csi_code}")
+        #         score -= 5
     
     is_valid = score >= 70 and len(errors) <= 3
     return {"is_valid": is_valid, "errors": errors, "score": score}

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# source venv/bin/activate && python test_cad_estimation.py
 """
 Test script for CAD cost estimation functionality
 This script tests the real PDF processing workflow: PDF -> Image -> OCR -> AI Analysis

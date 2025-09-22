@@ -24,20 +24,20 @@ MAX_WORKERS = 4
 
 # CSI division-based keywords
 construction_keywords = {
-    "03 - Concrete": ["concrete", "slab", "footing", "foundation", "column", "beam", "girder", 
+    "03 - Concrete": ["concrete", "slab", "footing", "foundation", "column", "beam", "girder",
                       "pile", "pier", "rebar", "reinforcement", "formwork", "joint", "curing"],
     "04 - Masonry": ["masonry", "brick", "block", "cmu", "stone", "veneer", "grout", "mortar", "lintel"],
     "05 - Metals": ["steel", "weld", "bolt", "plate", "angle", "channel", "pipe", "tube", "joist", "deck"],
     "06 - Wood": ["wood", "lumber", "timber", "plywood", "osb", "truss", "joist", "stud", "sheathing"],
-    "07 - Thermal & Moisture": ["roof", "roofing", "membrane", "insulation", "vapor barrier", 
+    "07 - Thermal & Moisture": ["roof", "roofing", "membrane", "insulation", "vapor barrier",
                                 "sealant", "flashing", "shingle", "tile"],
     "08 - Openings": ["door", "window", "frame", "glazing", "curtain wall", "skylight"],
-    "09 - Finishes": ["floor", "ceiling", "tile", "carpet", "paint", "coating", "plaster", 
+    "09 - Finishes": ["floor", "ceiling", "tile", "carpet", "paint", "coating", "plaster",
                       "gypsum", "drywall", "veneer", "paneling"],
     "21 - Fire Protection": ["sprinkler", "fire protection", "standpipe", "fire pump", "alarm"],
     "22 - Plumbing": ["plumbing", "pipe", "valve", "toilet", "sink", "water heater", "drainage", "fixture"],
     "23 - HVAC": ["hvac", "duct", "chiller", "boiler", "air handler", "diffuser", "damper", "ventilation"],
-    "26 - Electrical": ["electrical", "conduit", "cable", "wire", "panel", "transformer", "lighting", 
+    "26 - Electrical": ["electrical", "conduit", "cable", "wire", "panel", "transformer", "lighting",
                         "outlet", "switch", "breaker", "generator", "feeder", "grounding", "data", "telecom"],
     "Measurement Units": ["dimension", "length", "width", "height", "depth", "elevation", "level", "slope",
                           "thickness", "diameter", "radius", "area", "volume", "square", "cubic", "linear",
@@ -48,7 +48,7 @@ construction_keywords = {
 def notify_frontend(event_type, **kwargs):
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
-        "pdf_processing", 
+        "pdf_processing",
         {"type": event_type, **kwargs}
     )
 
@@ -128,7 +128,7 @@ def structure_cad_text_with_ai(cad_text: str):
             "- Each category is a list of objects: {\"item\": <string>}\n"
             "- No prose, no markdown, return valid JSON only.\n\n"
             "- Be exhaustive; preserve exact names; separate entries per name/size/rating"
-            
+
             "CATEGORY RULES:\n"
             "- MASONRY: Include CMU walls, BRICK walls, STONE, BLOCK. Use SF (wall area) or CY if thickness is clear.\n"
             "- METALS: Include STRUCTURAL STEEL, BEAMS, COLUMNS, STAIRS, HANDRAILS. Units = TONS (weight) or LF/SF.\n"
@@ -175,34 +175,174 @@ def structure_cad_text_with_ai(cad_text: str):
         print(f"Structuring AI failed: {e}")
         return None
 
-def get_construction_jobs(cad_text):
+def should_use_nrm2(project_location=None, cad_text=""):
+    """Determine if NRM2 standards should be used based on project characteristics"""
+
+    # Caribbean countries that commonly use NRM2/RICS standards
+    caribbean_countries = [
+        "barbados", "trinidad", "tobago", "jamaica", "bahamas", "grenada",
+        "st lucia", "dominica", "antigua", "barbuda", "st kitts", "nevis",
+        "st vincent", "grenadines", "belize", "guyana", "suriname"
+    ]
+
+    # Commonwealth countries that may use NRM2
+    commonwealth_indicators = [
+        "commonwealth", "rics", "nrm2", "british", "uk standard",
+        "metres", "cubic metres", "square metres"
+    ]
+
+    # Check project location
+    if project_location:
+        location_lower = project_location.lower()
+        if any(country in location_lower for country in caribbean_countries):
+            return True
+
+    # Check CAD text for indicators
+    cad_lower = cad_text.lower()
+
+    # Look for metric units (strong indicator of NRM2)
+    metric_indicators = ["m³", "m²", "metres", "cubic metres", "square metres", "linear metres"]
+    if any(indicator in cad_lower for indicator in metric_indicators):
+        return True
+
+    # Look for NRM2/RICS references
+    if any(indicator in cad_lower for indicator in commonwealth_indicators):
+        return True
+
+    # Look for Caribbean location references in CAD text
+    if any(country in cad_lower for country in caribbean_countries):
+        return True
+
+    return False
+
+
+def extract_project_location(cad_text):
+    """Extract project location from CAD text to determine if NRM2 should be used"""
+    if not cad_text:
+        return None
+
+    text_lower = cad_text.lower()
+
+    # Caribbean countries and territories
+    caribbean_locations = {
+        "barbados": "Barbados",
+        "trinidad": "Trinidad and Tobago",
+        "tobago": "Trinidad and Tobago",
+        "jamaica": "Jamaica",
+        "bahamas": "Bahamas",
+        "grenada": "Grenada",
+        "st lucia": "Saint Lucia",
+        "saint lucia": "Saint Lucia",
+        "dominica": "Dominica",
+        "antigua": "Antigua and Barbuda",
+        "barbuda": "Antigua and Barbuda",
+        "st kitts": "Saint Kitts and Nevis",
+        "saint kitts": "Saint Kitts and Nevis",
+        "nevis": "Saint Kitts and Nevis",
+        "st vincent": "Saint Vincent and the Grenadines",
+        "saint vincent": "Saint Vincent and the Grenadines",
+        "grenadines": "Saint Vincent and the Grenadines",
+        "belize": "Belize",
+        "guyana": "Guyana",
+        "suriname": "Suriname"
+    }
+
+    # Check for location indicators
+    for location_key, location_name in caribbean_locations.items():
+        if location_key in text_lower:
+            return location_name
+
+    # Check for other Commonwealth indicators
+    commonwealth_indicators = ["commonwealth", "rics", "nrm2", "british standard"]
+    for indicator in commonwealth_indicators:
+        if indicator in text_lower:
+            return "Commonwealth"
+
+    return None
+
+
+def get_construction_jobs(cad_text, project_location=None):
     print(f"Starting construction jobs analysis...")
-    
+
     # First, attempt AI structuring of OCR text
     structured_items = structure_cad_text_with_ai(cad_text)
 
     # Preprocess (existing heuristic summary) as supplemental context
     processed_cad_text = preprocess_cad_text(cad_text)
-    
+
     # Build the cost-estimation prompts
     structured_json_block = json.dumps(structured_items) if structured_items else "{}"
     print(f"structured_json_block text ==> {structured_json_block}")
-    
-    system_prompt = """You are a professional construction estimator with 20+ years of experience. Analyze CAD text and symbols to produce comprehensive cost estimates.
+
+    # Determine if NRM2 standards should be used
+    use_nrm2 = should_use_nrm2(project_location, cad_text)
+    print(f"Using NRM2 standards: {use_nrm2}")
+
+    # Build system prompt based on standards to use
+    if use_nrm2:
+        system_prompt = """You are a professional construction estimator with 20+ years of experience. Analyze CAD text and symbols to produce comprehensive cost estimates using NRM2 (RICS) standards.
+
+1. ACCURACY REQUIREMENTS:
+   - Use NRM2 (New Rules of Measurement 2) - 2nd edition UK October 2021 - RICS standardized measurement rules for detailed building works
+   - Include 2024 MasterFormat (CSI) codes for compatibility
+   - Base costs on current market rates appropriate for the region
+   - Consider regional variation (Caribbean/Commonwealth markets)
+   - Quantities must follow NRM2 net measurement principles
+   - Measure work as executed, exclude waste unless specified
+
+2. REQUIRED OUTPUT FORMAT:
+   - EXACT JSON list only, no prose: [{"CSI code":"03 30 00","NRM2 Section":"E10","Category":"In-situ Concrete","Job Activity":"Reinforced concrete slab, C25/30, 150mm thick","Quantity":50,"Unit":"m³","Rate":165.50,"Material Cost":4962.50,"Equipment Cost":826.25,"Labor Cost":2479.25,"Total Cost":8268.00}]
+   - All fields are mandatory; values must be numbers for costs/quantities/rate
+   - Include "NRM2 Section" field with appropriate work section code (A10-Z99)
+   - CSI Code for compatibility (XX XX XX format)
+   - Job Activity MUST be specific and self-contained (type, size, capacity, method)
+   - Units MUST be metric: m³ (cubic metres), m² (square metres), m (linear metres), nr (number), kg (kilograms), tonnes
+
+3. NRM2 MEASUREMENT PRINCIPLES:
+   - Measure net quantities to structural faces
+   - Follow RICS standard deduction rules
+   - Exclude overlaps and double counting
+   - Include all labor, materials, and plant in descriptions
+   - Use appropriate NRM2 work sections (E10 concrete, F10 masonry, V20 electrical, etc.)
+
+4. COVERAGE AND NAME PRESERVATION (CRITICAL):
+   - Use both the STRUCTURED_ITEMS_JSON and the HUMAN_SUMMARIES as ground truth
+   - PRESERVE EXACT ITEM NAMES from STRUCTURED_ITEMS_JSON for named equipment/devices
+   - PROPAGATE ATTRIBUTES into the Job Activity text when present
+   - PRESERVE MULTIPLICITY per distinct name/size/rating
+
+5. DERIVATION RULES (APPLY IF MISSING FROM STRUCTURED_ITEMS_JSON):
+   - BRANCH CABLE (m) = (RECEPTACLE + SWITCH + DIMMER + LIGHT FIXTURE counts) × 4m (or 8m if long runs)
+   - FEEDER CABLE (m) = (PANELS + TRANSFORMERS + GENERATORS) × 60m
+   - CONDUIT (m) ≈ 9% of total cable length
+
+6. COST RULES:
+   - Total Cost = Material Cost + Labor Cost + Equipment Cost
+   - Rate = Total Cost / Quantity
+   - Component percentage bands: Material 60–70%, Labor 25–35%, Equipment 5–15%
+
+7. VALIDATION CHECKLIST:
+   - Cover all detected categories with strong signals
+   - Positive quantities/costs; math consistent
+   - NRM2 work sections align with RICS structure
+   - Metric units throughout
+   - Net quantity measurement principles applied
+"""
+    else:
+        system_prompt = """You are a professional construction estimator with 20+ years of experience. Analyze CAD text and symbols to produce comprehensive cost estimates.
 
 1. ACCURACY REQUIREMENTS:
    - Use 2024 MasterFormat (CSI) codes
-   - Labor ELECTRICAL, Use 2023 - 2024 Edition NECA
+   - Labor ELECTRICAL: Use 2023 - 2024 Edition NECA standards
    - Base costs on current US market rates (RSMeans-like)
    - Consider regional variation (use national average if unknown)
    - Quantities must be realistic for the described scope and scale
-   - Use NRM2 2nd edition UK Oct 2025,  standards method of measurements (if cost estimates is for Caribbean Countries)
 
 2. REQUIRED OUTPUT FORMAT:
    - EXACT JSON list only, no prose: [{"CSI code":"03 30 00","Category":"Concrete","Job Activity":"Cast-in-place Concrete Slab, 6-inch thick","Quantity":150,"Unit":"CY","Rate":125.5,"Material Cost":12000,"Equipment Cost":3000,"Labor Cost":4500,"Total Cost":19500}]
    - All fields are mandatory; values must be numbers for costs/quantities/rate
-   - CSI Code MUST be organized in a progressive, six-digit sequence (with further specificity decimal extension, if required).
-   - Job Activity MUST be specific and self-contained (type, size, capacity, method). Do NOT embed bracketed notes. Each activity is one line item.
+   - CSI Code MUST be organized in a progressive, six-digit sequence (with further specificity decimal extension, if required)
+   - Job Activity MUST be specific and self-contained (type, size, capacity, method). Do NOT embed bracketed notes. Each activity is one line item
 
 3. COVERAGE AND NAME PRESERVATION (CRITICAL):
    - Use both the STRUCTURED_ITEMS_JSON and the HUMAN_SUMMARIES as ground truth. Do not omit major categories with strong signals.
@@ -218,14 +358,14 @@ def get_construction_jobs(cad_text):
    - CONDUIT (LF) ≈ 9% of total cable length (branch + feeder). Include as its own line item.
 
 5. QUANTITY/RATE/COST RULES (CRITICAL):
-   - Total Cost = Material Cost + Labor Cost + Equipment Cost.
-   - Rate = Total Cost / Quantity. If an external Rate is provided, treat it as total unit rate and split costs accordingly.
-   - Component percentage bands: Material 60–70%, Labor 25–35%, Equipment 5–15%.
+   - Total Cost = Material Cost + Labor Cost + Equipment Cost
+   - Rate = Total Cost / Quantity. If an external Rate is provided, treat it as total unit rate and split costs accordingly
+   - Component percentage bands: Material 60–70%, Labor 25–35%, Equipment 5–15%
 
 6. VALIDATION CHECKLIST:
-   - Cover categories with strong signals (Concrete, Masonry, Metals, Finishes, Thermal/Moisture, HVAC, Plumbing, Electrical, Sitework) if present.
-   - Positive quantities/costs; math consistent; CSI format "XX XX XX".
-   - PRESERVE exact item names, sizes, ratings, and multiplicities for ELECTRICAL equipment/devices/cables/conduit as implied by STRUCTURED_ITEMS_JSON.
+   - Cover categories with strong signals (Concrete, Masonry, Metals, Finishes, Thermal/Moisture, HVAC, Plumbing, Electrical, Sitework) if present
+   - Positive quantities/costs; math consistent; CSI format "XX XX XX"
+   - PRESERVE exact item names, sizes, ratings, and multiplicities for ELECTRICAL equipment/devices/cables/conduit as implied by STRUCTURED_ITEMS_JSON
 """
 
     user_prompt = f"""STRUCTURED_ITEMS_JSON:
@@ -273,13 +413,13 @@ def validate_and_improve_response(response_text, cad_text):
             json_match = re.search(r'\[.*\]', response_text, re.DOTALL)
             if json_match:
                 clean_json = json_match.group(0)
-        
+
         if clean_json:
             parsed_data = json.loads(clean_json)
-            
+
             # Validate the data structure and content
             validation_result = validate_construction_data(parsed_data)
-            
+
             if validation_result["is_valid"]:
                 print(f"Response validation passed: {validation_result['score']}/100")
                 return parsed_data
@@ -290,7 +430,7 @@ def validate_and_improve_response(response_text, cad_text):
         else:
             print("Could not extract valid JSON, using fallback...")
             return get_construction_jobs_fallback(cad_text)
-            
+
     except Exception as e:
         print(f"Validation error: {e}")
         return get_construction_jobs_fallback(cad_text)
@@ -299,29 +439,31 @@ def validate_construction_data(data):
     """Validate construction data for accuracy and completeness"""
     errors = []
     score = 100
-    
+
     if not isinstance(data, list):
         errors.append("Data is not a list")
         return {"is_valid": False, "errors": errors, "score": 0}
-    
+
     if len(data) == 0:
         errors.append("No construction activities found")
         return {"is_valid": False, "errors": errors, "score": 0}
-    
+
     required_fields = ["CSI code", "Category", "Job Activity", "Quantity", "Unit", "Rate", "Material Cost", "Equipment Cost", "Labor Cost", "Total Cost"]
-    
+    # NRM2 Section is optional but validated if present
+    optional_nrm2_fields = ["NRM2 Section"]
+
     for i, item in enumerate(data):
         if not isinstance(item, dict):
             errors.append(f"Item {i} is not a dictionary")
             score -= 20
             continue
-            
+
         # Check required fields
         for field in required_fields:
             if field not in item:
                 errors.append(f"Item {i} missing field: {field}")
                 score -= 5
-        
+
         # Validate numeric fields
         numeric_fields = ["Quantity", "Rate", "Material Cost", "Equipment Cost", "Labor Cost", "Total Cost"]
         for field in numeric_fields:
@@ -334,7 +476,7 @@ def validate_construction_data(data):
                 except (ValueError, TypeError):
                     errors.append(f"Item {i} {field} is not a valid number")
                     score -= 5
-        
+
         # Validate cost relationships
         if all(field in item for field in ["Material Cost", "Equipment Cost", "Labor Cost", "Total Cost"]):
             try:
@@ -345,14 +487,36 @@ def validate_construction_data(data):
                     score -= 10
             except (ValueError, TypeError):
                 pass
-        
-        # Validate CSI code format
-        # if "CSI code" in item:
-        #     csi_code = str(item["CSI code"])
-        #     if not re.match(r'^\d{2}\s\d{2}\s\d{2}$', csi_code):
-        #         errors.append(f"Item {i} has invalid CSI code format: {csi_code}")
-        #         score -= 5
-    
+
+        # Validate CSI code format (allow flexibility for NRM2 integration)
+        if "CSI code" in item:
+            csi_code = str(item["CSI code"])
+            # Basic CSI format validation - allow some flexibility
+            if not re.match(r'^\d{2}[\s\-]?\d{2}[\s\-]?\d{2}', csi_code):
+                errors.append(f"Item {i} has invalid CSI code format: {csi_code}")
+                score -= 3
+
+        # Validate NRM2 section format if present
+        if "NRM2 Section" in item:
+            nrm2_section = str(item["NRM2 Section"])
+            if not re.match(r'^[A-Z]\d{2}', nrm2_section):
+                errors.append(f"Item {i} has invalid NRM2 section format: {nrm2_section}")
+                score -= 3
+
+        # Validate metric units for NRM2 compliance
+        if "Unit" in item:
+            unit = str(item["Unit"]).lower()
+            metric_units = ["m³", "m²", "m", "nr", "kg", "tonnes", "m3", "m2"]
+            imperial_units = ["cy", "sf", "lf", "ea", "tons", "cf"]
+
+            # Check if using NRM2 (has NRM2 Section field or metric units)
+            has_nrm2_section = "NRM2 Section" in item
+            uses_metric = any(mu in unit for mu in metric_units)
+
+            if has_nrm2_section and not uses_metric:
+                errors.append(f"Item {i} has NRM2 section but non-metric unit: {unit}")
+                score -= 2
+
     is_valid = score >= 70 and len(errors) <= 3
     return {"is_valid": is_valid, "errors": errors, "score": score}
 
@@ -381,13 +545,13 @@ Return ONLY a valid JSON array with the exact structure specified in the system 
             temperature=0.1,
             max_tokens=4000
         )
-        
+
         improved_response = response.choices[0].message.content
         validated_response = validate_and_improve_response(improved_response, cad_text)
-        
+
         print("Improved response generated based on feedback")
         return validated_response
-        
+
     except Exception as e:
         print(f"Error improving response: {e}")
         return get_construction_jobs_fallback(cad_text)
@@ -395,7 +559,7 @@ Return ONLY a valid JSON array with the exact structure specified in the system 
 def get_construction_jobs_fallback(cad_text):
     """Fallback method with simpler, more reliable approach"""
     print("Using fallback method for construction jobs...")
-    
+
     fallback_prompt = f"""Based on this CAD drawing text, provide a simple list of common construction activities with basic cost estimates:
 
 {cad_text}
@@ -415,9 +579,9 @@ Include only the most obvious construction activities. Keep it simple and accura
                 temperature=0.1,
                 max_tokens=2000
             )
-            
+
         return response.choices[0].message.content
-        
+
     except Exception as e:
         print(f"Fallback method also failed: {e}")
         # Return error message instead of default data
@@ -538,7 +702,9 @@ def start_pdf_processing(pdf_path: str, output_pdf: str, output_excel: str):
         executor.map(process_page, range(1, total_pages + 1))
 
     combined_text = " ".join(all_texts)
-    jobs_list = get_construction_jobs(combined_text)
+    # Try to extract project location from PDF metadata or text
+    project_location = extract_project_location(combined_text)
+    jobs_list = get_construction_jobs(combined_text, project_location)
 
     if jobs_list:
         generate_outputs(jobs_list, output_pdf, output_excel)

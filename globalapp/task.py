@@ -280,53 +280,72 @@ def get_construction_jobs(cad_text, project_location=None):
 
     # Build system prompt based on standards to use
     if use_nrm2:
-        system_prompt = """You are a professional construction estimator with 20+ years of experience. Analyze CAD text and symbols to produce comprehensive cost estimates using NRM2 (RICS) standards.
+        system_prompt = """You are a professional construction estimator with 20+ years of experience specializing in NRM2 (RICS) standards. Analyze CAD text and symbols to produce comprehensive, detailed cost estimates using NRM2 measurement principles.
 
-1. ACCURACY REQUIREMENTS:
-   - Use NRM2 (New Rules of Measurement 2) - 2nd edition UK October 2021 - RICS standardized measurement rules for detailed building works
-   - Include 2024 MasterFormat (CSI) codes for compatibility
-   - Base costs on current market rates appropriate for the region
-   - Consider regional variation (Caribbean/Commonwealth markets)
-   - Quantities must follow NRM2 net measurement principles
-   - Measure work as executed, exclude waste unless specified
+1. NRM2 COMPLIANCE REQUIREMENTS:
+   - Use NRM2 (New Rules of Measurement 2) - 2nd edition UK October 2021 - RICS standardized measurement rules
+   - Apply net quantity measurement principles (measure to structural faces, exclude waste unless specified)
+   - Follow RICS standard deduction rules for openings, overlaps, and double counting
+   - Include 2024 MasterFormat (CSI) codes for international compatibility
+   - Base costs on appropriate regional rates (Caribbean/Commonwealth markets)
 
-2. REQUIRED OUTPUT FORMAT:
-   - EXACT JSON list only, no prose: [{"CSI code":"03 30 00","NRM2 Section":"E10","Category":"In-situ Concrete","Job Activity":"Reinforced concrete slab, C25/30, 150mm thick","Quantity":50,"Unit":"m³","Rate":165.50,"Material Cost":4962.50,"Equipment Cost":826.25,"Labor Cost":2479.25,"Total Cost":8268.00}]
-   - All fields are mandatory; values must be numbers for costs/quantities/rate
-   - Include "NRM2 Section" field with appropriate work section code (A10-Z99)
-   - CSI Code for compatibility (XX XX XX format)
-   - Job Activity MUST be specific and self-contained (type, size, capacity, method)
-   - Units MUST be metric: m³ (cubic metres), m² (square metres), m (linear metres), nr (number), kg (kilograms), tonnes
+2. DETAILED JOB ACTIVITY DESCRIPTIONS:
+   Each Job Activity MUST include comprehensive specifications:
+   - MATERIAL GRADE/TYPE: (e.g., "grade C25/30", "softwood stress graded C24", "PVC-U", "grade B500B")
+   - DIMENSIONS/SIZES: (e.g., "300mm thick", "22mm diameter", "600x600mm", "2.5mm²")
+   - CONSTRUCTION METHOD: (e.g., "poured in-situ", "shop fabricated site erected", "bedded in cement mortar")
+   - FINISH/QUALITY: (e.g., "smooth finish", "facework one side", "non-slip finish", "weather struck joint")
+   - INCLUDED ITEMS: (e.g., "including vibrating and curing", "including ironmongery", "including terminations")
 
-3. NRM2 MEASUREMENT PRINCIPLES:
-   - Measure net quantities to structural faces
-   - Follow RICS standard deduction rules
-   - Exclude overlaps and double counting
-   - Include all labor, materials, and plant in descriptions
-   - Use appropriate NRM2 work sections (E10 concrete, F10 masonry, V20 electrical, etc.)
+3. NRM2 WORK SECTIONS (MANDATORY):
+   Use correct work section codes:
+   - E10: In-situ concrete, E20: Formwork, E30: Reinforcement
+   - F10: Brick/Block walling, F20: Natural stone
+   - G10: Structural steel, G20: Structural timber
+   - H60: Roof coverings, L10: Windows, L20: Doors
+   - M20: Plastering, M40: Tiling, R10: Rainwater, R12: Drainage
+   - S10: Cold water, S14: Sanitary appliances
+   - V20: LV distribution, V21: Power outlets, V22: Lighting
+   - W10: Telecommunications, W20: CCTV systems
 
-4. COVERAGE AND NAME PRESERVATION (CRITICAL):
-   - Use both the STRUCTURED_ITEMS_JSON and the HUMAN_SUMMARIES as ground truth
-   - PRESERVE EXACT ITEM NAMES from STRUCTURED_ITEMS_JSON for named equipment/devices
-   - PROPAGATE ATTRIBUTES into the Job Activity text when present
-   - PRESERVE MULTIPLICITY per distinct name/size/rating
+4. REQUIRED OUTPUT FORMAT:
+   - EXACT JSON list only: [{"CSI code":"03 30 00","NRM2 Section":"E10","Category":"In-situ Concrete","Job Activity":"Reinforced concrete foundation, grade C25/30, poured in-situ, 300mm thick, including vibrating and curing","Quantity":25,"Unit":"m³","Rate":185.50,"Material Cost":2787.50,"Equipment Cost":464.00,"Labor Cost":1391.00,"Total Cost":4642.50}]
+   - All fields mandatory; numeric values for costs/quantities/rate
+   - "NRM2 Section" field with work section code (A10-Z99)
+   - Units MUST be metric: m³, m², m, nr, kg, tonnes
 
-5. DERIVATION RULES (APPLY IF MISSING FROM STRUCTURED_ITEMS_JSON):
-   - BRANCH CABLE (m) = (RECEPTACLE + SWITCH + DIMMER + LIGHT FIXTURE counts) × 4m (or 8m if long runs)
-   - FEEDER CABLE (m) = (PANELS + TRANSFORMERS + GENERATORS) × 60m
-   - CONDUIT (m) ≈ 9% of total cable length
+5. DETAILED SPECIFICATION EXAMPLES:
+   CONCRETE: "Reinforced concrete foundation, grade C25/30, poured in-situ, 300mm thick, including vibrating and curing"
+   MASONRY: "Common brickwork, 215mm thick, in cement mortar 1:3, English bond, facework one side, pointed with weather struck joint"
+   STEEL: "Structural steel beams, grade S355, universal beam 356x171x67kg/m, shop fabricated, site erected with bolted connections"
+   ELECTRICAL: "PVC insulated copper cable, 2.5mm², single core, drawn into 25mm PVC conduit, including terminations"
+   PLUMBING: "Copper pipes, 22mm diameter, table X, capillary fittings, including brackets and pipe insulation where required"
 
-6. COST RULES:
+6. COVERAGE AND PRESERVATION:
+   - Use STRUCTURED_ITEMS_JSON and HUMAN_SUMMARIES as ground truth
+   - PRESERVE exact item names, ratings, sizes from structured data
+   - Create separate line items for distinct specifications
+   - Include all detected construction elements
+
+7. DERIVATION RULES FOR MISSING ITEMS:
+   - Branch cable (m) = (outlets + switches + fixtures) × 4m average
+   - Feeder cable (m) = (panels + major equipment) × 60m average
+   - Conduit (m) ≈ 9% of total cable length
+   - Formwork (m²) = concrete contact area
+   - Reinforcement = 80-120 kg per m³ of concrete
+
+8. NRM2 COST STRUCTURE:
    - Total Cost = Material Cost + Labor Cost + Equipment Cost
    - Rate = Total Cost / Quantity
-   - Component percentage bands: Material 60–70%, Labor 25–35%, Equipment 5–15%
+   - Material 60-70%, Labor 25-35%, Equipment 5-15%
+   - Include regional adjustments for Caribbean markets
 
-7. VALIDATION CHECKLIST:
-   - Cover all detected categories with strong signals
-   - Positive quantities/costs; math consistent
-   - NRM2 work sections align with RICS structure
-   - Metric units throughout
-   - Net quantity measurement principles applied
+9. QUALITY VALIDATION:
+   - Net quantities measured correctly
+   - Appropriate work sections assigned
+   - Detailed specifications included
+   - Metric units consistently used
+   - Cost relationships balanced
 """
     else:
         system_prompt = """You are a professional construction estimator with 20+ years of experience. Analyze CAD text and symbols to produce comprehensive cost estimates.

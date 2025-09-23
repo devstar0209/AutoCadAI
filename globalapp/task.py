@@ -108,10 +108,44 @@ def extract_text_from_image(image_path: str) -> str:
 
 # =================== AI COST ESTIMATION ===================
 
-def structure_cad_text_with_ai(cad_text: str):
+def validate_items_against_source_text(structured_data, source_text):
+    """
+    Universal validation to ensure structured items actually exist in the source text.
+    Prevents AI hallucination across all construction categories.
+    """
+    if not structured_data or not source_text:
+        return structured_data
+
+    source_text_upper = source_text.upper()
+    validated_data = {}
+
+    for category, items in structured_data.items():
+        validated_items = []
+
+        for item in items:
+            if isinstance(item, dict) and 'item' in item:
+                item_name = item['item'].strip().upper()
+                # Check for key words from the item name
+                item_words = [word for word in item_name.split() if len(word) > 2]
+                if item_words and any(word in source_text_upper for word in item_words):
+                    validated_items.append(item)
+                    print(f"✅ Validated item: {item['item']}")
+                else:
+                    print(f"⚠️ Filtered out non-existent item: {item['item']}")
+                    continue
+
+        if validated_items:
+            validated_data[category] = validated_items
+
+    print(f"📊 Universal validation complete: {len(validated_data)} categories validated")
+    return validated_data
+
+def structure_cad_text_with_ai(cad_text: str, use_nrm2: bool = False):
     """
     Use AI to convert raw OCR text into a normalized, machine-readable structure
     grouped by job category. Returns a Python object (list/dict) or None on failure.
+    Includes validation to prevent AI hallucination of non-existent items.
+    If use_nrm2 is True, incorporates NRM2 standards in structuring.
 
     Expected JSON (examples):
     {
@@ -120,14 +154,33 @@ def structure_cad_text_with_ai(cad_text: str):
       ...
     }
     """
+    # print(f"origin text ==> {cad_text}")
     try:
+        if use_nrm2:
+            categories_note = (
+                "Categories: Use NRM2 work sections where applicable - E10 (In-situ concrete), F10 (Brick/Block walling), G10 (Structural steel), H60 (Roof coverings), M20 (Plastering/Rendering), V10-V99 (Electrical), etc.\n"
+                "- Units MUST be metric: m³, m², m, nr, kg, tonnes\n"
+            )
+        else:
+            categories_note = (
+                "Categories: Concrete, Masonry, Metals, Finishes, Thermal & Moisture Protection, HVAC, Plumbing, Electrical, Fire Protection, Electrical Safety & Security, Sitework, Equipment.\n"
+                "- Units: CY, SF, LF, EA, etc. as appropriate\n"
+            )
+
         struct_prompt = (
             "You are a construction plans takeoff assistant. Read the CAD OCR text and return ONLY valid JSON grouped by job category.\n"
+            "CRITICAL RULES:\n"
+            "- ONLY include items that ACTUALLY EXIST in the provided CAD OCR text\n"
+            "- DO NOT generate similar or sequential names (e.g., if you see EDL216-2, do NOT create EDL216-3, EDL216-4, etc.)\n"
+            "- DO NOT extrapolate or assume additional items based on patterns\n"
+            "- Extract ONLY what is explicitly mentioned in the text\n"
+            "- Use EXACT item names as they appear in the drawings\n\n"
+
             "General Rules:\n"
-            "- Categories: Concrete, Masonry, Metals, Finishes, Thermal & Moisture Protection, HVAC, Plumbing, Electrical, Fire Protection, Electrical Safety & Security, Sitework, Equipment.\n"
-            "- Each category is a list of objects: {\"item\": <string>}\n"
+            f"{categories_note}"
+            "- Each category is a list of objects: {\"item\": <string>, \"quantity\": <number>, \"unit\": <string>}\n"
             "- No prose, no markdown, return valid JSON only.\n\n"
-            "- Be exhaustive; preserve exact names; separate entries per name/size/rating"
+            "- Be exhaustive but ONLY for items that exist; preserve exact names; separate entries per name/size/rating\n"
 
             "CATEGORY RULES:\n"
             "- MASONRY: Include CMU walls, BRICK walls, STONE, BLOCK. Use SF (wall area) or CY if thickness is clear.\n"
@@ -137,7 +190,6 @@ def structure_cad_text_with_ai(cad_text: str):
             "- HVAC: Include DUCTS (LF/SF with size if present), FANS, AHUs, FCUs, AC UNITS (tons), DIFFUSERS, GRILLES.\n"
             "- PLUMBING: Include PIPES (LF, with size/type if present), DRAINS, VENTS, FIXTURES (SINK, TOILET, WATER CLOSET, PUMP).\n"
             "- ELECTRICAL:\n"
-            "  • Panels and switchboards: PANEL <name>, DISTRIBUTION SWITCHBOARD <name>, DISTRIBUTION PANEL <name>, SWITCHBOARD <name> (capture AMP if present: 60A–4000A).\n"
             "  • Breakers/MCBs if explicit (by frame or rating).\n"
             "  • Receptacles: DUPLEX, QUAD, GFCI, WEATHERPROOF, FLOOR BOX, etc.\n"
             "  • Switching: SWITCH, 3-WAY, 4-WAY, DIMMER.\n"
@@ -156,21 +208,26 @@ def structure_cad_text_with_ai(cad_text: str):
             "- FIRE PROTECTION: Include SPRINKLERS, FIRE ALARMS, HYDRANTS, HOSE CABINETS, SMOKE DETECTORS.\n"
             "- ELECTRICAL SAFETY & SECURITY: Include CAMERAS, ACCESS CONTROL, ALARMS, CARD READERS, INTERCOMS.\n"
             "- SITEWORK: Include EXCAVATION, GRADING, BACKFILL, ASPHALT, SIDEWALKS, CURBS, LANDSCAPING.\n"
-            "- EQUIPMENT: Include LEVATORS, LIFTS, etc.\n\n"
+            "- EQUIPMENT: Include ELEVATORS, LIFTS, etc.\n\n"
 
             f"CAD_OCR_TEXT:\n{cad_text}"
         )
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {"role": "system", "content": "Extract structured construction items from OCR text as strict JSON by category."},
+                {"role": "system", "content": "Extract ONLY existing construction items from OCR text as strict JSON. DO NOT generate or extrapolate items not explicitly mentioned."},
                 {"role": "user", "content": struct_prompt}
             ],
-            temperature=0.1,
+            temperature=0.1,  # Lower temperature for more deterministic output
         )
         text = response.choices[0].message.content
         clean = extract_json_from_response(text) or text
-        return json.loads(clean)
+        structured_data = json.loads(clean)
+
+        # Apply universal validation to prevent hallucination across all categories
+        validated_data = validate_items_against_source_text(structured_data, cad_text)
+
+        return validated_data
     except Exception as e:
         print(f"Structuring AI failed: {e}")
         return None
@@ -198,20 +255,20 @@ def should_use_nrm2(project_location=None, cad_text=""):
             return True
 
     # Check CAD text for indicators
-    cad_lower = cad_text.lower()
+    # cad_lower = cad_text.lower()
 
-    # Look for metric units (strong indicator of NRM2)
-    metric_indicators = ["m³", "m²", "metres", "cubic metres", "square metres", "linear metres"]
-    if any(indicator in cad_lower for indicator in metric_indicators):
-        return True
+    # # Look for metric units (strong indicator of NRM2)
+    # metric_indicators = ["m³", "m²", "metres", "cubic metres", "square metres", "linear metres"]
+    # if any(indicator in cad_lower for indicator in metric_indicators):
+    #     return True
 
-    # Look for NRM2/RICS references
-    if any(indicator in cad_lower for indicator in commonwealth_indicators):
-        return True
+    # # Look for NRM2/RICS references
+    # if any(indicator in cad_lower for indicator in commonwealth_indicators):
+    #     return True
 
-    # Look for Caribbean location references in CAD text
-    if any(country in cad_lower for country in caribbean_countries):
-        return True
+    # # Look for Caribbean location references in CAD text
+    # if any(country in cad_lower for country in caribbean_countries):
+    #     return True
 
     return False
 
@@ -264,16 +321,6 @@ def extract_project_location(cad_text):
 def get_construction_jobs(cad_text, project_location=None):
     print(f"Starting construction jobs analysis...")
 
-    # First, attempt AI structuring of OCR text
-    structured_items = structure_cad_text_with_ai(cad_text)
-
-    # Preprocess (existing heuristic summary) as supplemental context
-    processed_cad_text = preprocess_cad_text(cad_text)
-
-    # Build the cost-estimation prompts
-    structured_json_block = json.dumps(structured_items) if structured_items else "{}"
-    print(f"structured_json_block text ==> {structured_json_block}")
-
     # Determine if NRM2 standards should be used
     use_nrm2 = should_use_nrm2(project_location, cad_text)
     print(f"Using NRM2 standards: {use_nrm2}")
@@ -299,14 +346,41 @@ def get_construction_jobs(cad_text, project_location=None):
 
 3. NRM2 WORK SECTIONS (MANDATORY):
    Use correct work section codes:
-   - E10: In-situ concrete, E20: Formwork, E30: Reinforcement
-   - F10: Brick/Block walling, F20: Natural stone
-   - G10: Structural steel, G20: Structural timber
-   - H60: Roof coverings, L10: Windows, L20: Doors
-   - M20: Plastering, M40: Tiling, R10: Rainwater, R12: Drainage
-   - S10: Cold water, S14: Sanitary appliances
-   - V20: LV distribution, V21: Power outlets, V22: Lighting
-   - W10: Telecommunications, W20: CCTV systems
+   - A10-A99: Preliminaries and General Conditions
+   - D20-D99: Groundwork (excavation, filling, piling)
+   - E10: In-situ concrete, E20: Formwork, E30: Reinforcement, E40: Precast concrete
+   - F10: Brick/Block walling, F20: Natural stone, F30: Cast stone
+   - G10: Structural steel, G20: Structural timber, G30: Metal decking
+   - H10-H99: Cladding/Covering (curtain walling, sheeting, membranes)
+   - H60: Roof coverings, H70: Rooflights
+   - J10-J99: Waterproofing (liquid applied, sheet, cementitious)
+   - K10-K99: Linings/Sheathing/Dry partitioning
+   - L10: Windows/Rooflights, L20: Doors/Shutters, L30: Stairs/Walkways
+   - M10-M99: Surface finishes (screeds, tiling, decorative papers, painting)
+   - M20: Plastering/Rendering, M40: Stone/Concrete/Ceramic tiling, M50: Timber flooring
+   - N10-N99: Furniture/Equipment
+   - P10-P99: Building fabric sundries
+   - Q10-Q99: Paving/Planting/Fencing/Site furniture
+   - R10: Rainwater pipework/gutters, R11: Foul drainage above ground, R12: Drainage below ground
+   - R13: Land drainage, R14: Sump and sewage pumping
+   - S10-S99: Piped supply systems
+   - S10: Cold water, S11: Hot water, S12: Central heating, S13: Compressed air, S14: Sanitary appliances/fittings
+   - T10-T99: Mechanical heating/cooling/refrigeration systems
+   - T30: Low temperature hot water heating, T31: Steam heating, T32: Warm air heating
+   - T40: Cooling systems, T41: Chilled water, T42: Refrigeration
+   - U10-U99: Ventilation/Air conditioning systems
+   - U10: General ventilation, U11: Smoke extract/Smoke control, U12: Kitchen ventilation
+   - U13: Car park ventilation, U14: Fume extract, U15: Air conditioning
+   - V10-V99: Electrical supply/power/lighting systems
+   - V10: Electrical generation plant, V11: HV supply/distribution, V12: LV supply/distribution
+   - V13: Motors/Starters, V20: LV distribution, V21: General LV power, V22: General lighting
+   - V23: Emergency lighting, V24: Specialist lighting, V25: Exit/Emergency signs
+   - W10-W99: Communications/Security/Control systems
+   - W10: Telecommunications, W20: Radio/TV/CCTV/Video, W21: Data transmission
+   - W22: Audio systems, W23: Clocks, W30: Security systems, W40: Building management systems
+   - X10-X99: Transport systems (lifts, escalators, moving walkways)
+   - Y10-Y99: General fixings/supports/restraints
+   - Z10-Z99: Simple building works incidental to landscape works
 
 4. REQUIRED OUTPUT FORMAT:
    - EXACT JSON list only: [{"CSI code":"03 30 00","NRM2 Section":"E10","Category":"In-situ Concrete","Job Activity":"Reinforced concrete foundation, grade C25/30, poured in-situ, 300mm thick, including vibrating and curing","Quantity":25,"Unit":"m³","Rate":185.50,"Material Cost":2787.50,"Equipment Cost":464.00,"Labor Cost":1391.00,"Total Cost":4642.50}]
@@ -315,17 +389,22 @@ def get_construction_jobs(cad_text, project_location=None):
    - Units MUST be metric: m³, m², m, nr, kg, tonnes
 
 5. DETAILED SPECIFICATION EXAMPLES:
-   CONCRETE: "Reinforced concrete foundation, grade C25/30, poured in-situ, 300mm thick, including vibrating and curing"
-   MASONRY: "Common brickwork, 215mm thick, in cement mortar 1:3, English bond, facework one side, pointed with weather struck joint"
-   STEEL: "Structural steel beams, grade S355, universal beam 356x171x67kg/m, shop fabricated, site erected with bolted connections"
-   ELECTRICAL: "PVC insulated copper cable, 2.5mm², single core, drawn into 25mm PVC conduit, including terminations"
-   PLUMBING: "Copper pipes, 22mm diameter, table X, capillary fittings, including brackets and pipe insulation where required"
+   CONCRETE (E10): "Reinforced concrete foundation, grade C25/30, poured in-situ, 300mm thick, including vibrating and curing"
+   MASONRY (F10): "Common brickwork, 215mm thick, in cement mortar 1:3, English bond, facework one side, pointed with weather struck joint"
+   STEEL (G10): "Structural steel beams, grade S355, universal beam 356x171x67kg/m, shop fabricated, site erected with bolted connections"
+   ELECTRICAL DISTRIBUTION (V20): "PVC insulated copper cable, 2.5mm², single core, drawn into 25mm PVC conduit, including terminations"
+   ELECTRICAL POWER (V21): "13A socket outlets, twin switched with earth terminal, including back box and connections"
+   ELECTRICAL LIGHTING (V22): "LED ceiling luminaires, 600x600mm, 36W, 4000K, including lamp, control gear and mounting accessories"
+   PLUMBING (S10): "Copper pipes, 22mm diameter, table X, capillary fittings, including brackets and pipe insulation where required"
+   HVAC (U15): "Air conditioning split unit, 5kW cooling capacity, wall mounted, including refrigerant pipework and controls"
+   DRAINAGE (R12): "Vitrified clay drain pipes, 150mm diameter, flexible joints, laid in trenches including granular bedding"
 
 6. COVERAGE AND PRESERVATION:
-   - Use STRUCTURED_ITEMS_JSON and HUMAN_SUMMARIES as ground truth
-   - PRESERVE exact item names, ratings, sizes from structured data
-   - Create separate line items for distinct specifications
-   - Include all detected construction elements
+    - Use CAD_OCR_TEXT as ground truth
+    - PRESERVE exact item names, ratings, sizes from CAD text (NO modifications or sequential generation)
+    - Create separate line items for distinct specifications
+    - Include ONLY items that actually exist in the CAD_OCR_TEXT
+    - DO NOT generate similar items based on patterns (e.g., if EDL216-2 exists, do NOT create EDL216-3, EDL216-4)
 
 7. DERIVATION RULES FOR MISSING ITEMS:
    - Branch cable (m) = (outlets + switches + fixtures) × 4m average
@@ -364,14 +443,15 @@ def get_construction_jobs(cad_text, project_location=None):
    - Job Activity MUST be specific and self-contained (type, size, capacity, method). Do NOT embed bracketed notes. Each activity is one line item
 
 3. COVERAGE AND NAME PRESERVATION (CRITICAL):
-   - Use both the STRUCTURED_ITEMS_JSON and the HUMAN_SUMMARIES as ground truth. Do not omit major categories with strong signals.
-   - PRESERVE EXACT ITEM NAMES from STRUCTURED_ITEMS_JSON for named equipment/devices.
-   - PROPAGATE ATTRIBUTES into the Job Activity text when present in STRUCTURED_ITEMS_JSON:
-       • rating (e.g., 125A, 30 kVA, 250 kW)
-       • size (e.g., 3#250MCM, 1\" conduit)
-   - PRESERVE MULTIPLICITY per distinct name/size/rating: separate rows and correct quantities for each distinct item.
+    - Use CAD_OCR_TEXT as ground truth. Do not omit major categories with strong signals.
+    - PRESERVE EXACT ITEM NAMES from CAD_OCR_TEXT for named equipment/devices (NO sequential generation or pattern-based extrapolation).
+    - CRITICAL: If CAD_OCR_TEXT contains "Panel EDL216-2", use ONLY "Panel EDL216-2" - do NOT create EDL216-3, EDL216-4, etc.
+    - PROPAGATE ATTRIBUTES into the Job Activity text when present in CAD_OCR_TEXT:
+        • rating (e.g., 125A, 30 kVA, 250 kW)
+        • size (e.g., 3#250MCM, 1\" conduit)
+    - PRESERVE MULTIPLICITY per distinct name/size/rating: separate rows and correct quantities for each distinct item.
 
-4. DERIVATION RULES (APPLY IF MISSING FROM STRUCTURED_ITEMS_JSON):
+4. DERIVATION RULES (APPLY IF MISSING FROM CAD_OCR_TEXT):
    - BRANCH CABLE (LF) = (RECEPTACLE + SWITCH + DIMMER + LIGHT FIXTURE counts) × 12 LF (or 25 LF if long runs are implied). Include as its own line item.
    - FEEDER CABLE (MCM) (LF) = (PANELS + TRANSFORMERS + GENERATORS) × 200 LF. Include as its own line item.
    - CONDUIT (LF) ≈ 9% of total cable length (branch + feeder). Include as its own line item.
@@ -382,23 +462,44 @@ def get_construction_jobs(cad_text, project_location=None):
    - Component percentage bands: Material 60–70%, Labor 25–35%, Equipment 5–15%
 
 6. VALIDATION CHECKLIST:
-   - Cover categories with strong signals (Concrete, Masonry, Metals, Finishes, Thermal/Moisture, HVAC, Plumbing, Electrical, Sitework) if present
-   - Positive quantities/costs; math consistent; CSI format "XX XX XX"
-   - PRESERVE exact item names, sizes, ratings, and multiplicities for ELECTRICAL equipment/devices/cables/conduit as implied by STRUCTURED_ITEMS_JSON
+    - Cover categories with strong signals (Concrete, Masonry, Metals, Finishes, Thermal/Moisture, HVAC, Plumbing, Electrical, Sitework) if present
+    - Positive quantities/costs; math consistent; CSI format "XX XX XX"
+    - PRESERVE exact item names, sizes, ratings, and multiplicities for ELECTRICAL equipment/devices/cables/conduit as implied by CAD_OCR_TEXT
+    - ANTI-HALLUCINATION: Use ONLY items that exist in CAD_OCR_TEXT - do not generate additional similar items
 """
 
-    user_prompt = f"""STRUCTURED_ITEMS_JSON:
-{structured_json_block}
-
-HUMAN_SUMMARIES:
-{processed_cad_text}
+    user_prompt = f"""CAD_OCR_TEXT:
+{cad_text}
 
 REQUIRED ANALYSIS:
-1) Expand STRUCTURED_ITEMS_JSON into detailed Job Activities across all detected categories.
-2) For each entry in STRUCTURED_ITEMS_JSON, create a corresponding line item that:
-   - Uses the exact item name (no generic renaming), includes rating/size when provided.
-   - Preserves multiplicities per distinct name/size/rating (separate rows or quantities).
-   - Assigns CSI code, realistic quantity/unit, and computes Material/Labor/Equipment/Total costs with Rate.
+1) MANDATORY: Extract EVERY SINGLE construction item that appears in the CAD_OCR_TEXT. Do not skip or miss any items - be exhaustive.
+2) CRITICAL: DO NOT generate similar or sequential names (e.g., if you see EDL216-2, do NOT create EDL216-3, EDL216-4, etc.)
+3) DO NOT extrapolate or assume additional items based on patterns - ONLY extract what is explicitly mentioned.
+4) Use EXACT item names as they appear in the drawings, but interpret symbols and abbreviations to meaningful construction terms.
+5) Systematically scan for items in these categories (do not limit to major items - include all found):
+   - CONCRETE: Foundations, slabs, footings, columns, beams, girders, piles, piers, rebar, reinforcement, formwork, joints, curing, CONCRETE PAVING, sidewalks, driveways
+   - MASONRY: Brick walls, CMU walls, block walls, stone, veneer, grout, mortar, lintels
+   - METALS: Structural steel, beams, columns, stairs, handrails, joists, decking, welding, bolts, plates, angles, channels, pipes, tubes
+   - WOOD: Lumber, timber, plywood, OSB, trusses, joists, studs, sheathing
+   - THERMAL & MOISTURE: Roofing, roofing membrane, insulation, vapor barrier, sealant, flashing, shingles, tiles
+   - OPENINGS: Doors, windows, frames, glazing, curtain walls, skylights
+   - FINISHES: Flooring, ceilings, tile, carpet, paint, coating, plaster, gypsum, drywall, veneer, paneling
+   - FIRE PROTECTION: Sprinklers, fire protection systems, standpipes, fire pumps, alarms
+   - PLUMBING: Pipes, valves, toilets, sinks, water heaters, drainage, fixtures
+   - HVAC: Ducts, chillers, boilers, air handlers, diffusers, dampers, ventilation, fans, AC units
+   - ELECTRICAL: Conduit, cables, wires, panels, TRANSFORMERS (with kVA ratings), lighting, outlets, switches, breakers, GENERATORS, feeders, grounding, data, telecom, receptacles, DIMMERS
+   - SITEWORK: Excavation, grading, backfill, asphalt, sidewalks, curbs, landscaping
+   - EQUIPMENT: Elevators, lifts
+6) SPECIFIC ATTENTION: Ensure these commonly missed items are captured if present:
+   - Concrete paving/driveways
+   - Transformers (note kVA ratings)
+   - Generators
+   - Dimmers
+   - Any electrical panels with specific names
+7) For each extracted item, create a detailed Job Activity line item with:
+    - Exact item name (no generic renaming), includes rating/size when provided.
+    - Preserves multiplicities per distinct name/size/rating (separate rows or quantities).
+    - Assigns appropriate CSI code (or NRM2 Section if applicable), realistic quantity/unit, and computes Material/Labor/Equipment/Total costs with Rate.
 
 OUTPUT: ONLY a valid JSON array as specified above, no text.
 """
@@ -414,11 +515,11 @@ OUTPUT: ONLY a valid JSON array as specified above, no text.
         )
         response_text = response.choices[0].message.content
         print(f"Initial AI response received:: {response_text}")
-        validated_response = validate_and_improve_response(response_text, processed_cad_text)
+        validated_response = validate_and_improve_response(response_text, cad_text)
         return validated_response
     except Exception as e:
         print(f"Error in get_construction_jobs: {e}")
-        return get_construction_jobs_fallback(processed_cad_text)
+        return get_construction_jobs_fallback(cad_text)
 
 def validate_and_improve_response(response_text, cad_text):
     """Validate AI response and improve if necessary"""
@@ -701,7 +802,7 @@ def generate_outputs(jobs_list: list, output_pdf: str, output_excel: str):
 def get_page_count(pdf_file):
     reader = PdfReader(pdf_file)
     return len(reader.pages)
-def start_pdf_processing(pdf_path: str, output_pdf: str, output_excel: str):
+def start_pdf_processing(pdf_path: str, output_pdf: str, output_excel: str, location = None):
     total_pages = get_page_count(pdf_path)
     all_texts = [""] * total_pages
 
@@ -722,8 +823,8 @@ def start_pdf_processing(pdf_path: str, output_pdf: str, output_excel: str):
 
     combined_text = " ".join(all_texts)
     # Try to extract project location from PDF metadata or text
-    project_location = extract_project_location(combined_text)
-    jobs_list = get_construction_jobs(combined_text, project_location)
+    # project_location = extract_project_location(combined_text)
+    jobs_list = get_construction_jobs(combined_text, location)
 
     if jobs_list:
         generate_outputs(jobs_list, output_pdf, output_excel)

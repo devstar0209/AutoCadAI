@@ -3,6 +3,7 @@ import re
 import json
 import cv2
 import pytesseract
+from pytesseract import Output
 import openai
 import openpyxl
 from concurrent.futures import ThreadPoolExecutor
@@ -64,43 +65,51 @@ def extract_text_from_image(image_path: str) -> str:
             return ""
         print(f"Processing OCR function...: {image_path}")
 
+        # Preprocess image
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         enhanced = cv2.convertScaleAbs(gray, alpha=1.5, beta=30)
         denoised = cv2.medianBlur(enhanced, 3)
         thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
                                        cv2.THRESH_BINARY, 11, 2)
 
-        processed_images = [gray, denoised, thresh]
-        all_texts = []
+        # Get detailed OCR data with position information
+        data = pytesseract.image_to_data(thresh, output_type=Output.DICT)
 
-        for proc_img in processed_images:
-            text = pytesseract.image_to_string(proc_img, config="--psm 6")
-            # rotated = cv2.rotate(proc_img, cv2.ROTATE_90_CLOCKWISE)
-            # rotated_text = pytesseract.image_to_string(rotated, config='--psm 6')
-            # text = origin_text + " " + rotated_text
-            if text and len(text.strip()) > 0:
-                all_texts.append(text)
-        # Select the best result
-        best_text = ""
-        max_score = 0
+        # Group text by lines based on y-coordinate proximity
+        items = []
+        current_item = []
+        last_y = None
+        line_tolerance = 20  # pixels tolerance for same line
 
-        for text in all_texts:
-            score = len(text.strip())  # base score: text length
-            text_lower = text.lower()
-            # Add score for keyword matches
-            for division, keywords in construction_keywords.items():
-                for kw in keywords:
-                    if re.search(rf"\b{re.escape(kw.lower())}\b", text_lower):
-                        score += 10
-            if score > max_score:
-                max_score = score
-                best_text = text
+        for i, text in enumerate(data["text"]):
+            if not text.strip():
+                continue
 
-        if best_text:
-            cleaned_text = re.sub(r"\s+", " ", best_text.strip())
-            return cleaned_text
+            y = data["top"][i]
 
-        return ""
+            # If new text is close to previous (same line), group them
+            if last_y is not None and abs(y - last_y) < line_tolerance:
+                current_item.append(text)
+            else:
+                # Save current item if it exists
+                if current_item:
+                    items.append(" ".join(current_item))
+                current_item = [text]
+
+            last_y = y
+
+        # Add the last item
+        if current_item:
+            items.append(" ".join(current_item))
+
+        # Join all items with double newlines to separate different entries
+        combined_text = "\n\n".join(items)
+
+        # Clean up excessive whitespace
+        combined_text = re.sub(r'\s+', ' ', combined_text)
+        combined_text = re.sub(r'\n\s*\n', '\n\n', combined_text)
+
+        return combined_text.strip()
 
     except Exception as e:
         print(f"OCR error for {image_path}: {e}")
@@ -321,6 +330,10 @@ def extract_project_location(cad_text):
 def get_construction_jobs(cad_text, project_location=None):
     print(f"Starting construction jobs analysis...")
 
+    cad_text = preprocess_cad_text(cad_text)
+
+    print(f"preprocess_cad_text: {cad_text}")
+
     # Determine if NRM2 standards should be used
     use_nrm2 = should_use_nrm2(project_location, cad_text)
     print(f"Using NRM2 standards: {use_nrm2}")
@@ -477,7 +490,7 @@ REQUIRED ANALYSIS:
 3) DO NOT extrapolate or assume additional items based on patterns - ONLY extract what is explicitly mentioned.
 4) Use EXACT item names as they appear in the drawings, but interpret symbols and abbreviations to meaningful construction terms.
 5) Systematically scan for items in these categories (do not limit to major items - include all found):
-   - CONCRETE: Foundations, slabs, footings, columns, beams, girders, piles, piers, rebar, reinforcement, formwork, joints, curing, CONCRETE PAVING, sidewalks, driveways
+   - CONCRETE: Foundations, slabs, footings, columns, beams, girders, piles, piers, rebar, reinforcement, formwork, joints, curing, CONCRETE, PAVING, sidewalks, driveways
    - MASONRY: Brick walls, CMU walls, block walls, stone, veneer, grout, mortar, lintels
    - METALS: Structural steel, beams, columns, stairs, handrails, joists, decking, welding, bolts, plates, angles, channels, pipes, tubes
    - WOOD: Lumber, timber, plywood, OSB, trusses, joists, studs, sheathing
@@ -837,17 +850,62 @@ def start_pdf_processing(pdf_path: str, output_pdf: str, output_excel: str, loca
 
 def preprocess_cad_text(cad_text: str) -> str:
     """
-    Generalized text structuring for AI prompts.
-    - Extracts quantities per unique item/unit
-    - Counts keywords without numbers
-    - Categorizes into job categories
-    - Builds AI-readable structured text
+    Preprocess CAD text to preserve multi-line item relationships while cleaning for AI processing.
+    - Preserves line breaks for multi-line items
+    - Groups related lines together
+    - Cleans excessive whitespace while maintaining structure
     """
 
-    text = cad_text.upper()
-    text = re.sub(r'\s+', ' ', text)
+    # Split into lines and clean each line
+    lines = cad_text.split('\n')
+    cleaned_lines = []
 
-    return text
+    for line in lines:
+        # Remove excessive spaces but preserve single spaces
+        line = re.sub(r'\s+', ' ', line.strip())
+        # Skip empty lines
+        if line:
+            cleaned_lines.append(line.upper())
+
+    # Join with newlines to preserve multi-line structure
+    processed_text = '\n'.join(cleaned_lines)
+
+    # Group related multi-line items more intelligently
+    lines = processed_text.split('\n')
+    grouped_items = []
+    current_item_lines = []
+
+    for i, line in enumerate(lines):
+        # Check if this line looks like a continuation or a new item
+        is_short_line = len(line.split()) <= 3  # Short lines might be continuations
+        has_partial_word = not line.endswith(' ') and i < len(lines) - 1  # Line ends abruptly
+        next_line_exists = i < len(lines) - 1
+
+        # If current group exists and this line seems like a continuation
+        if current_item_lines and (is_short_line or has_partial_word):
+            current_item_lines.append(line)
+        else:
+            # Save current group if it exists
+            if current_item_lines:
+                grouped_items.append(' '.join(current_item_lines))
+                current_item_lines = []
+
+            # Start new group
+            current_item_lines = [line]
+
+    # Add the last group
+    if current_item_lines:
+        grouped_items.append(' '.join(current_item_lines))
+
+    # Clean up the grouped items
+    final_items = []
+    for item in grouped_items:
+        # Remove extra spaces and clean up
+        item = re.sub(r'\s+', ' ', item.strip())
+        if item:
+            final_items.append(item)
+
+    return '\n\n'.join(final_items)
 
 def extract_json_from_response(response_text: str):
     match = re.search(r"```json\n(.*?)\n```", response_text, re.DOTALL)

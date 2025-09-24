@@ -370,12 +370,8 @@ def get_construction_jobs(cad_text, project_location=None):
     - PROPAGATE ATTRIBUTES into the Job Activity text when present in CAD_OCR_TEXT:
         • rating (e.g., 125A, 30 kVA, 250 kW)
         • size (e.g., 3#250MCM, 1\" conduit)
-    - PRESERVE MULTIPLICITY per distinct name/size/rating: separate rows and correct quantities for each distinct item.
-
-4. DERIVATION RULES (APPLY IF MISSING FROM CAD_OCR_TEXT):
-   - BRANCH CABLE (LF) = (RECEPTACLE + SWITCH + DIMMER + LIGHT FIXTURE counts) × 12 LF (or 25 LF if long runs are implied). Include as its own line item.
-   - FEEDER CABLE (MCM) (LF) = (PANELS + TRANSFORMERS + GENERATORS) × 200 LF. Include as its own line item.
-   - CONDUIT (LF) ≈ 9% of total cable length (branch + feeder). Include as its own line item.
+        • length (from patterns like L=200, L=4", L=3.5m; treat as quantity + unit where possible)
+    - PRESERVE MULTIPLICITY per distinct name/size/rating: separate rows and correct quantities for each distinct item.  
 
 5. QUANTITY/RATE/COST RULES (CRITICAL):
    - Total Cost = Material Cost + Labor Cost + Equipment Cost
@@ -398,7 +394,7 @@ REQUIRED ANALYSIS:
 3) DO NOT extrapolate or assume additional items based on patterns - ONLY extract what is explicitly mentioned.
 4) Use EXACT item names as they appear in the drawings, but interpret symbols and abbreviations to meaningful construction terms.
 5) Systematically scan for items in these categories (do not limit to major items - include all found):
-   - CONCRETE: Foundations, slabs, footings, columns, beams, girders, piles, piers, rebar, reinforcement, formwork, joints, curing, CONCRETE, PAVING, sidewalks, driveways
+   - CONCRETE: Foundations, slabs, footings, columns, beams, girders, piles, piers, rebar, reinforcement, formwork, joints, curing, CONCRETE PAVING, PAVING, sidewalks, driveways
    - MASONRY: Brick walls, CMU walls, block walls, stone, veneer, grout, mortar, lintels
    - METALS: Structural steel, beams, columns, stairs, handrails, joists, decking, welding, bolts, plates, angles, channels, pipes, tubes
    - WOOD: Lumber, timber, plywood, OSB, trusses, joists, studs, sheathing
@@ -408,15 +404,20 @@ REQUIRED ANALYSIS:
    - FIRE PROTECTION: Sprinklers, fire protection systems, standpipes, fire pumps, alarms
    - PLUMBING: Pipes, valves, toilets, sinks, water heaters, drainage, fixtures
    - HVAC: Ducts, chillers, boilers, air handlers, diffusers, dampers, ventilation, fans, AC units
-   - ELECTRICAL: Conduit, cables, wires, panels, TRANSFORMERS (with kVA ratings), lighting, outlets, switches, breakers, GENERATORS, feeders, grounding, data, telecom, receptacles, DIMMERS
+   - ELECTRICAL: Conduit, cables, wires, panels, TRANSFORMERS (with kVA ratings), lighting, outlets, switches, breakers, GENERATOR, feeders, grounding, data, telecom, receptacles, DIMMER
    - SITEWORK: Excavation, grading, backfill, asphalt, sidewalks, curbs, landscaping
    - EQUIPMENT: Elevators, lifts
 6) SPECIFIC ATTENTION: Ensure these commonly missed items are captured if present:
-   - Concrete paving/driveways
+   - CONCRETE / PAVING (slab-on-grade with 6\" default thickness if unspecified; CY or SF with conversion)
    - Transformers (note kVA ratings)
-   - Generators
-   - Dimmers
    - Any electrical panels with specific names
+   - BRANCH CABLE (LF) = (RECEPTACLE + SWITCH + DIMMER + LIGHT FIXTURE counts) × 12 LF (or 25 LF if long runs are implied). Include as its own line item.
+   - FEEDER CABLE (MCM) (LF) = (PANELS + TRANSFORMERS + GENERATORS) × 200 LF. Include as its own line item.
+   - CONDUIT (LF) ≈ 9% of total cable length (branch + feeder). Include as its own line item.
+   - If the text includes any form of "paving" (e.g., "paving", "pavement", "PVG"),
+        you must include it in the output. Do not omit paving items.
+    - Classify paving as "Concrete" if it's concrete paving, otherwise "Sitework".
+    - Do not skip or lose any items.
 7) For each extracted item, create a detailed Job Activity line item with:
     - Exact item name (no generic renaming), includes rating/size when provided.
     - Preserves multiplicities per distinct name/size/rating (separate rows or quantities).

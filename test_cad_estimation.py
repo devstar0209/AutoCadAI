@@ -25,7 +25,7 @@ def test_complete_workflow():
     print("\n🔄 COMPLETE WORKFLOW TEST")
     print("=" * 60)
     
-    pdf_path = "/media/logan/Work/AutoCadAI/globalapp/media/pdfs/test.pdf"
+    pdf_path = "globalapp/media/pdfs/test.pdf"
     
     if not os.path.exists(pdf_path):
         print(f"❌ PDF file not found: {pdf_path}")

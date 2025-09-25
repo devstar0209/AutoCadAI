@@ -261,6 +261,7 @@ def get_construction_jobs(cad_text, project_location=None):
    Each Job Activity MUST include comprehensive specifications:
    - MATERIAL GRADE/TYPE: (e.g., "grade C25/30", "softwood stress graded C24", "PVC-U", "grade B500B")
    - DIMENSIONS/SIZES: (e.g., "300mm thick", "22mm diameter", "600x600mm", "2.5mm²")
+        Apply default architectural and sitework/paving assumptions if dimensions are missing (see Tables below)
    - CONSTRUCTION METHOD: (e.g., "poured in-situ", "shop fabricated site erected", "bedded in cement mortar")
    - FINISH/QUALITY: (e.g., "smooth finish", "facework one side", "non-slip finish", "weather struck joint")
    - INCLUDED ITEMS: (e.g., "including vibrating and curing", "including ironmongery", "including terminations")
@@ -308,6 +309,8 @@ def get_construction_jobs(cad_text, project_location=None):
    - All fields mandatory; numeric values for costs/quantities/rate
    - "NRM2 Section" field with work section code (A10-Z99)
    - Units MUST be metric: m³, m², m, nr, kg, tonnes
+   - Steel reinforcement Quantity and UNIT in Kilograms
+   - Structural Steel to be Measured in "Tonnes"
 
 5. DETAILED SPECIFICATION EXAMPLES:
    CONCRETE (E10): "Reinforced concrete foundation, grade C25/30, poured in-situ, 300mm thick, including vibrating and curing"
@@ -333,10 +336,51 @@ def get_construction_jobs(cad_text, project_location=None):
    - Conduit (m) ≈ 9% of total cable length
    - Formwork (m²) = concrete contact area
    - Reinforcement = 80-120 kg per m³ of concrete
+   - Apply Default Architectural and Sitework/Paving Assumptions only if CAD/OCR text is missing dimensions/specifications.
+
+   **Default Architectural Assumptions Table**
+   | Element | Typical / Default Size / Specification | Notes |
+   |---------|----------------------------------------|-------|
+   | Room Sizes | Bedroom (single): 9–12 m² | Floor area if missing |
+   | | Bedroom (double): 12–18 m² | Floor area if missing |
+   | | Living room: 12–30 m² | Small to large units |
+   | | Dining room: 8–20 m² | Floor area if missing |
+   | | Bathroom: 3–6 m² | Floor area if missing |
+   | Ceiling Height | 2.4–2.7 m | Standard between finished floor and ceiling |
+   | Wall Thickness | Internal walls: 100–150 mm | Brick/blockwork |
+   | | External walls: 200–300 mm | Brick/blockwork or concrete |
+   | Doors | Internal: 2.1 m × 0.8 m | Standard flush/panel |
+   | | External: 2.1 m × 0.9 m | Includes frame |
+   | Windows | Standard: 1.2 m × 1.0 m | Single/double glazing |
+   | | Large / patio: 2.1 m × 1.8 m | Sliding/fixed |
+   | Floor / Slab Thickness | Ground floor slab: 150–200 mm RC | Reinforced concrete incl. screed |
+   | | Upper floor slab: 120–180 mm RC | Reinforced concrete incl. screed |
+   | Stairs | Rise: 150–180 mm | Vertical height per step |
+   | | Tread: 250–300 mm | Horizontal depth per step |
+   | | Width: 900–1200 mm | Clear width of stair |
+   | | Landings: 900–1200 mm | Minimum clear width/depth |
+   | Doors & Openings Deduction | Deduct from wall/floor areas as per NRM2 | Only if specified in CAD/OCR |
+   | Default Construction Method | Concrete: poured in-situ; masonry: bedded in cement mortar | Apply unless CAD text specifies otherwise |
+   | Default Finish | Walls: smooth plaster/render; Floors: screed/tiled; Ceilings: painted | Apply unless CAD text specifies otherwise |
+
+   **Default Sitework / Paving Assumptions Table**
+   | Element | Typical / Default Size / Specification | Notes |
+   |---------|----------------------------------------|-------|
+   | Concrete Paving | 100–150 mm thick reinforced concrete slab | Standard pedestrian/light vehicle traffic |
+   | Asphalt / Bituminous Pavement | 50–100 mm thick compacted asphalt | For driveways / parking areas |
+   | Kerbs | 150 mm high × 200 mm wide | Standard concrete kerbs |
+   | Footpaths / Walkways | 1.0–1.5 m width | Pedestrian access, concrete or pavers |
+   | Driveways | 3–4 m width | Single lane, reinforced or compacted |
+   | Site Furniture Spacing | Benches: 2–3 m apart; Trash bins: 15–20 m apart | Default if CAD does not specify |
+   | Landscaping / Planting Beds | 1–3 m width | Shrubs or groundcover, default if CAD missing |
+   | Fencing | 1.8–2 m high | Chain link, timber, or metal standard |
+   | Paving Unit Sizes | Standard pavers: 200 × 100 × 60 mm | Modular concrete or clay pavers |
+   | Expansion / Joint Spacing | Concrete paving: 4–6 m centers | Joints for shrinkage and thermal movement |
 
 8. NRM2 COST STRUCTURE:
    - Total Cost = Material Cost + Labor Cost + Equipment Cost
    - Rate = Total Cost / Quantity
+   - If only the material rate is known, first calculate Total Cost as (Material Rate × Quantity), then derive Labor and Equipment costs using standard allocation percentages.
    - Material 60-70%, Labor 25-35%, Equipment 5-15%
    - Include regional adjustments for Caribbean markets
 
@@ -352,8 +396,8 @@ def get_construction_jobs(cad_text, project_location=None):
 
 1. ACCURACY REQUIREMENTS:
    - Use 2024 MasterFormat (CSI) codes
-   - Labor ELECTRICAL: Use 2023 - 2024 Edition NECA standards
-   - Base costs on current US market rates (RSMeans-like)
+   - Electrical labor: Use 2023–2024 NECA standards
+   - Base costs on current US market rates (RSMeans-like, national averages)
    - Consider regional variation (use national average if unknown)
    - Quantities must be realistic for the described scope and scale
 
@@ -373,10 +417,21 @@ def get_construction_jobs(cad_text, project_location=None):
         • length (from patterns like L=200, L=4", L=3.5m; treat as quantity + unit where possible)
     - PRESERVE MULTIPLICITY per distinct name/size/rating: separate rows and correct quantities for each distinct item.  
 
-5. QUANTITY/RATE/COST RULES (CRITICAL):
-   - Total Cost = Material Cost + Labor Cost + Equipment Cost
-   - Rate = Total Cost / Quantity. If an external Rate is provided, treat it as total unit rate and split costs accordingly
-   - Component percentage bands: Material 60–70%, Labor 25–35%, Equipment 5–15%
+5. QUANTITY/RATE/COST RULES (CRITICAL — ENFORCEMENT REQUIRED):
+    - Total Cost Formula:
+        • Total Cost = Material Cost + Labor Cost + Equipment Cost
+        • Rate = Material rate
+    - Default Cost Allocation (Required if breakdown unknown):
+        • Material: 50–65%
+        • Labor: 30–40%
+        • Equipment: 5–15%
+    - Market Source:
+        • Use RSMeans 2024 national average installed costs as a reference baseline.
+        • Electrical labor productivity and costs must follow NECA 2023–2024 standards.
+    - OCR Rate Handling:
+        • If a unit rate is found in OCR text but no labor/equipment split is provided, treat that number as a material cost only and calculate the missing labor and equipment portions according to typical US construction cost distribution.
+        • If the OCR explicitly states that a rate is a total installed cost, split it according to the component bands above.
+    - If only the material rate is known, first calculate Total Cost and Material Cost as (Material Rate × Quantity), then derive Labor and Equipment costs using standard allocation percentages.
 
 6. VALIDATION CHECKLIST:
     - Cover categories with strong signals (Concrete, Masonry, Metals, Finishes, Thermal/Moisture, HVAC, Plumbing, Electrical, Sitework) if present

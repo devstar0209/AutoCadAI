@@ -14,7 +14,6 @@ from reportlab.lib.pagesizes import A3, landscape
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-from collections import defaultdict, Counter
 
 # =================== CONFIG ===================
 API_KEY = "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"
@@ -44,6 +43,9 @@ construction_keywords = {
                           "thickness", "diameter", "radius", "area", "volume", "square", "cubic", "linear",
                           "feet", "foot", "inch", "inches", "meter", "millimeter", "centimeter"]
 }
+
+# Regex pattern for conduit size extraction (matches e.g., 3/4”C, 1"C, 2”C, etc.)
+CONDUIT_SIZE_REGEX = r'(\d+\/\d+|\d+(\.\d+)?)(”|")\s*C'
 
 # =================== FRONTEND NOTIFY ===================
 def notify_frontend(event_type, **kwargs):
@@ -323,6 +325,31 @@ def get_construction_jobs(cad_text, project_location=None):
    HVAC (U15): "Air conditioning split unit, 5kW cooling capacity, wall mounted, including refrigerant pipework and controls"
    DRAINAGE (R12): "Vitrified clay drain pipes, 150mm diameter, flexible joints, laid in trenches including granular bedding"
 
+6. COVERAGE AND NAME PRESERVATION (CRITICAL):
+   - Use CAD_OCR_TEXT as ground truth. Do not omit major categories with strong signals.
+   - PRESERVE EXACT ITEM NAMES from CAD_OCR_TEXT for named equipment/devices (NO sequential generation or pattern-based extrapolation).
+   - CRITICAL: If CAD_OCR_TEXT contains "Panel EDL216-2", use ONLY "Panel EDL216-2" - do NOT create EDL216-3, EDL216-4, etc.
+   - PROPAGATE ATTRIBUTES into the Job Activity text when present in CAD_OCR_TEXT:
+       • rating (e.g., 125A, 30 kVA, 250 kW)
+       • size (e.g., 22mm, 600x600mm, 2.5mm²)
+       • length (from patterns like L=200, L=4", L=3.5m; treat as quantity + unit where possible)
+   - PRESERVE MULTIPLICITY per distinct name/size/rating: separate rows and correct quantities for each distinct item.
+
+   - For each drawing, you MUST extract and include ALL relevant construction elements if present, including but not limited to:
+       • Foundations (strip, pad, raft, pile, etc.)
+       • Walls (internal, external, retaining, block, brick, concrete, etc.)
+       • Slabs (ground, upper, suspended, etc.)
+       • Columns, Beams, Girders
+       • Stairs, Walkstairs, Landings, Ramps
+       • Roofs, Roof coverings, Rooflights
+       • Doors, Windows, Openings
+       • Finishes (floor, wall, ceiling, tiling, painting, etc.)
+       • Sitework (paving, kerbs, landscaping, fencing, etc.)
+       • Drainage, Plumbing, HVAC, Electrical, Fire Protection, Equipment
+   - Do NOT skip or lose any items. If an item is present in the CAD_OCR_TEXT, it must be included in the output.
+   - ANTI-HALLUCINATION: Use ONLY items that exist in CAD_OCR_TEXT - do not generate additional similar items.
+
+
 6. COVERAGE AND PRESERVATION:
     - Use CAD_OCR_TEXT as ground truth
     - PRESERVE exact item names, ratings, sizes from CAD text (NO modifications or sequential generation)
@@ -379,8 +406,8 @@ def get_construction_jobs(cad_text, project_location=None):
 
 8. NRM2 COST STRUCTURE:
    - Total Cost = Material Cost + Labor Cost + Equipment Cost
-   - Rate = Total Cost / Quantity
-   - If only the material rate is known, first calculate Total Cost as (Material Rate × Quantity), then derive Labor and Equipment costs using standard allocation percentages.
+   - Rate = Material Rate
+   - If only the material rate is known, first calculate Total Cost and Material Cost as (Material Rate × Quantity), then derive Labor and Equipment costs using standard allocation percentages.
    - Material 60-70%, Labor 25-35%, Equipment 5-15%
    - Include regional adjustments for Caribbean markets
 
@@ -404,6 +431,7 @@ def get_construction_jobs(cad_text, project_location=None):
 2. REQUIRED OUTPUT FORMAT:
    - EXACT JSON list only, no prose: [{"CSI code":"03 30 00","Category":"Concrete","Job Activity":"Cast-in-place Concrete Slab, 6-inch thick","Quantity":150,"Unit":"CY","Rate":125.5,"Material Cost":12000,"Equipment Cost":3000,"Labor Cost":4500,"Total Cost":19500}]
    - All fields are mandatory; values must be numbers for costs/quantities/rate
+   
    - CSI Code MUST be organized in a progressive, six-digit sequence (with further specificity decimal extension, if required)
    - Job Activity MUST be specific and self-contained (type, size, capacity, method). Do NOT embed bracketed notes. Each activity is one line item
 
@@ -413,18 +441,18 @@ def get_construction_jobs(cad_text, project_location=None):
     - CRITICAL: If CAD_OCR_TEXT contains "Panel EDL216-2", use ONLY "Panel EDL216-2" - do NOT create EDL216-3, EDL216-4, etc.
     - PROPAGATE ATTRIBUTES into the Job Activity text when present in CAD_OCR_TEXT:
         • rating (e.g., 125A, 30 kVA, 250 kW)
-        • size (e.g., 3#250MCM, 1\" conduit)
-        • length (from patterns like L=200, L=4", L=3.5m; treat as quantity + unit where possible)
+        • size (e.g., 1”C, 1/2”C). Do NOT generate sequential or pattern-based conduit sizes (e.g., do not output 1”C, 1/2”C, 2”C, etc. unless each is explicitly present in the CAD_OCR_TEXT). Only use sizes that exist in the CAD_OCR_TEXT.
     - PRESERVE MULTIPLICITY per distinct name/size/rating: separate rows and correct quantities for each distinct item.  
 
 5. QUANTITY/RATE/COST RULES (CRITICAL — ENFORCEMENT REQUIRED):
-    - Total Cost Formula:
-        • Total Cost = Material Cost + Labor Cost + Equipment Cost
-        • Rate = Material rate
     - Default Cost Allocation (Required if breakdown unknown):
         • Material: 50–65%
         • Labor: 30–40%
         • Equipment: 5–15%
+    - Total Cost Formula:
+        • Material Cost = Rate * Quantity
+        • Total Cost = Material Cost + Labor Cost + Equipment Cost
+    
     - Market Source:
         • Use RSMeans 2024 national average installed costs as a reference baseline.
         • Electrical labor productivity and costs must follow NECA 2023–2024 standards.
@@ -432,12 +460,23 @@ def get_construction_jobs(cad_text, project_location=None):
         • If a unit rate is found in OCR text but no labor/equipment split is provided, treat that number as a material cost only and calculate the missing labor and equipment portions according to typical US construction cost distribution.
         • If the OCR explicitly states that a rate is a total installed cost, split it according to the component bands above.
     - If only the material rate is known, first calculate Total Cost and Material Cost as (Material Rate × Quantity), then derive Labor and Equipment costs using standard allocation percentages.
-
-6. VALIDATION CHECKLIST:
+6 SPECIFIC ATTENTION: Ensure these commonly missed items are captured if present:
+   - CONCRETE / PAVING (slab-on-grade with 6\" default thickness if unspecified; CY or SF with conversion)
+   - Transformers (note kVA ratings)
+   - Any electrical panels with specific names
+   - BRANCH CABLE: You MUST output a line item for branch cable if any RECEPTACLE, SWITCH, DIMMER, or LIGHT FIXTURE is present. Use 2#12 AWG + 1# 12 GRD. Calculate as: (number of RECEPTACLES + number of SWITCHES + number of DIMMERS + number of LIGHT FIXTURES) × 12 LF (use 25 LF if long runs are implied by the CAD text). Example: If there are 10 receptacles, 5 switches, and 8 light fixtures, Branch Cable = (10+5+8) × 12 = 276 LF.
+   - FEEDER CABLE: You MUST output a line item for feeder cable if any PANEL, TRANSFORMER, or GENERATOR is present. Use 2#10 AWG + 1# 10 GRD. Calculate as: (number of PANELS + number of TRANSFORMERS + number of GENERATORS) × 200 LF. Example: If there are 2 panels and 1 transformer, Feeder Cable = (2+1) × 200 = 600 LF.
+   - CONDUIT: Output only one line item for 3/4"C conduit, even if multiple branch or feeder cables are present. Use 3/4"C. Calculate as: 30% of the total cable length (branch cable length + feeder cable length). Example: If Branch Cable = 276 LF and Feeder Cable = 600 LF, total cable = 876 LF, so Conduit = 0.3 × 876 = 262.8 LF (round to nearest whole number). Do not repeat this item.
+   
+   - If the text includes any form of "paving" (e.g., "paving", "pavement", "PVG"),
+        you must include it in the output. Do not omit paving items.
+    - Classify paving as "Concrete" if it's concrete paving, otherwise "Sitework".
+    - Do not skip or lose any items.
+7. VALIDATION CHECKLIST:
     - Cover categories with strong signals (Concrete, Masonry, Metals, Finishes, Thermal/Moisture, HVAC, Plumbing, Electrical, Sitework) if present
     - Positive quantities/costs; math consistent; CSI format "XX XX XX"
     - PRESERVE exact item names, sizes, ratings, and multiplicities for ELECTRICAL equipment/devices/cables/conduit as implied by CAD_OCR_TEXT
-    - ANTI-HALLUCINATION: Use ONLY items that exist in CAD_OCR_TEXT - do not generate additional similar items
+    - ANTI-HALLUCINATION: Use ONLY items that exist in CAD_OCR_TEXT - do not generate additional similar items and sequantial items
 """
 
     user_prompt = f"""CAD_OCR_TEXT:
@@ -462,18 +501,7 @@ REQUIRED ANALYSIS:
    - ELECTRICAL: Conduit, cables, wires, panels, TRANSFORMERS (with kVA ratings), lighting, outlets, switches, breakers, GENERATOR, feeders, grounding, data, telecom, receptacles, DIMMER
    - SITEWORK: Excavation, grading, backfill, asphalt, sidewalks, curbs, landscaping
    - EQUIPMENT: Elevators, lifts
-6) SPECIFIC ATTENTION: Ensure these commonly missed items are captured if present:
-   - CONCRETE / PAVING (slab-on-grade with 6\" default thickness if unspecified; CY or SF with conversion)
-   - Transformers (note kVA ratings)
-   - Any electrical panels with specific names
-   - BRANCH CABLE (LF) = (RECEPTACLE + SWITCH + DIMMER + LIGHT FIXTURE counts) × 12 LF (or 25 LF if long runs are implied). Include as its own line item.
-   - FEEDER CABLE (MCM) (LF) = (PANELS + TRANSFORMERS + GENERATORS) × 200 LF. Include as its own line item.
-   - CONDUIT (LF) ≈ 9% of total cable length (branch + feeder). Include as its own line item.
-   - If the text includes any form of "paving" (e.g., "paving", "pavement", "PVG"),
-        you must include it in the output. Do not omit paving items.
-    - Classify paving as "Concrete" if it's concrete paving, otherwise "Sitework".
-    - Do not skip or lose any items.
-7) For each extracted item, create a detailed Job Activity line item with:
+6) For each extracted item, create a detailed Job Activity line item with:
     - Exact item name (no generic renaming), includes rating/size when provided.
     - Preserves multiplicities per distinct name/size/rating (separate rows or quantities).
     - Assigns appropriate CSI code (or NRM2 Section if applicable), realistic quantity/unit, and computes Material/Labor/Equipment/Total costs with Rate.
@@ -497,6 +525,7 @@ OUTPUT: ONLY a valid JSON array as specified above, no text.
     except Exception as e:
         print(f"Error in get_construction_jobs: {e}")
         return get_construction_jobs_fallback(cad_text)
+
 
 def validate_and_improve_response(response_text, cad_text):
     """Validate AI response and improve if necessary"""

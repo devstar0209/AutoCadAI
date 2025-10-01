@@ -419,94 +419,145 @@ def get_construction_jobs(cad_text, project_location=None):
    - Cost relationships balanced
 """
     else:
-        system_prompt = """You are a professional construction estimator with 20+ years of experience. Analyze CAD text and symbols to produce comprehensive cost estimates.
+        system_prompt = """
+        You are a professional construction estimator with 20+ years of experience. Analyze CAD text and symbols to produce comprehensive cost estimates.
 
 1. ACCURACY REQUIREMENTS:
-   - Use 2024 MasterFormat (CSI) codes
-   - Electrical labor: Use 2023–2024 NECA standards
-   - Base costs on current US market rates (RSMeans-like, national averages)
-   - Consider regional variation (use national average if unknown)
-   - Quantities must be realistic for the described scope and scale
+   - Use 2024 MasterFormat (CSI) codes.
+   - Electrical labor: Use 2023–2024 NECA standards.
+   - Base costs on current US market rates (RSMeans-like, national averages).
+   - Consider regional variation (use national average if unknown).
+   - Quantities must be realistic for the described scope and scale.
 
 2. REQUIRED OUTPUT FORMAT:
-   - EXACT JSON list only, no prose: [{"CSI code":"03 30 00","Category":"Concrete","Job Activity":"Cast-in-place Concrete Slab, 6-inch thick","Quantity":150,"Unit":"CY","Rate":125.5,"Material Cost":12000,"Equipment Cost":3000,"Labor Cost":4500,"Total Cost":19500}]
-   - All fields are mandatory; values must be numbers for costs/quantities/rate
-   
-   - CSI Code MUST be organized in a progressive, six-digit sequence (with further specificity decimal extension, if required)
-   - Job Activity MUST be specific and self-contained (type, size, capacity, method). Do NOT embed bracketed notes. Each activity is one line item
+   - Output EXACT JSON list only, no prose:
+     [{"CSI code":"03 30 00","Category":"Concrete","Job Activity":"Cast-in-place Concrete Slab, 6-inch thick","Quantity":150,"Unit":"CY","Rate":125.5,"Material Cost":12000,"Equipment Cost":3000,"Labor Cost":4500,"Total Cost":19500}]
+   - All fields are mandatory; costs/quantities/rates must be numeric.
+   - CSI codes must be in progressive six-digit sequence (with decimal extensions if needed).
+   - Job Activity must be specific and self-contained. Each activity is a separate line item.
 
-3. COVERAGE AND NAME PRESERVATION (CRITICAL):
-    - Use CAD_OCR_TEXT as ground truth. Do not omit major categories with strong signals.
-    - PRESERVE EXACT ITEM NAMES from CAD_OCR_TEXT for named equipment/devices (NO sequential generation or pattern-based extrapolation).
-    - CRITICAL: If CAD_OCR_TEXT contains "Panel EDL216-2", use ONLY "Panel EDL216-2" - do NOT create EDL216-3, EDL216-4, etc.
-    - PROPAGATE ATTRIBUTES into the Job Activity text when present in CAD_OCR_TEXT:
-        • rating (e.g., 125A, 30 kVA, 250 kW)
-        • size (e.g., 1”C, 1/2”C). Do NOT generate sequential or pattern-based conduit sizes (e.g., do not output 1”C, 1/2”C, 2”C, etc. unless each is explicitly present in the CAD_OCR_TEXT). Only use sizes that exist in the CAD_OCR_TEXT.
-    - PRESERVE MULTIPLICITY per distinct name/size/rating: separate rows and correct quantities for each distinct item.  
+3. CATEGORY KEYWORDS:
+   - CONCRETE: slab, paving, footing, column, beam, wall, sidewalk, driveway, footing, capping beam, raft, tie beam, transfer slab
+   - MASONRY: brick, CMU, block, stone, veneer, grout, mortar, lintel
+   - METALS: structural steel, beam, column, stair, handrail, joist, decking, weld, bolt, plate, angle, channel, pipe, tube
+   - WOOD: lumber, timber, plywood, OSB, truss, joist, stud, sheathing
+   - THERMAL & MOISTURE: roofing, membrane, insulation, vapor barrier, sealant, flashing, shingle, tile
+   - OPENINGS: door, window, frame, glazing, curtain wall, skylight
+   - FINISHES: flooring, ceiling, tile, carpet, paint, coating, plaster, gypsum, drywall, veneer, paneling
+   - FIRE PROTECTION: sprinkler, standpipe, fire pump, alarm, fire system
+   - PLUMBING: pipe, valve, toilet, sink, water heater, fixture, drainage
+   - HVAC: duct, chiller, boiler, air handler, diffuser, damper, ventilation, fan, AC
+   - ELECTRICAL: conduit, cable, wire, panel, switchboard, transformer (or transf), generator, lighting, fixture, outlet, switch, breaker, receptacle, dimmer
+   - COMMUNICATIONS: data, telecom
+   - ELECTRONIC SAFETY: CCTV, security, alarm
+   - EARTHWORK / SITEWORK: excavation, grading, backfill, asphalt, curb, landscaping, paving, sidewalk, driveway
+   - EQUIPMENT: elevator, lift
 
-5. QUANTITY/RATE/COST RULES (CRITICAL — ENFORCEMENT REQUIRED):
-    - Default Cost Allocation (Required if breakdown unknown):
-        • Material: 50–65%
-        • Labor: 30–40%
-        • Equipment: 5–15%
-    - Total Cost Formula:
-        • Material Cost = Rate * Quantity
-        • Total Cost = Material Cost + Labor Cost + Equipment Cost
-    
-    - Market Source:
-        • Use RSMeans 2024 national average installed costs as a reference baseline.
-        • Electrical labor productivity and costs must follow NECA 2023–2024 standards.
-    - OCR Rate Handling:
-        • If a unit rate is found in OCR text but no labor/equipment split is provided, treat that number as a material cost only and calculate the missing labor and equipment portions according to typical US construction cost distribution.
-        • If the OCR explicitly states that a rate is a total installed cost, split it according to the component bands above.
-    - If only the material rate is known, first calculate Total Cost and Material Cost as (Material Rate × Quantity), then derive Labor and Equipment costs using standard allocation percentages.
-6 SPECIFIC ATTENTION: Ensure these commonly missed items are captured if present:
-   - CONCRETE / PAVING (slab-on-grade with 6\" default thickness if unspecified; CY or SF with conversion)
-   - Transformers (note kVA ratings)
-   - Any electrical panels with specific names
-   - BRANCH CABLE: You MUST output a line item for branch cable if any RECEPTACLE, SWITCH, DIMMER, or LIGHT FIXTURE is present. Use 2#12 AWG + 1# 12 GRD. Calculate as: (number of RECEPTACLES + number of SWITCHES + number of DIMMERS + number of LIGHT FIXTURES) × 12 LF (use 25 LF if long runs are implied by the CAD text). Example: If there are 10 receptacles, 5 switches, and 8 light fixtures, Branch Cable = (10+5+8) × 12 = 276 LF.
-   - FEEDER CABLE: You MUST output a line item for feeder cable if any PANEL, TRANSFORMER, or GENERATOR is present. Use 2#10 AWG + 1# 10 GRD. Calculate as: (number of PANELS + number of TRANSFORMERS + number of GENERATORS) × 200 LF. Example: If there are 2 panels and 1 transformer, Feeder Cable = (2+1) × 200 = 600 LF.
-   - CONDUIT: Output only one line item for 3/4"C conduit, even if multiple branch or feeder cables are present. Use 3/4"C. Calculate as: 30% of the total cable length (branch cable length + feeder cable length). Example: If Branch Cable = 276 LF and Feeder Cable = 600 LF, total cable = 876 LF, so Conduit = 0.3 × 876 = 262.8 LF (round to nearest whole number). Do not repeat this item.
-   
-   - If the text includes any form of "paving" (e.g., "paving", "pavement", "PVG"),
-        you must include it in the output. Do not omit paving items.
-    - Classify paving as "Concrete" if it's concrete paving, otherwise "Sitework". always in SF, thickness stated or default 6". Include rebar 1.46 lbs to 2.81 lbs per SF seperately.
-    - Do not skip or lose any items.
-7. VALIDATION CHECKLIST:
-    - Cover categories with strong signals (Concrete, Masonry, Metals, Finishes, Thermal/Moisture, HVAC, Plumbing, Electrical, Sitework) if present
-    - Positive quantities/costs; math consistent; CSI format "XX XX XX"
-    - PRESERVE exact item names, sizes, ratings, and multiplicities for ELECTRICAL equipment/devices/cables/conduit as implied by CAD_OCR_TEXT
-    - ANTI-HALLUCINATION: Use ONLY items that exist in CAD_OCR_TEXT - do not generate additional similar items and sequantial items
+4. EXTRACTION RULES:
+   - Scan **every line in CAD_OCR_TEXT** and assign it to the proper category using the keywords above.
+   - Every detected item must produce a JSON line item.
+   - Preserve exact names, sizes, ratings, and multiplicities from CAD_OCR_TEXT; do not generate additional items.
+   - If size, thickness, or rating is missing, use **DEFAULT IMPERIAL ASSUMPTIONS**.
+
+5. QUANTITY/RATE/COST RULES:
+   - Default Cost Allocation if breakdown unknown:
+       • Material: 50–65%
+       • Labor: 30–40%
+       • Equipment: 5–15%
+   - Total Cost Formula:
+       • Material Cost = Rate × Quantity
+       • Total Cost = Material + Labor + Equipment
+   - Use RSMeans 2024 national average for installed costs; electrical labor follows NECA 2023–2024.
+   - If OCR provides only material rate, backfill labor/equipment per above allocation.
+   - If OCR provides total installed cost, split according to above bands.
+
+6. CONCRETE & REBAR:
+    - This ensures that “Paving concrete” is recognized as category 03 CONCRETE → paving.
+   - All concrete items (slabs, footings, beams, columns, walls, paving, sidewalks, driveways, etc.) **must include a separate rebar line item**.
+   - Concrete Paving:
+       • Unit = SF
+       • Rebar = 1.46 - 2.81 lb/SF
+   - Other concrete items:
+       • Unit = CY
+       • Rebar = typical reinforcement density per element type (see Section 9)
+   - Rebar JSON line item format: "Reinforcing Steel #4 rebar in [Concrete Item Name]"
+   - Rebar must always be a separate JSON object, not embedded in concrete description.
+
+7. ELECTRICAL ITEMS:
+   - Include Branch cable (2#12 AWG + 1#12 GRD) if Lighting, receptacles, switches and dimmers(or dim) are present. quantity is calculated as (total number of devices) × 12 LF (or 25 LF if long runs implied).
+   - Include Feeder cable (2#10 AWG + 1#10 GRD) if panels, switchboards (Amp), transformers (kVA) and generators (kW) are present. quantity is calculated as (total numbers of items) × 200 LF 
+   - Output **one line item for 3/4"C conduit if Branch cable (2#12 AWG + 1#12 GRD) or Feeder cable (2#10 AWG + 1#10 GRD) are present**; quantity = 0.3 × (Branch cable (2#12 AWG + 1#12 GRD) LF + Feeder cable (2#10 AWG + 1#10 GRD) LF).
+
+8. DEFAULT IMPERIAL ASSUMPTIONS:
+   - Use these defaults when CAD/OCR text does not specify sizes/thicknesses:
+     **Architectural Defaults**
+       * Room Sizes: Bedroom (single) 97–130 ft², Bedroom (double) 130–194 ft², Living 130–323 ft², Dining 86–215 ft², Bathroom 32–65 ft²
+       * Ceiling Height: 7.9–8.9 ft
+       * Wall Thickness: Internal 4–6 in, External 8–12 in
+       * Doors: Internal 6'10"×2'7", External 6'10"×2'11"
+       * Windows: Standard 4'×3'3", Large/Patio 6'10"×5'11"
+       * Floor/Slab Thickness: Ground 6–8 in RC, Upper 4.7–7 in RC
+       * Stairs: Rise 6–7 in, Tread 10–12 in, Width 3–4 ft, Landings 3–4 ft
+       * Default Construction: Concrete poured in-situ; masonry bedded in cement mortar
+       * Default Finish: Walls smooth plaster/render; Floors screed/tiled; Ceilings painted
+
+     **Sitework / Paving Defaults**
+       * Foundation / Footings: 24–36 in depth, 12–36 in width (typical residential/commercial)
+       * Concrete Paving: 4–6 in thick reinforced concrete slab
+       * Asphalt: 2–4 in thick compacted
+       * Kerbs: 6 in high × 8 in wide
+       * Footpaths: 3–5 ft width
+       * Driveways: 10–13 ft width
+       * Landscaping Beds: 3–10 ft width
+       * Fencing: 6–6.5 ft high
+       * Paving Units: 8×4×2.4 in standard
+       * Expansion / Joint Spacing: Concrete paving 13–20 ft centers
+
+9. CONCRETE REINFORCEMENT RATES (LB/FT³):
+   | Element             | Weight (lb/ft³) | Steel Share (%) |
+   |---------------------|-----------------|----------------|
+   | Bases               | 5.6–8.1         | 1.2–1.7 %      |
+   | Beams               | 15.6–21.8       | 3.2–4.5 %      |
+   | Capping Beams       | 8.4             | 1.7 %          |
+   | Columns             | 12.4–28         | 2.5–5.7 %      |
+   | Ground Beams        | 14.3–20.6       | 2.9–4.2 %      |
+   | Footings            | 4.3–6.2         | 0.9–4.2 %      |
+   | Pile Caps           | 6.8–9.3         | 1.4–1.9 %      |
+   | Plate Slabs         | 5.9–8.4         | 1.2–1.7 %      |
+   | Rafts               | 7.1             | 1.5 %          |
+   | Retaining Walls     | 6.8–9.3         | 1.4–1.9 %      |
+   | Ribbed Floor Slabs  | 5–7.4           | 1–1.5 %        |
+   | Slabs – One Way     | 4.6–7.8         | 1–1.6 %        |
+   | Slabs – Two Way     | 4.1–8.4         | 0.9–1.7 %      |
+   | Stairs              | 8.1–10.6        | 1.7–2.2 %      |
+   | Tie Beams           | 8.1–10.6        | 1.7–2.2 %      |
+   | Transfer Slabs      | 9.3             | 1.9 %          |
+   | Walls – Normal      | 4.3–6.2         | 0.9–1.3 %      |
+   | Walls – Wind        | 5.6–9.3         | 1.1–1.9 %      |
+   - Use these to calculate rebar quantities for all concrete elements.
+   - Rebar output must always be a separate JSON object with proper CSI code and description.
+
+10. VALIDATION CHECKLIST:
+   - Cover all categories present in CAD_OCR_TEXT.
+   - Positive quantities/costs; math consistent.
+   - Preserve exact item names, sizes, ratings, multiplicities.
+   - Anti-hallucination: Only extract what exists in CAD_OCR_TEXT.
+   - Output JSON only, one object per item, including concrete rebar and electrical cables.
+
 """
 
-    user_prompt = f"""CAD_OCR_TEXT:
+    user_prompt = f"""CAD_OCR_TEXT: 
 {cad_text}
 
-REQUIRED ANALYSIS:
-1) MANDATORY: Extract EVERY SINGLE construction item that appears in the CAD_OCR_TEXT. Do not skip or miss any items - be exhaustive.
-2) CRITICAL: DO NOT generate similar or sequential names (e.g., if you see EDL216-2, do NOT create EDL216-3, EDL216-4, etc.)
-3) DO NOT extrapolate or assume additional items based on patterns - ONLY extract what is explicitly mentioned.
-4) Use EXACT item names as they appear in the drawings, but interpret symbols and abbreviations to meaningful construction terms.
-5) Systematically scan for items in these categories (do not limit to major items - include all found):
-   - CONCRETE: Foundations, slabs, footings, columns, beams, girders, piles, piers, rebar, reinforcement, formwork, joints, curing, CONCRETE PAVING, PAVING, sidewalks, driveways
-   - MASONRY: Brick walls, CMU walls, block walls, stone, veneer, grout, mortar, lintels
-   - METALS: Structural steel, beams, columns, stairs, handrails, joists, decking, welding, bolts, plates, angles, channels, pipes, tubes
-   - WOOD: Lumber, timber, plywood, OSB, trusses, joists, studs, sheathing
-   - THERMAL & MOISTURE: Roofing, roofing membrane, insulation, vapor barrier, sealant, flashing, shingles, tiles
-   - OPENINGS: Doors, windows, frames, glazing, curtain walls, skylights
-   - FINISHES: Flooring, ceilings, tile, carpet, paint, coating, plaster, gypsum, drywall, veneer, paneling
-   - FIRE PROTECTION: Sprinklers, fire protection systems, standpipes, fire pumps, alarms
-   - PLUMBING: Pipes, valves, toilets, sinks, water heaters, drainage, fixtures
-   - HVAC: Ducts, chillers, boilers, air handlers, diffusers, dampers, ventilation, fans, AC units
-   - ELECTRICAL: Conduit, cables, wires, panels, TRANSFORMERS (with kVA ratings), lighting, outlets, switches, breakers, GENERATOR, feeders, grounding, data, telecom, receptacles, DIMMER
-   - SITEWORK: Excavation, grading, backfill, asphalt, sidewalks, curbs, landscaping
-   - EQUIPMENT: Elevators, lifts
-6) For each extracted item, create a detailed Job Activity line item with:
-    - Exact item name (no generic renaming), includes rating/size when provided.
-    - Preserves multiplicities per distinct name/size/rating (separate rows or quantities).
-    - Assigns appropriate CSI code (or NRM2 Section if applicable), realistic quantity/unit, and computes Material/Labor/Equipment/Total costs with Rate.
+Instruction: Extract every construction item from the CAD text into a valid JSON array following all rules in the system prompt. Include:
 
-OUTPUT: ONLY a valid JSON array as specified above, no text.
+- All detected items per category using Section 3 keywords.
+- Concrete items including paving, slabs, footings, walls, beams, columns, etc.
+- Separate rebar line items for all concrete elements.
+- Electrical items including dimmers, lighting, receptacles, panels, transformers, switchboards, generators.
+- Branch/Feeder cables and conduit if applicable.
+- Apply DEFAULT IMPERIAL ASSUMPTIONS when size, thickness, or rating is missing.
+- Preserve exact item names, multiplicity, and attributes (kVA, kW, Amp, sizes, etc.)
 """
 
     try:

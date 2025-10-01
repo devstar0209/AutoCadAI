@@ -470,7 +470,7 @@ def get_construction_jobs(cad_text, project_location=None):
    
    - If the text includes any form of "paving" (e.g., "paving", "pavement", "PVG"),
         you must include it in the output. Do not omit paving items.
-    - Classify paving as "Concrete" if it's concrete paving, otherwise "Sitework".
+    - Classify paving as "Concrete" if it's concrete paving, otherwise "Sitework". always in SF, thickness stated or default 6". Include rebar 1.46 lbs to 2.81 lbs per SF seperately.
     - Do not skip or lose any items.
 7. VALIDATION CHECKLIST:
     - Cover categories with strong signals (Concrete, Masonry, Metals, Finishes, Thermal/Moisture, HVAC, Plumbing, Electrical, Sitework) if present

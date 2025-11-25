@@ -38,14 +38,15 @@ def test_complete_workflow():
     output_pdf_path = pdf_path.replace(".pdf", "_cost.pdf")
     
     print(f"📊 Excel output: {excel_path}")
-    print(f"📄 PDF output: {output_pdf_path}")
+    print(f"📄 PDF output (note: no PDF is generated): {output_pdf_path}")
     
     try:
         # Test the complete workflow starting from start_pdf_processing
         print("\n🚀 Starting complete PDF processing workflow...")
         print("Starting PDF processing...")
         
-        start_pdf_processing(pdf_path, excel_path, output_pdf_path)
+        # Parameters: (pdf_path, output_pdf, output_excel, location)
+        start_pdf_processing(pdf_path, output_pdf_path, excel_path)
         
         print("✅ Complete workflow executed successfully")
         

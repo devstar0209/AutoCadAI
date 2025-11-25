@@ -6,6 +6,7 @@ import pytesseract
 from pytesseract import Output
 import openai
 import openpyxl
+from openpyxl import Workbook
 from concurrent.futures import ThreadPoolExecutor
 from pdf2image import convert_from_path
 from PyPDF2 import PdfReader
@@ -16,7 +17,7 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
 # =================== CONFIG ===================
-API_KEY = "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"
+API_KEY = ""
 client = openai.OpenAI(api_key=API_KEY)
 pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"  # Linux
 # pytesseract.pytesseract.tesseract_cmd = r"C:\Path\To\tesseract.exe"  # Windows
@@ -563,7 +564,7 @@ Instruction: Extract every construction item from the CAD text into a valid JSON
     try:
         response = client.chat.completions.create(
             model="gpt-4o",
-            messages=[
+            messages=[    
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ],
@@ -773,87 +774,832 @@ def convert_pdf_page_to_image(pdf_path: str, page_number: int) -> str:
     images[0].save(image_path, "PNG")
     return image_path
 
-# =================== OUTPUT GENERATION ===================
-def generate_outputs(jobs_list: list, output_pdf: str, output_excel: str):
-    print(f"Generating outputs...")
-    headers = [
-        "CSI code","Category","Job Activity","Quantity","Unit","Rate",
-        "Material Cost","Equipment Cost","Labor Cost","Total Cost"
-    ]
-    table_data = [headers]
-
-    material_sum = equipment_sum = labor_sum = total_sum = 0
-
-    for item in jobs_list:
-        # Safe parsing
-        try:
-            quantity = int(item.get("Quantity") or 0)
-        except Exception:
-            quantity = 0
-
-        row = [
-            str(item.get("CSI code","")),
-            str(item.get("Category","")),
-            str(item.get("Job Activity","")),
-            f"{quantity:,}",
-            str(item.get("Unit","")),
-            f"${float(item.get('Rate') or 0):,.2f}",
-            f"${float(item.get('Material Cost') or 0):,.2f}",
-            f"${float(item.get('Equipment Cost') or 0):,.2f}",
-            f"${float(item.get('Labor Cost') or 0):,.2f}",
-            f"${float(item.get('Total Cost') or 0):,.2f}",
-        ]
-        table_data.append(row)
-
-        material_sum += float(item.get('Material Cost') or 0)
-        equipment_sum += float(item.get('Equipment Cost') or 0)
-        labor_sum += float(item.get('Labor Cost') or 0)
-        total_sum += float(item.get('Total Cost') or 0)
-
-    # Safe summary row (auto matches header length)
-    summary_row = [""] * (len(headers) - 5) + [
-        "Total",
-        f"${material_sum:,.2f}",
-        f"${equipment_sum:,.2f}",
-        f"${labor_sum:,.2f}",
-        f"${total_sum:,.2f}"
-    ]
-    table_data.append(summary_row)
-
-    # Validate row lengths & fix if needed
-    expected_cols = len(headers)
-    for i, row in enumerate(table_data):
-        if len(row) < expected_cols:
-            row.extend([""] * (expected_cols - len(row)))  # pad short rows
-        elif len(row) > expected_cols:
-            row = row[:expected_cols]  # truncate extras
-            table_data[i] = row
-
-    # Build PDF
-    doc = SimpleDocTemplate(output_pdf, pagesize=landscape(A3))
-    table = Table(table_data, repeatRows=1)
-
-    style = TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.grey),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
-        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0,0), (-1,0), 12),
-        ('GRID', (0,0), (-1,-1), 1, colors.black),
-        ('BACKGROUND', (0,-1), (-1,-1), colors.lightgrey),
-        ('FONTNAME', (0,-1), (-1,-1), 'Helvetica-Bold'),
-    ])
-    table.setStyle(style)
-
-    doc.build([table])
-
-    # Excel
-    wb = openpyxl.Workbook()
+# =================== EXCEL OUTPUT GENERATION ===================
+def generate_outputs(output_json: dict, filename: str):
+    print(f"Generating Excel output...")
+    """
+    Generate Excel file with cost estimation in the required format:
+    - Column A: Di (Division number)
+    - Column B: Description
+    - Column C: Main Building (cost)
+    - Column D: Total (cost)
+    
+    Returns: Excel file (.xlsx) only, no PDF
+    """
+    from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+    from openpyxl.utils import get_column_letter
+    
+    wb = Workbook()
     ws = wb.active
-    ws.title = "Cost Estimation"
-    for row in table_data:
-        ws.append(row)
-    wb.save(output_excel)
+    ws.title = "Cost Summary"
+    
+    # Define styles
+    header_font = Font(bold=True, size=11)
+    header_fill = PatternFill(start_color="4F81BD", end_color="4F81BD", fill_type="solid")
+    summary_font = Font(bold=True)
+    summary_fill = PatternFill(start_color="D9E2F3", end_color="D9E2F3", fill_type="solid")
+    border_style = Border(
+        left=Side(style='thin'),
+        right=Side(style='thin'),
+        top=Side(style='thin'),
+        bottom=Side(style='thin')
+    )
+    
+    # Header row
+    ws.append(["", "CSI code", "Description", "Main Building", "Total"])
+    
+    # Style header
+    for col in range(1, 6):
+        cell = ws.cell(row=1, column=col)
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.border = border_style
+        cell.alignment = Alignment(horizontal='center', vertical='center')
+    
+    # Track totals
+    facility_subtotal = 0
+    facility_items = []
+    
+    # Ordered categories to mirror the Summary sheet exactly
+    ordered_categories = [
+        ("Existing Conditions", "02"),
+        ("Concrete", "03"),
+        ("Masonry", "04"),
+        ("Wood, Plastic & Composites", "06"),
+        ("Thermal & Moisture Protection", "07"),
+        ("Openings", "08"),
+        ("Finishes", "09"),
+        ("Specialties", "10"),
+        ("Plumbing", "22"),
+        ("HVAC", "23"),
+        ("Electrical", "26"),
+        ("Electronic Safety & Security", "28"),
+        ("Earthwork", "31"),
+    ]
+    csi_division_map = {name: div for name, div in ordered_categories}
+
+    def normalize_category(raw: str) -> str:
+        text = (raw or "").lower().strip()
+        # First check exact matches
+        exact_matches = {
+            "existing conditions": "Existing Conditions",
+            "concrete": "Concrete",
+            "masonry": "Masonry",
+            "wood, plastic & composites": "Wood, Plastic & Composites",
+            "thermal & moisture protection": "Thermal & Moisture Protection",
+            "openings": "Openings",
+            "finishes": "Finishes",
+            "specialties": "Specialties",
+            "plumbing": "Plumbing",
+            "hvac": "HVAC",
+            "electrical": "Electrical",
+            "electronic safety & security": "Electronic Safety & Security",
+            "earthwork": "Earthwork",
+        }
+        if text in exact_matches:
+            return exact_matches[text]
+        
+        # Then check partial matches (order matters - more specific first)
+        # Check for concrete-related keywords that might be misclassified
+        concrete_keywords = ["concrete", "slab", "footing", "foundation", "column", "beam", "wall", "sidewalk", "driveway", "paving", "capping beam", "raft", "tie beam", "transfer slab"]
+        if any(keyword in text for keyword in concrete_keywords):
+            # Only if it's not clearly earthwork
+            if not any(ew_word in text for ew_word in ["excavation", "grading", "backfill", "earth moving"]):
+                return "Concrete"
+        
+        mapping = [
+            ("concrete", "Concrete"),  # Check concrete first before other matches
+            ("existing conditions", "Existing Conditions"),
+            ("existing", "Existing Conditions"),
+            ("masonry", "Masonry"),
+            ("brick", "Masonry"),
+            ("block", "Masonry"),
+            ("cmu", "Masonry"),
+            ("wood", "Wood, Plastic & Composites"),
+            ("lumber", "Wood, Plastic & Composites"),
+            ("timber", "Wood, Plastic & Composites"),
+            ("plastic", "Wood, Plastic & Composites"),
+            ("composite", "Wood, Plastic & Composites"),
+            ("thermal", "Thermal & Moisture Protection"),
+            ("moisture", "Thermal & Moisture Protection"),
+            ("roof", "Thermal & Moisture Protection"),
+            ("roofing", "Thermal & Moisture Protection"),
+            ("opening", "Openings"),
+            ("door", "Openings"),
+            ("window", "Openings"),
+            ("finish", "Finishes"),
+            ("finishes", "Finishes"),
+            ("special", "Specialties"),
+            ("specialties", "Specialties"),
+            ("plumb", "Plumbing"),
+            ("plumbing", "Plumbing"),
+            ("hvac", "HVAC"),
+            ("mechanical", "HVAC"),
+            ("electric", "Electrical"),
+            ("electrical", "Electrical"),
+            ("electronic safety", "Electronic Safety & Security"),
+            ("security", "Electronic Safety & Security"),
+            ("earth", "Earthwork"),
+            ("earthwork", "Earthwork"),
+            ("sitework", "Earthwork"),
+            ("excavation", "Earthwork"),
+            ("grading", "Earthwork"),
+        ]
+        for key, value in mapping:
+            if key in text:
+                return value
+        return raw or "Uncategorized"
+    
+    def get_div_for_category(category_name: str) -> str:
+        return csi_division_map.get(category_name, "02")
+    
+    def generate_csi_code(category: str, job_activity: str = "") -> str:
+        """Generate appropriate CSI code based on category and job activity"""
+        cat_lower = category.lower()
+        job_lower = (job_activity or "").lower()
+        
+        # Existing Conditions
+        if "existing" in cat_lower:
+            return "02 00 00"
+        
+        # Concrete - check this early to catch concrete items
+        if "concrete" in cat_lower:
+            if any(word in job_lower for word in ["slab", "foundation", "footing", "column", "beam", "wall"]):
+                return "03 30 00"  # Cast-in-place Concrete
+            elif "rebar" in job_lower or "reinforcement" in job_lower or "reinforcing" in job_lower:
+                return "03 20 00"  # Concrete Reinforcing
+            elif "formwork" in job_lower or "form" in job_lower:
+                return "03 11 00"  # Concrete Forming
+            elif "finish" in job_lower:
+                return "03 35 00"  # Concrete Finishing
+            else:
+                return "03 30 00"  # Default: Cast-in-place Concrete
+        
+        # Masonry
+        if "masonry" in cat_lower or "brick" in cat_lower or "block" in cat_lower or "cmu" in cat_lower:
+            if "brick" in job_lower:
+                return "04 21 00"  # Clay Unit Masonry
+            elif "block" in job_lower or "cmu" in job_lower:
+                return "04 22 00"  # Concrete Unit Masonry
+            else:
+                return "04 20 00"  # Unit Masonry
+        
+        # Metals / Steel
+        if "metal" in cat_lower or "steel" in cat_lower:
+            if "deck" in job_lower:
+                return "05 15 00"  # Metal Decking
+            else:
+                return "05 12 00"  # Structural Steel Framing
+        
+        # Wood
+        if "wood" in cat_lower or "lumber" in cat_lower or "timber" in cat_lower:
+            if "sheathing" in job_lower:
+                return "06 16 00"  # Sheathing
+            else:
+                return "06 10 00"  # Rough Carpentry
+        
+        # Thermal & Moisture Protection
+        if "thermal" in cat_lower or "moisture" in cat_lower or "roof" in cat_lower:
+            if "insulation" in job_lower:
+                return "07 21 00"  # Building Insulation
+            elif "vapor" in job_lower or "barrier" in job_lower:
+                return "07 26 00"  # Vapor Retarders
+            else:
+                return "07 20 00"  # Thermal Insulation
+        
+        # Openings
+        if "opening" in cat_lower or "door" in cat_lower or "window" in cat_lower:
+            if "door" in job_lower:
+                if "metal" in job_lower:
+                    return "08 11 00"  # Metal Doors and Frames
+                else:
+                    return "08 14 00"  # Wood Doors
+            elif "window" in job_lower:
+                return "08 51 00"  # Windows
+            else:
+                return "08 10 00"  # Openings
+        
+        # Finishes
+        if "finish" in cat_lower:
+            if "gypsum" in job_lower or "drywall" in job_lower:
+                return "09 21 00"  # Gypsum Board
+            elif "plaster" in job_lower:
+                return "09 29 00"  # Gypsum Plaster
+            elif "tile" in job_lower:
+                return "09 30 00"  # Tiling
+            elif "floor" in job_lower or "carpet" in job_lower:
+                return "09 65 00"  # Resilient Flooring
+            else:
+                return "09 20 00"  # Plaster and Gypsum Board
+        
+        # Specialties
+        if "special" in cat_lower:
+            return "10 00 00"  # Specialties
+        
+        # Fire Protection
+        if "fire" in cat_lower or "sprinkler" in job_lower:
+            return "21 13 00"  # Fire-Suppression Sprinkler Systems
+        
+        # Plumbing
+        if "plumb" in cat_lower:
+            if "fixture" in job_lower or "toilet" in job_lower or "sink" in job_lower:
+                return "22 11 00"  # Plumbing Fixtures
+            elif "water" in job_lower or "distribution" in job_lower:
+                return "22 13 00"  # Facility Water Distribution
+            elif "sewer" in job_lower or "drainage" in job_lower:
+                return "22 16 00"  # Facility Sanitary Sewerage
+            else:
+                return "22 10 00"  # Plumbing
+        
+        # HVAC
+        if "hvac" in cat_lower or "mechanical" in cat_lower:
+            if "duct" in job_lower:
+                return "23 21 00"  # HVAC Ducts and Casings
+            elif "coil" in job_lower:
+                return "23 23 00"  # HVAC Coils
+            elif "air" in job_lower or "distribution" in job_lower:
+                return "23 25 00"  # HVAC Air Distribution
+            else:
+                return "23 20 00"  # HVAC
+        
+        # Electrical
+        if "electric" in cat_lower:
+            if "conduit" in job_lower or "raceway" in job_lower:
+                return "26 28 00"  # Low-Voltage Electrical Power Raceways
+            elif "cable" in job_lower or "conductor" in job_lower or "wire" in job_lower:
+                return "26 27 00"  # Low-Voltage Electrical Power Conductors
+            elif "panel" in job_lower or "switchboard" in job_lower or "transformer" in job_lower:
+                return "26 20 00"  # Low-Voltage Electrical Power Transmission
+            elif "light" in job_lower or "fixture" in job_lower:
+                return "26 51 00"  # Interior Lighting
+            else:
+                return "26 05 00"  # Common Work Results for Electrical
+        
+        # Electronic Safety & Security
+        if "security" in cat_lower or "electronic" in cat_lower:
+            if "access" in job_lower or "control" in job_lower:
+                return "28 13 00"  # Access Control
+            elif "intrusion" in job_lower or "detection" in job_lower or "alarm" in job_lower:
+                return "28 16 00"  # Intrusion Detection
+            else:
+                return "28 10 00"  # Electronic Access Control and Intrusion Detection
+        
+        # Earthwork
+        if "earth" in cat_lower or "sitework" in cat_lower:
+            if "excavation" in job_lower or "fill" in job_lower:
+                return "31 23 00"  # Excavation and Fill
+            elif "earth" in job_lower or "moving" in job_lower:
+                return "31 25 00"  # Earth Moving
+            elif "paving" in job_lower or "base" in job_lower or "ballast" in job_lower:
+                return "31 32 00"  # Bases, Ballasts, and Paving
+            else:
+                return "31 20 00"  # Earth Moving
+        
+        # Default based on division
+        division = get_div_for_category(category)
+        return f"{division} 00 00"
+    
+    # Add Facility Costs
+    ws.append(["", "", "Facility:", "", ""])
+    facility_row = ws.max_row
+    for col in range(1, 6):
+        cell = ws.cell(row=facility_row, column=col)
+        cell.border = border_style
+    
+    # Process items from output_json
+    details = output_json.get("Details", [])
+    summary = output_json.get("Summary", [])
+    
+    # Only filter out items that are truly invalid (no description/category AND no cost)
+    # Keep items even if all costs are 0, as long as they have a job/category (visibility required)
+    valid_details = []
+    for item in details:
+        total_cost = float(item.get("Total Cost", 0) or 0)
+        material = float(item.get("Material Cost", 0) or 0)
+        labor = float(item.get("Labor Cost", 0) or 0)
+        equipment = float(item.get("Equipment Cost", 0) or 0)
+        has_identity = bool(str(item.get("Job Activity", "")).strip() or str(item.get("Category", "")).strip())
+        # Exclude only if no identity fields AND all costs are zero
+        if not has_identity and total_cost == 0 and material == 0 and labor == 0 and equipment == 0:
+            continue
+        valid_details.append(item)
+    details = valid_details
+    
+    # Aggregate totals by Category for the summary sheet (one row per category)
+    category_totals = {}
+    category_csi_codes = {}  # Map category to CSI code
+    categories_present = set()
+    
+    # Debug: Track original category names to see what we're getting
+    original_categories = {}
+    
+    for item in details:
+        original_cat = str(item.get("Category", "Uncategorized"))
+        job_activity = str(item.get("Job Activity", "")).lower()
+        
+        # Re-classify based on job activity if category seems wrong
+        # Check for concrete-related keywords in job activity
+        # IMPORTANT: Only reclassify if clearly misclassified - don't reclassify "Existing Conditions" items
+        cat = normalize_category(original_cat)
+        
+        # Only reclassify if category is clearly wrong (e.g., electrical or uncategorized with concrete keywords)
+        # Do NOT reclassify "Existing Conditions" - those are legitimate even if they mention concrete
+        concrete_keywords = ["patch", "slab", "footing", "foundation", "column", "beam", "concrete", 
+                           "dowel", "turnstile slab", "slab-on-grade", "cast-in-place", "poured"]
+        if any(keyword in job_activity for keyword in concrete_keywords):
+            # Only reclassify if clearly misclassified (not Existing Conditions, not already Concrete)
+            if "existing" not in original_cat.lower() and "concrete" not in original_cat.lower():
+                # Check if it's a clear misclassification (electrical, uncategorized, etc.)
+                if "electrical" in original_cat.lower() or original_cat.lower() in ["uncategorized", "other"]:
+                    cat = "Concrete"
+        
+        # Track original category names for debugging
+        if original_cat not in original_categories:
+            original_categories[original_cat] = cat
+        
+        try:
+            subtotal = float(item.get("Total Cost", 0) or 0)
+        except Exception:
+            subtotal = 0.0
+        
+        # Process all items, even if cost is 0 (they might have partial data)
+        # Only exclude if truly empty (all zeros)
+        material_check = float(item.get("Material Cost", 0) or 0)
+        labor_check = float(item.get("Labor Cost", 0) or 0)
+        equipment_check = float(item.get("Equipment Cost", 0) or 0)
+        
+        # Track presence regardless of costs to ensure category visibility
+        categories_present.add(cat)
+
+        if subtotal > 0 or material_check > 0 or labor_check > 0 or equipment_check > 0:
+            category_totals[cat] = category_totals.get(cat, 0.0) + subtotal
+
+        # Extract or generate CSI code from item even if subtotal is zero (for display rows)
+        if cat not in category_csi_codes:
+            # For Concrete category, always generate correct CSI code (03 30 00) instead of trusting item's code
+            # This ensures Concrete gets the right code even if items were misclassified
+            if cat == "Concrete":
+                job_activity_name = item.get("Job Activity", "")
+                generated_csi = generate_csi_code(cat, job_activity_name)
+                category_csi_codes[cat] = generated_csi
+            else:
+                csi_code = item.get("CSI code", "")
+                if csi_code:
+                    # Normalize CSI code format: remove spaces and ensure 6-8 digits
+                    csi_clean = re.sub(r'[\s\-]', '', str(csi_code))
+                    if len(csi_clean) >= 6:
+                        # Verify the CSI code is appropriate for the category
+                        # Check if first two digits match expected division
+                        expected_division = get_div_for_category(cat)
+                        if csi_clean[:2] == expected_division:
+                            # Format as XX XX XX or XX XX XX XX (with spaces)
+                            if len(csi_clean) == 6:
+                                formatted_csi = f"{csi_clean[0:2]} {csi_clean[2:4]} {csi_clean[4:6]}"
+                            else:
+                                formatted_csi = f"{csi_clean[0:2]} {csi_clean[2:4]} {csi_clean[4:6]} {csi_clean[6:]}"
+                            category_csi_codes[cat] = formatted_csi
+                        else:
+                            # CSI code doesn't match category, generate correct one
+                            job_activity_name = item.get("Job Activity", "")
+                            generated_csi = generate_csi_code(cat, job_activity_name)
+                            category_csi_codes[cat] = generated_csi
+                    else:
+                        # Invalid CSI code format, generate correct one
+                        job_activity_name = item.get("Job Activity", "")
+                        generated_csi = generate_csi_code(cat, job_activity_name)
+                        category_csi_codes[cat] = generated_csi
+                else:
+                    # Generate CSI code if not present
+                    job_activity_name = item.get("Job Activity", "")
+                    generated_csi = generate_csi_code(cat, job_activity_name)
+                    category_csi_codes[cat] = generated_csi
+    
+    # Debug output
+    print(f"📊 Category totals: {category_totals}")
+    print(f"📊 Original categories mapped: {original_categories}")
+    
+    def get_csi_code_for_category(category_name: str) -> str:
+        """Get CSI code for category, defaulting to division-based code if not found"""
+        if category_name in category_csi_codes:
+            return category_csi_codes[category_name]
+        # Default CSI code based on division (format: XX 00 00)
+        division = get_div_for_category(category_name)
+        return f"{division} 00 00"
+
+    # Write categories in the exact order from ordered_categories
+    # Include categories that have items (even if total is 0, for completeness)
+    row_num = ws.max_row + 1
+    for cat, division in ordered_categories:
+        total_for_cat = category_totals.get(cat, 0.0)
+        # Write category if it is present in details, even if total is 0
+        if cat in categories_present:
+            csi_code = get_csi_code_for_category(cat)
+            ws.append([division, csi_code, cat, total_for_cat, total_for_cat])
+            for col in range(1, 6):
+                cell = ws.cell(row=row_num, column=col)
+                cell.border = border_style
+                if col in (4, 5):
+                    cell.number_format = '#,##0.00'
+            facility_subtotal += total_for_cat
+            row_num = ws.max_row + 1
+    
+    # Add Subtotal Facility
+    ws.append(["", "", "Subtotal Facility", facility_subtotal, facility_subtotal])
+    subtotal_row = ws.max_row
+    
+    for col in range(1, 6):
+        cell = ws.cell(row=subtotal_row, column=col)
+        cell.font = summary_font
+        cell.border = Border(
+            top=Side(style='double'),
+            bottom=Side(style='thin'),
+            left=Side(style='thin'),
+            right=Side(style='thin')
+        )
+        if col == 4 or col == 5:
+            cell.number_format = '#,##0.00'
+    
+    # Calculate GC Markups (typically 6% of facility subtotal)
+    gc_markups = facility_subtotal * 0.06
+    ws.append(["", "", "GC Markups", gc_markups, gc_markups])
+    gc_row = ws.max_row
+    
+    for col in range(1, 6):
+        cell = ws.cell(row=gc_row, column=col)
+        cell.border = border_style
+        if col == 4 or col == 5:
+            cell.number_format = '#,##0.00'
+    
+    # Calculate Total Construction Cost
+    total_construction = facility_subtotal + gc_markups
+    ws.append(["", "", "Total Construction Cost", total_construction, total_construction])
+    const_row = ws.max_row
+    
+    for col in range(1, 6):
+        cell = ws.cell(row=const_row, column=col)
+        cell.font = summary_font
+        cell.border = Border(
+            top=Side(style='double'),
+            bottom=Side(style='thin'),
+            left=Side(style='thin'),
+            right=Side(style='thin')
+        )
+        if col == 4 or col == 5:
+            cell.number_format = '#,##0.00'
+    
+    # Calculate Contingency (typically 5% of total construction)
+    contingency = total_construction * 0.05
+    ws.append(["", "", "Contingency", contingency, contingency])
+    cont_row = ws.max_row
+    
+    for col in range(1, 6):
+        cell = ws.cell(row=cont_row, column=col)
+        cell.border = border_style
+        if col == 4 or col == 5:
+            cell.number_format = '#,##0.00'
+    
+    # Calculate Total Project Cost
+    total_project = total_construction + contingency
+    ws.append(["", "", "Total Project Cost", total_project, total_project])
+    total_row = ws.max_row
+    
+    for col in range(1, 6):
+        cell = ws.cell(row=total_row, column=col)
+        cell.font = summary_font
+        cell.fill = summary_fill
+        cell.border = Border(
+            top=Side(style='double'),
+            bottom=Side(style='double'),
+            left=Side(style='thin'),
+            right=Side(style='thin')
+        )
+        if col == 4 or col == 5:
+            cell.number_format = '$#,##0'
+    
+    # Add Area metrics (calculate from facility details if available)
+    # This would need to be calculated from the CAD drawings
+    area = 1608  # Default or calculate from items
+    cost_per_sf = total_project / area if area > 0 else 0
+    
+    ws.append(["", "", "Area", area, ""])
+    ws.append(["", "", "$/sf", round(cost_per_sf, 0), ""])
+    
+    # Set column widths
+    ws.column_dimensions['A'].width = 5
+    ws.column_dimensions['B'].width = 12
+    ws.column_dimensions['C'].width = 50
+    ws.column_dimensions['D'].width = 18
+    ws.column_dimensions['E'].width = 18
+    
+    # =================== MAIN BUILDING TAB ===================
+    main_ws = wb.create_sheet(title="Main Building")
+    # Detailed columns per category (to reflect your example)
+    main_headers = [
+        "Div", "CSI code", "DESCRIPTION", "Quant.", "Unit", "U/Cost", "Cost", "Total.Material",
+        "MH/Unit", "Hrs.", "Rate", "Total.Labor",
+        "H/Unit", "Hrs.", "Rate", "Total.Equip",
+        "Markups", "Total Amount"
+    ]
+    main_ws.append(main_headers)
+
+    for col in range(1, len(main_headers) + 1):
+        cell = main_ws.cell(row=1, column=col)
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.border = border_style
+        cell.alignment = Alignment(horizontal='center', vertical='center')
+
+    details = output_json.get("Details", [])
+    
+    # Only filter out items that are truly invalid (no description/category AND no cost)
+    # Keep items even if all costs are 0, as long as they have a job/category (visibility required)
+    valid_details = []
+    for item in details:
+        total_cost = float(item.get("Total Cost", 0) or 0)
+        material = float(item.get("Material Cost", 0) or 0)
+        labor = float(item.get("Labor Cost", 0) or 0)
+        equipment = float(item.get("Equipment Cost", 0) or 0)
+        has_identity = bool(str(item.get("Job Activity", "")).strip() or str(item.get("Category", "")).strip())
+        if not has_identity and total_cost == 0 and material == 0 and labor == 0 and equipment == 0:
+            continue
+        valid_details.append(item)
+    details = valid_details
+    
+    # Create category_csi_codes map for Main Building tab (reuse from summary processing)
+    category_csi_codes_main = {}
+    for item in details:
+        original_cat = str(item.get("Category", "Uncategorized"))
+        job_activity = str(item.get("Job Activity", "")).lower()
+        
+        # Re-classify based on job activity if category seems wrong
+        # IMPORTANT: Only reclassify if clearly misclassified - preserve Existing Conditions, Specialties, etc.
+        cat = normalize_category(original_cat)
+        
+        # Only reclassify if category is clearly wrong (e.g., electrical or uncategorized with concrete keywords)
+        # Do NOT reclassify "Existing Conditions", "Specialties", "Electronic Safety & Security" - those are legitimate
+        concrete_keywords = ["patch", "slab", "footing", "foundation", "column", "beam", "concrete", 
+                           "dowel", "turnstile slab", "slab-on-grade", "cast-in-place", "poured", "paving", "sidewalk", "driveway"]
+        if any(keyword in job_activity for keyword in concrete_keywords):
+            # Only reclassify if clearly misclassified (not Existing Conditions, not already Concrete, not Specialties, etc.)
+            if "existing" not in original_cat.lower() and "concrete" not in original_cat.lower() and "special" not in original_cat.lower():
+                # Check if it's a clear misclassification (electrical, uncategorized, etc.)
+                if "electrical" in original_cat.lower() or original_cat.lower() in ["uncategorized", "other"]:
+                    cat = "Concrete"
+        
+        if cat not in category_csi_codes_main:
+            # For Concrete category, always generate correct CSI code (03 30 00) instead of trusting item's code
+            if cat == "Concrete":
+                category_csi_codes_main[cat] = generate_csi_code(cat, job_activity)
+            else:
+                csi_code = item.get("CSI code", "")
+                if csi_code:
+                    csi_clean = re.sub(r'[\s\-]', '', str(csi_code))
+                    if len(csi_clean) >= 6:
+                        # Verify the CSI code is appropriate for the category
+                        expected_division = get_div_for_category(cat)
+                        if csi_clean[:2] == expected_division:
+                            if len(csi_clean) == 6:
+                                category_csi_codes_main[cat] = f"{csi_clean[0:2]} {csi_clean[2:4]} {csi_clean[4:6]}"
+                            else:
+                                category_csi_codes_main[cat] = f"{csi_clean[0:2]} {csi_clean[2:4]} {csi_clean[4:6]} {csi_clean[6:]}"
+                        else:
+                            # CSI code doesn't match category, generate correct one
+                            category_csi_codes_main[cat] = generate_csi_code(cat, job_activity)
+                    else:
+                        category_csi_codes_main[cat] = generate_csi_code(cat, job_activity)
+                else:
+                    category_csi_codes_main[cat] = generate_csi_code(cat, job_activity)
+
+    # Default hourly rates for labor and equipment per category
+    labor_hourly_rate = {
+        "Existing Conditions": 95.0,
+        "Concrete": 95.0,
+        "Masonry": 95.0,
+        "Wood, Plastic & Composites": 115.0,
+        "Thermal & Moisture Protection": 120.0,
+        "Openings": 120.0,
+        "Finishes": 150.0,
+        "Specialties": 150.0,
+        "Plumbing": 220.0,
+        "HVAC": 180.0,
+        "Electrical": 165.0,
+        "Electronic Safety & Security": 165.0,
+        "Earthwork": 120.0,
+    }
+    equipment_hourly_rate = 125.0
+    
+    # Group details by Category to create sections like the example
+    # Re-classify items based on job activity if category is wrong
+    category_to_items = {}
+    for it in details:
+        original_cat = str(it.get("Category", "Uncategorized"))
+        job_activity = str(it.get("Job Activity", "")).lower()
+        
+        # Re-classify based on job activity if category seems wrong
+        # IMPORTANT: Only reclassify if clearly misclassified - preserve Existing Conditions, Specialties, etc.
+        cat = normalize_category(original_cat)
+        
+        # Only reclassify if category is clearly wrong (e.g., electrical or uncategorized with concrete keywords)
+        # Do NOT reclassify "Existing Conditions", "Specialties", "Electronic Safety & Security" - those are legitimate
+        concrete_keywords = ["patch", "slab", "footing", "foundation", "column", "beam", "concrete", 
+                           "dowel", "turnstile slab", "slab-on-grade", "cast-in-place", "poured", "paving", "sidewalk", "driveway"]
+        if any(keyword in job_activity for keyword in concrete_keywords):
+            # Only reclassify if clearly misclassified (not Existing Conditions, not already Concrete, not Specialties, etc.)
+            if "existing" not in original_cat.lower() and "concrete" not in original_cat.lower() and "special" not in original_cat.lower():
+                # Check if it's a clear misclassification (electrical, uncategorized, etc.)
+                if "electrical" in original_cat.lower() or original_cat.lower() in ["uncategorized", "other"]:
+                    cat = "Concrete"
+        
+        category_to_items.setdefault(cat, []).append(it)
+
+    # Write high-level section title 'FACILITY:'
+    main_ws.append(["", "", "FACILITY:", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""])
+    fac_row = main_ws.max_row
+    for col in range(1, len(main_headers) + 1):
+        c = main_ws.cell(row=fac_row, column=col)
+        c.font = summary_font
+        c.border = border_style
+    
+    def get_csi_code_for_category_main_building(category_name: str) -> str:
+        """Get CSI code for category in Main Building tab"""
+        # Try to get from category_csi_codes_main if available, otherwise generate
+        if category_name in category_csi_codes_main:
+            return category_csi_codes_main[category_name]
+        # Generate based on category
+        division = get_div_for_category(category_name)
+        return f"{division} 00 00"
+    
+    # Order categories by division where possible to keep a sensible order
+    def sort_key(cat: str):
+        return get_div_for_category(cat) + cat
+
+    main_total = 0.0
+    # Use the same order as the Summary tab
+    for category, _div in ordered_categories:
+        if category not in category_to_items:
+            continue
+        division_for_category = get_div_for_category(category)
+        # Get CSI code for this category
+        csi_code_for_category = get_csi_code_for_category_main_building(category)
+        
+        # Category header, bold row
+        main_ws.append([division_for_category, csi_code_for_category, category, "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]) 
+        cat_header_row = main_ws.max_row
+        for col in range(1, len(main_headers) + 1):
+            ch = main_ws.cell(row=cat_header_row, column=col)
+            ch.font = summary_font
+            ch.border = border_style
+
+        category_subtotal = 0.0
+        for item in category_to_items[category]:
+            subtotal = float(item.get("Total Cost", 0) or 0)
+            # Include items even if total is 0, as long as they have some data
+            material = float(item.get("Material Cost", 0) or 0)
+            labor = float(item.get("Labor Cost", 0) or 0)
+            equipment = float(item.get("Equipment Cost", 0) or 0)
+            # Only skip if truly empty
+            if subtotal == 0 and material == 0 and labor == 0 and equipment == 0:
+                continue
+                
+            description = item.get("Job Activity", "")
+            try:
+                qty = float(item.get("Quantity") or 0)
+            except Exception:
+                qty = 0.0
+            unit = item.get("Unit", "")
+            material = float(item.get("Material Cost") or 0)
+            labor = float(item.get("Labor Cost") or 0)
+            equipment = float(item.get("Equipment Cost") or 0)
+            sub_markups = float(item.get("Sub Markups") or 0)
+
+            # Calculate material unit cost: Material Cost / Quantity
+            # This reflects current market prices for the specific material
+            if qty > 0:
+                material_unit_cost = material / qty
+            else:
+                # Fallback to Rate if quantity is 0 or missing
+                material_unit_cost = float(item.get("Rate") or 0)
+            unit_cost = material_unit_cost
+            
+            # Get CSI code for this item
+            item_csi_code = item.get("CSI code", "")
+            if item_csi_code:
+                # Normalize CSI code format
+                csi_clean = re.sub(r'[\s\-]', '', str(item_csi_code))
+                if len(csi_clean) >= 6:
+                    if len(csi_clean) == 6:
+                        item_csi_code = f"{csi_clean[0:2]} {csi_clean[2:4]} {csi_clean[4:6]}"
+                    else:
+                        item_csi_code = f"{csi_clean[0:2]} {csi_clean[2:4]} {csi_clean[4:6]} {csi_clean[6:]}"
+                else:
+                    item_csi_code = csi_code_for_category
+            else:
+                # Generate CSI code if not present
+                item_csi_code = generate_csi_code(category, description)
+            
+            # Labor block
+            lh_rate = labor_hourly_rate.get(category, 150.0)
+            mh_unit = ((labor / lh_rate) / (qty if qty else 1.0)) if lh_rate else 0.0
+            labor_hours = mh_unit * qty
+            # Equipment block
+            eh_rate = equipment_hourly_rate
+            eh_unit = ((equipment / eh_rate) / (qty if qty else 1.0)) if eh_rate else 0.0
+            equip_hours = eh_unit * qty
+
+            main_ws.append([
+                division_for_category, item_csi_code, description, qty, unit,
+                unit_cost, subtotal, material,
+                mh_unit, labor_hours, lh_rate, labor,
+                eh_unit, equip_hours, eh_rate, equipment,
+                sub_markups, sub_markups
+            ])
+            # Style numeric cells for this detail row
+            row_idx = main_ws.max_row
+            for col in range(1, len(main_headers) + 1):
+                cell = main_ws.cell(row=row_idx, column=col)
+                cell.border = border_style
+                if col >= 5:
+                    cell.number_format = '#,##0.00'
+
+            category_subtotal += subtotal
+            main_total += subtotal
+
+        # Category subtotal row
+        main_ws.append(["", "", f"Subtotal: {category}", "", "", "", "", "", "", "", "", "", "", "", "", "", "", category_subtotal])
+        sr = main_ws.max_row
+        for col in range(1, len(main_headers) + 1):
+            cell = main_ws.cell(row=sr, column=col)
+            cell.font = summary_font
+            cell.border = border_style
+            if col == len(main_headers):
+                cell.number_format = '#,##0.00'
+
+    # Total row
+    main_ws.append(["", "", "Total", "", "", "", "", "", "", "", "", "", "", "", "", "", "", main_total])
+    total_row = main_ws.max_row
+    for col in range(1, len(main_headers) + 1):
+        cell = main_ws.cell(row=total_row, column=col)
+        cell.font = summary_font
+        cell.border = border_style
+        if col >= 5:
+            cell.number_format = '#,##0.00'
+
+    # Column widths
+    main_ws.column_dimensions['A'].width = 6
+    main_ws.column_dimensions['B'].width = 12
+    main_ws.column_dimensions['C'].width = 60
+    for col in ['D','E']:
+        main_ws.column_dimensions[col].width = 10
+    for col in ['F','G','H','I','J','K','L','M','N','O','P','Q']:
+        main_ws.column_dimensions[col].width = 14
+
+    # (Labor Rates tab removed)
+
+    # Save Excel
+    wb.save(filename)
+    print(f"✅ Exported estimate to {filename}")
+
+# =================== SUMMARY GENERATION ===================
+def generate_summary_from_details(details: list) -> dict:
+    """
+    Generate a cost summary grouped by Category from the Details list.
+    Returns a dict: { "Summary": [...], "Details": details }
+    """
+    if not details:
+        return {"Summary": [], "Details": []}
+
+    summary_map = {}
+    total_project_cost = 0.0
+
+    for item in details:
+        category = item.get("Category", "Uncategorized").strip()
+        try:
+            # Try "Total Cost" first, fallback to "Subtotal Cost" for compatibility
+            subtotal = float(item.get("Total Cost", 0))
+            if subtotal == 0:
+                subtotal = float(item.get("Subtotal Cost", 0))
+        except (TypeError, ValueError):
+            subtotal = 0.0
+
+        summary_map[category] = summary_map.get(category, 0.0) + subtotal
+        total_project_cost += subtotal
+
+    summary_list = []
+    for category, total in summary_map.items():
+        summary_list.append({
+            "Category": category,
+            "Total Cost": round(total, 2)
+        })
+
+    summary_list.append({
+        "Category": "Total Project Cost",
+        "Total Cost": round(total_project_cost, 2)
+    })
+
+    return {
+        "Summary": summary_list,
+        "Details": details
+    }
 
 # =================== MAIN PDF PROCESSING WITH LIVE PROGRESS ===================
 def get_page_count(pdf_file):
@@ -882,9 +1628,39 @@ def start_pdf_processing(pdf_path: str, output_pdf: str, output_excel: str, loca
     # Try to extract project location from PDF metadata or text
     # project_location = extract_project_location(combined_text)
     jobs_list = get_construction_jobs(combined_text, location)
+    
+    # --- Safety guards so generate_outputs never sees malformed data ---
+    if isinstance(jobs_list, str):
+        try:
+            parsed = json.loads(jobs_list)
+            jobs_list = parsed if isinstance(parsed, list) else []
+        except json.JSONDecodeError:
+            print("⚠️ jobs_list returned invalid JSON string, defaulting to empty list.")
+            jobs_list = []
+    elif not isinstance(jobs_list, list):
+        print(f"⚠️ jobs_list returned unsupported type {type(jobs_list)}, defaulting to empty list.")
+        jobs_list = []
 
-    if jobs_list:
-        generate_outputs(jobs_list, output_pdf, output_excel)
+    safe_jobs = []
+    for idx, item in enumerate(jobs_list):
+        if isinstance(item, dict):
+            safe_jobs.append(item)
+            continue
+        if isinstance(item, str):
+            try:
+                parsed_item = json.loads(item)
+                if isinstance(parsed_item, dict):
+                    safe_jobs.append(parsed_item)
+                elif isinstance(parsed_item, list):
+                    safe_jobs.extend(obj for obj in parsed_item if isinstance(obj, dict))
+            except json.JSONDecodeError:
+                print(f"⚠️ Skipping malformed string entry at index {idx}")
+        else:
+            print(f"⚠️ Skipping unsupported entry at index {idx}: {type(item)}")
+
+    if safe_jobs:
+        final_output = generate_summary_from_details(safe_jobs)
+        generate_outputs(final_output, output_excel)
         notify_frontend(
             "pdf_processing_completed",
             pdf_path=output_pdf,

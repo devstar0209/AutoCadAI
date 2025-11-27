@@ -17,7 +17,7 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
 # =================== CONFIG ===================
-API_KEY = "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"
+API_KEY = "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"
 client = openai.OpenAI(api_key=API_KEY)
 pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"  # Linux
 # pytesseract.pytesseract.tesseract_cmd = r"C:\Path\To\tesseract.exe"  # Windows
@@ -223,27 +223,18 @@ def get_construction_jobs(cad_text, project_location=None):
     # Build system prompt based on standards to use
 
     system_prompt = f"""
-    You are a professional construction estimator and data normalizer.
-
-You must extract structured cost items from OCR text and map them to the closest matching
-Job Activity names from the approved training dataset vocabulary.
-
-=== OUTPUT RULES ===
-1. Output only valid JSON (array of objects, no text before or after).
-2. Each object must include:
-   Category, Job Activity, Quantity, Unit, Rate, Material Cost, Labor Cost, Equipment Cost, Sub Markups, Subtotal Cost.
-   - SubTotal Cost = Material Cost + Labor Cost + Equipment Cost + Sub Markups.
-3. Use only Job Activity names that already exist in the training dataset vocabulary.
-   - If the OCR mentions an activity that is similar to one in the dataset, choose that dataset name.
-   - Never invent new Job Activity names.
-   - Never repeat the same Job Activity.
-4. Combine duplicates and sum numeric fields.
-5. Maintain correct Category as defined in the training dataset for each Job Activity.
-6. If no valid matches are found, return an empty list [].
-7. Always ensure valid JSON output.
+    You are an expert construction estimator. 
+Your job is to read unstructured OCR text from drawings and extract each job activity into structured JSON. 
+Each activity must include: Category, Job Activity, Quantity, Unit, Rate, Material Cost, Labor Cost, Equipment Cost, Sub Markups, Subtotal Cost.
+When OCR text lacks explicit quantities or rates, assume reasonable defaults so that every activity still produces a complete JSON record. Do not refuse due to missing data.
+You are only allowed to use one of the following categories exactly as written: "General Requirements", "Existing Conditions", "Concrete", "Masonry", "Metal", "Wood, Plastic & Composites", "Thermal & Moisture Protection", "Openings", "Finishes", "Specialties", "Equipment", "Furnishing", "Special Construction", "Conveying Systems", "Fire Suppression", "Plumbing", "HVAC", "Electrical", "Communications", "Electronic Safety & Security", "Earthwork", "Exterior Improvement", "Utilities", "Transportations", "Waterway & marine", "Material Processing & Handling Equipment", "Pollution Control Equipment"
+Do NOT create new or modified categories. If the text does not match any category, skip.
     """
 
-    user_prompt = f"""Extract construction cost items from the following OCR text. 
+    user_prompt = f"""Extract all job activities and costs from the following text.
+Return JSON array of objects, one per activity. 
+- For each activity, assign one of the allowed categories from the predefined list. If no category applies, skip.
+- SubTotal Cost = Material Cost + Labor Cost + Equipment Cost + Sub Markups. Round numbers
 - Default Cost Allocation if breakdown unknown:
     • Material: 50–65%
     • Labor: 30–40%
@@ -256,15 +247,26 @@ Job Activity names from the approved training dataset vocabulary.
 
 
     try:
-        response = client.responses.create(
-            model="ft:gpt-4o-2024-08-06:global-precisional-services-llc::CQl7qhC7",
-            input=[    
+        response = client.chat.completions.create(
+            model="ft:gpt-4o-2024-08-06:global-precisional-services-llc::CSwogr3u",
+            messages=[
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt},
+                {"role": "user", "content": user_prompt}
             ],
-            temperature=0.2,
+            # temperature=0.1,
+            store= True,
         )
-        response_text = response.output_text
+        response_text = response.choices[0].message.content
+
+        # response = client.responses.create(
+        #     model="ft:gpt-4o-2024-08-06:global-precisional-services-llc::CRoIewoT",
+        #     input=[    
+        #         {"role": "system", "content": system_prompt},
+        #         {"role": "user", "content": user_prompt},
+        #     ],
+        #     temperature=0.2
+        # )
+        # response_text = response.output_text
 
         # Remove markdown fences and extra whitespace
         response_text = re.sub(r"^```json\s*|\s*```$", "", response_text, flags=re.DOTALL).strip()
@@ -302,10 +304,11 @@ def generate_outputs(output_json: dict, filename: str):
 
     ws_summary = wb.active
     ws_summary.title = "Summary"
-    ws_summary.append(["Description", "Cost"]) # headers
+    ws_summary.append(["Div", "Description", "Cost"]) # headers
 
     for item in output_json.get("Summary", []):
         ws_summary.append([
+        item.get("Div", 0),
         item.get("Category", ""),
         item.get("Total Cost", 0)
     ])
@@ -313,12 +316,12 @@ def generate_outputs(output_json: dict, filename: str):
 
     # --- Write Details Sheet ---
     ws_details = wb.create_sheet("Details")
-    headers = ["Category", "Description", "Quantity", "Unit", "Rate", "Material Cost", "Equipment Cost", "Labor Cost", "Sub Markups", "Subtotal Cost"]
+    headers = ["Div", "Description", "Quantity", "Unit", "Rate", "Material Cost", "Equipment Cost", "Labor Cost", "Sub Markups", "Subtotal Cost"]
     ws_details.append(headers)
 
     for item in output_json.get("Details", []):
         ws_details.append([
-            item.get("Category", ""),
+            item.get("Div", 0),
             item.get("Job Activity", ""),
             item.get("Quantity", ""),
             item.get("Unit", ""),
@@ -424,6 +427,7 @@ def start_pdf_processing(pdf_path: str, output_pdf: str, output_excel: str, loca
                     pass
 
     final_jobs_list = list(merged.values())
+    final_jobs_list = normalize_categories(final_jobs_list)
 
     # ✅ Generate Excel output
     if final_jobs_list:
@@ -439,6 +443,62 @@ def start_pdf_processing(pdf_path: str, output_pdf: str, output_excel: str, loca
     else:
         print("⚠️ No valid results extracted from PDF.")
 
+def normalize_categories(data: list) -> list:
+    """
+    Validate categories, assign division order (Div), 
+    and sort by Div following the allowed category order.
+    """
+
+    allowed_categories = [
+        "General Requirements",
+        "Existing Conditions",
+        "Concrete",
+        "Masonry",
+        "Metal",
+        "Wood, Plastic & Composites",
+        "Thermal & Moisture Protection",
+        "Openings",
+        "Finishes",
+        "Specialties",
+        "Equipment",
+        "Furnishing",
+        "Special Construction",
+        "Conveying Systems",
+        "Fire Suppression",
+        "Plumbing",
+        "HVAC",
+        "Electrical",
+        "Communications",
+        "Electronic Safety & Security",
+        "Earthwork",
+        "Exterior Improvement",
+        "Utilities",
+        "Transportations",
+        "Waterway & marine",
+        "Material Processing & Handling Equipment",
+        "Pollution Control Equipment"
+    ]
+
+    # Map category name to its division number
+    category_to_div = {cat: i + 1 for i, cat in enumerate(allowed_categories)}
+
+    normalized = []
+    for item in data:
+        cat = str(item.get("Category", "")).strip()
+        if cat not in allowed_categories:
+            continue
+
+        normalized_item = {**item}
+        normalized_item["Category"] = cat
+        normalized_item["Div"] = category_to_div[cat]
+
+        normalized.append(normalized_item)
+
+    # Sort by Div number
+    normalized.sort(key=lambda x: x["Div"])
+
+    return normalized
+
 def generate_summary_from_details(details: list) -> dict:
     """
     Generate a cost summary grouped by Category from the Details list.
@@ -452,22 +512,33 @@ def generate_summary_from_details(details: list) -> dict:
 
     for item in details:
         category = item.get("Category", "Uncategorized").strip()
+        div = item.get("Div", 0)
+
         try:
             subtotal = float(item.get("Subtotal Cost", 0))
         except (TypeError, ValueError):
             subtotal = 0.0
 
-        summary_map[category] = summary_map.get(category, 0.0) + subtotal
+        key = (div, category)
+        summary_map[key] = summary_map.get(key, 0.0) + subtotal
         total_project_cost += subtotal
 
-    summary_list = []
-    for category, total in summary_map.items():
-        summary_list.append({
+    # Build summary list
+    summary_list = [
+        {
+            "Div": div,
             "Category": category,
             "Total Cost": round(total, 2)
-        })
+        }
+        for (div, category), total in summary_map.items()
+    ]
 
+    # Sort by Div order
+    summary_list.sort(key=lambda x: x["Div"])
+
+    # Add total project summary (optional Div for consistency)
     summary_list.append({
+        "Div": 99,  # Keeps it last
         "Category": "Total Project Cost",
         "Total Cost": round(total_project_cost, 2)
     })

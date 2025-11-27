@@ -45,7 +45,7 @@ def test_complete_workflow():
         print("\n🚀 Starting complete PDF processing workflow...")
         print("Starting PDF processing...")
         
-        start_pdf_processing(pdf_path, excel_path, output_pdf_path)
+        start_pdf_processing(pdf_path, output_pdf_path, excel_path)
         
         print("✅ Complete workflow executed successfully")
         

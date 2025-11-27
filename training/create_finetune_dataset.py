@@ -99,7 +99,7 @@ def extract_text_from_image(image_path: str) -> str:
         # === Post-cleaning ===
         cleaned_lines = []
         for line in lines:
-            print(f"line:: {line}")
+            # print(f"line:: {line}")
             # remove single-character noise
             if len(line.strip()) < 2:
                 continue
@@ -204,10 +204,6 @@ def clean_ocr_text(text: str) -> str:
 
     # 2. Normalize whitespace
     text = re.sub(r'\s+', ' ', text)
-
-    # 3. Replace obvious separators
-    # text = re.sub(r'(\d{1,2}/\d{1,2}/\d{2,4})', r'\n\1\n', text)
-    # text = re.sub(r'(GENERAL NOTES:|SPECIAL NOTES:|SCOPE OF WORK|DRAWN BY:)', r'\n### \1\n', text)
 
     # # 4. Split into potential sentences or sections
     # chunks = re.split(r'(?<=\.)(?=\s[A-Z])|(?=### )', text)
@@ -351,7 +347,7 @@ for pdf_file in os.listdir(PDF_FOLDER):
             continue  # skip empty div
 
         # Remove "Div" field from details
-        # details_clean = []
+        details_clean = []
         for d in details_div:
             d_clean = {k: v for k, v in d.items() if k != "Div"}
             # Assign category based on summary Description of this Div
@@ -359,44 +355,41 @@ for pdf_file in os.listdir(PDF_FOLDER):
             summary_descs = [s["Category"] for s in summary_data if s.get("Div") == div]
             d_clean["Category"] = summary_descs[0] if summary_descs else ""
             details_clean.append(d_clean)
-
-        # Clean summary: remove "Div" but keep all items
-        # summary_clean = [{k: v for k, v in s.items() if k != "Div"} for s in summary_div]
         
-        # assistant_content = json.dumps(details_clean)
+        assistant_content = json.dumps(details_clean)
 
-        # dataset_entries.append({
-        #     "messages": [
-        #         {"role": "user", "content": user_content},
-        #         {"role": "assistant", "content": assistant_content}
-        #     ]
-        # })
-
-    clean_text = clean_ocr_text(pdf_text)
-    chunks = smart_chunk_text(clean_text)
-
-    for chunk in chunks:
-        if len(chunk) < 120:
-            continue
-
-        matched_jobs = match_jobs_to_chunk_ocr_tolerant(chunk, details_clean)
-
-        if not matched_jobs:
-            continue  # skip irrelevant chunk
-
-        entry = {
+        dataset_entries.append({
             "messages": [
-                {
-                    "role": "user",
-                    "content": f"Extract all job activities, quantities, costs, and categories from this OCR text:\n{chunk}"
-                },
-                {
-                    "role": "assistant",
-                    "content": json.dumps(matched_jobs, ensure_ascii=False)
-                }
+                {"role": "user", "content": user_content},
+                {"role": "assistant", "content": assistant_content}
             ]
-        }
-        dataset_entries.append(entry)
+        })
+
+    # clean_text = clean_ocr_text(pdf_text)
+    # chunks = smart_chunk_text(clean_text)
+
+    # for chunk in chunks:
+    #     if len(chunk) < 120:
+    #         continue
+
+    #     matched_jobs = match_jobs_to_chunk_ocr_tolerant(chunk, details_clean)
+
+    #     if not matched_jobs:
+    #         continue  # skip irrelevant chunk
+
+    #     entry = {
+    #         "messages": [
+    #             {
+    #                 "role": "user",
+    #                 "content": f"Extract all job activities, quantities, costs, and categories from this OCR text:\n{chunk}"
+    #             },
+    #             {
+    #                 "role": "assistant",
+    #                 "content": json.dumps(matched_jobs, ensure_ascii=False)
+    #             }
+    #         ]
+    #     }
+        # dataset_entries.append(entry)
 
 
 # Write JSONL

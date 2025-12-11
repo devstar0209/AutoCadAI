@@ -17,11 +17,176 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
 # =================== CONFIG ===================
-API_KEY = "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"
+API_KEY = ""
 client = openai.OpenAI(api_key=API_KEY)
 pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"  # Linux
 # pytesseract.pytesseract.tesseract_cmd = r"C:\Path\To\tesseract.exe"  # Windows
 MAX_WORKERS = 4
+
+allowed_categories = [
+    "General Requirements",
+    "Existing Conditions",
+    "Concrete",
+    "Masonry",
+    "Metal",
+    "Wood, Plastic & Composites",
+    "Thermal & Moisture Protection",
+    "Openings",
+    "Finishes",
+    "Specialties",
+    "Equipment",
+    "Furnishing",
+    "Special Construction",
+    "Conveying Systems",
+    "Fire Suppression",
+    "Plumbing",
+    "HVAC",
+    "Electrical",
+    "Communications",
+    "Electronic Safety & Security",
+    "Earthwork",
+    "Exterior Improvement",
+    "Utilities",
+    "Transportations",
+    "Waterway & marine",
+    "Material Processing & Handling Equipment",
+    "Pollution Control Equipment"
+]
+
+category_keywords = {
+
+    "Existing Conditions": [
+        "remain","demolish", "protect", "survey", 
+        "remove", "salvage"
+    ],
+
+    "Concrete": [
+        "concrete", "paving", "slab", "footing", "foundation", "patch", "curb", 
+        "sidewalk", "masonry grout", "reinforcing", "rebar", "cast-in-place"
+    ],
+
+    "Masonry": [
+        "masonry", "brick", "CMU", "stone", "veneers", "grout", 
+        "mortar", "joint", "wall unit", "prefabricated masonry"
+    ],
+
+    "Metal": [
+        "steel", "metal", "structural", "beam", "column", "angle", "channel", 
+        "dowel", "weld", "bracket", "stainless steel", "guardrail", "handrail"
+    ],
+
+    "Wood, Plastic & Composites": [
+        "wood", "plywood", "composite", "plastic", "millwork", "laminate", 
+        "finish carpentry", "paneling", "cabinet", "trim"
+    ],
+
+    "Thermal & Moisture Protection": [
+        "insulation", "vapor barrier", "waterproof", "membrane", "roofing", 
+        "sealant", "caulk", "weatherproof", "thermal protection", "moisture barrier"
+    ],
+
+    "Openings": [
+        "door", "window", "frame", "hardware", "curtain wall", "glazing", 
+        "hatch", "shutter", "access panel", "louvers"
+    ],
+
+    "Finishes": [
+        "paint", "coating", "tile", "carpet", "flooring", "plaster", "wall covering", 
+        "ceiling", "stain", "veneer", "finish", "resilient flooring", "epoxy"
+    ],
+
+    "Specialties": [
+        "signage", "toilet accessory", "lockers", "whiteboard", "fire extinguisher", "paper holder",
+        "flagpole", "bicycle rack", "specialty item", "marker board", "wall mirror", "casework", "medicine chest",
+        "closed shelving"
+    ],
+
+    "Equipment": [
+        "turnstile", "entry", "gate", "fountain", "bench", "exercise equipment", "kitchen equipment",
+        "generator", "HVAC unit", "elevator equipment"
+    ],
+
+    "Furnishing": [
+        "furniture", "desk", "chair", "table", "cabinet", "shelving", "fixture", 
+        "casework", "window treatment", "curtain"
+    ],
+
+    "Special Construction": [
+        "special structure", "swimming pool", "roof top platform", "platform", 
+        "greenhouse", "sound barrier", "temporary structure"
+    ],
+
+    "Conveying Systems": [
+        "elevator", "escalator", "conveyor", "lift", "dumbwaiter", "moving walkway", 
+        "hoist", "vertical transport"
+    ],
+
+    "Fire Suppression": [
+        "sprinkler", "fire pump", "standpipe", "fire line", "hydrant", 
+        "fire alarm system", "fire protection", "extinguisher", "suppression system"
+    ],
+
+    "Plumbing": [
+        "pipe", "valve", "plumbing fixture", "drain", "water supply", "sanitary", 
+        "storm drain", "trap", "plumbing line", "hot water", "cold water"
+    ],
+
+    "HVAC": [
+        "duct", "air handler", "vent", "diffuser", "chiller", "heating", 
+        "cooling", "fan", "AHU", "thermostat", "grille", "HVAC equipment"
+    ],
+
+    "Electrical": [
+        "panelboard", "circuit", "breaker", "wire", "receptacle", 
+        "lighting", "switch", "transformer", "distribution", "power", "ATS"
+    ],
+
+    "Communications": [
+        "conduit", "cable", "jack", "network", "fiber", "telecom", 
+        "SYSTIMAX", "riser", "outlet", "structured cabling"
+    ],
+
+    "Electronic Safety & Security": [
+        "camera", "CCTV", "security system", "access control", "alarm", "sensor", 
+        "turnstile", "gate", "motion detector", "security panel"
+    ],
+
+    "Earthwork": [
+        "excavation", "grading", "cut", "fill", "soil", "compaction", "trenching", 
+        "backfill", "site prep", "earth", "subgrade"
+    ],
+
+    "Exterior Improvement": [
+        "landscape", "sidewalk", "curb", "fence", "scrim", 
+        "site furniture", "bollard", "planter", "hardscape"
+    ],
+
+    "Utilities": [
+        "water line", "sewer line", "gas line", "stormwater", "utility trench", 
+        "manhole", "utility connection"
+    ],
+
+    "Transportations": [
+        "roadway", "pavement", "highway", "parking lot", "striping", 
+        "traffic sign", "guardrail", "curb ramp", "transportation"
+    ],
+
+    "Waterway & Marine": [
+        "dock", "pier", "bulkhead", "marina", "jetty", "boat ramp", "waterway", 
+        "wharf", "pile", "marine structure"
+    ],
+
+    "Material Processing & Handling Equipment": [
+        "conveyor", "crusher", "hopper", "mixing equipment", "processing", 
+        "handling system", "material handling", "silo", "bin", "industrial equipment"
+    ],
+
+    "Pollution Control Equipment": [
+        "scrubber", "emission control", "dust collector", 
+        "wastewater treatment", "pollution control", "environmental equipment"
+    ]
+}
+
 
 # =================== FRONTEND NOTIFY ===================
 def notify_frontend(event_type, **kwargs):
@@ -145,7 +310,7 @@ def should_use_nrm2(project_location=None, cad_text=""):
 def extract_project_location(cad_text):
     """Extract project location from CAD text to determine if NRM2 should be used"""
     if not cad_text:
-        return None
+        return 'USA'
 
     text_lower = cad_text.lower()
 
@@ -184,46 +349,52 @@ def extract_project_location(cad_text):
         if indicator in text_lower:
             return "Commonwealth"
 
-    return None
+    return 'USA'
 
 
-def get_construction_jobs(cad_text, project_location=None):
-    print(f"Starting construction jobs analysis...")
-
-    cad_text = preprocess_cad_text(cad_text)
-
-    print(f"preprocess_cad_text: {cad_text}")
+def get_construction_jobs(cad_text, category, project_location='USA'):
+    print(f"Starting construction category {category} jobs analysis...")
 
     # Determine if NRM2 standards should be used
     use_nrm2 = should_use_nrm2(project_location, cad_text)
-    print(f"Using NRM2 standards: {use_nrm2}")
+    # print(f"Using NRM2 standards: {use_nrm2}")
 
     # Build system prompt based on standards to use
 
-    system_prompt = f"""
-    You are an expert construction estimator. 
-Your job is to read unstructured OCR text from drawings and extract each job activity into structured JSON. 
-Each activity must include: CSI Code, Category, Job Activity, Quantity, Unit, Rate, Material Cost, Labor Cost, Equipment Cost, Sub Markups, Subtotal Cost.
-When OCR text lacks explicit quantities or rates, assume reasonable defaults so that every activity still produces a complete JSON record. Do not refuse due to missing data.
-You are only allowed to use one of the following categories exactly as written: "General Requirements", "Existing Conditions", "Concrete", "Masonry", "Metal", "Wood, Plastic & Composites", "Thermal & Moisture Protection", "Openings", "Finishes", "Specialties", "Equipment", "Furnishing", "Special Construction", "Conveying Systems", "Fire Suppression", "Plumbing", "HVAC", "Electrical", "Communications", "Electronic Safety & Security", "Earthwork", "Exterior Improvement", "Utilities", "Transportations", "Waterway & marine", "Material Processing & Handling Equipment", "Pollution Control Equipment"
-Do NOT create new or modified categories. If the text does not match any category, skip.
-    """
-
-    user_prompt = f"""Extract all job activities and costs from the following text.
-Return JSON array of objects, one per activity. 
-- For each activity, assign one of the allowed categories from the predefined list. If no category applies, skip.
-- SubTotal Cost = Material Cost + Labor Cost + Equipment Cost + Sub Markups. Round numbers
-- Default Cost Allocation if breakdown unknown:
-    • Material: 50–65%
-    • Labor: 30–40%
-    • Equipment: 5–15%
-    • Sub Markups: 12–20%
-- CSI Code format: 1 2 3 4.5
-- OCR text:
-{cad_text}
-
+    system_prompt = """
+You are an expert construction cost estimator.
+Your job is to extract job activities only from the OCR text of CAD drawings and provide detailed cost estimates.
+Only use the information explicitly present in the OCR text provided.
 """
 
+
+    user_prompt = f"""
+Extract all job activities from the following OCR text for category: {category}.
+For each activity:
+- Skip exact duplicate activities
+- Use 2024 MasterFormat (CSI) codes
+- Assign one of the allowed categories from the predefined list: {','.join(allowed_categories)}
+- Adjust units according to : 
+   • Caribbean/Commonwealth → NRM2 units
+   • Otherwise → RSMeans US units. For RSMeans US: Concrete Paving → SF; other concrete → CY.
+
+Return a JSON array of objects, one per activity, with these fields:
+- CSI Code (format 01 02 03.04)
+- Category
+- Job Activity (only exact or relative description as it appears in OCR text)
+- Quantity (number, use default only if missing)
+- Unit (use default only if missing)
+- M.UCost (material cost per unit)
+- L.Rate (labor rate per hour)
+- L.Hrs (round number)
+- E.Rate (equipment rate per hour)
+- E.Hrs (round number)
+
+Project Location: {project_location}
+
+OCR text:
+{cad_text}
+"""
 
     try:
         response = client.chat.completions.create(
@@ -232,28 +403,14 @@ Return JSON array of objects, one per activity.
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ],
-            # temperature=0.1,
             store= True,
         )
         response_text = response.choices[0].message.content
 
-        # response = client.responses.create(
-        #     model="ft:gpt-4o-2024-08-06:global-precisional-services-llc::CRoIewoT",
-        #     input=[    
-        #         {"role": "system", "content": system_prompt},
-        #         {"role": "user", "content": user_prompt},
-        #     ],
-        #     temperature=0.2
-        # )
-        # response_text = response.output_text
-
         # Remove markdown fences and extra whitespace
         response_text = re.sub(r"^```json\s*|\s*```$", "", response_text, flags=re.DOTALL).strip()
+        response_text = response_text.replace('```', '').strip()
         print(f"AI response received:: {response_text}")
-        # response_text = response_text.replace("\n", "").replace("\r", "")
-
-        # Remove trailing commas if needed
-        # response_text = re.sub(r",(\s*[}\]])", r"\1", response_text)
         
         return response_text
     except Exception as e:
@@ -295,10 +452,10 @@ def generate_outputs(output_json: dict, filename: str):
         bottom=Side(style='thin')
     )
 
-    ws_summary.append(["Div", "CSI Code", "Description", "Total"]) # headers
+    ws_summary.append(["Div", "Description", "Total"]) # headers
 
     # Style header
-    for col in range(1, 5):
+    for col in range(1, 4):
         cell = ws_summary.cell(row=1, column=col)
         cell.font = header_font
         cell.fill = header_fill
@@ -307,26 +464,23 @@ def generate_outputs(output_json: dict, filename: str):
     
     # Set column widths
     ws_summary.column_dimensions['A'].width = 5
-    ws_summary.column_dimensions['B'].width = 12
-    ws_summary.column_dimensions['C'].width = 50
-    ws_summary.column_dimensions['D'].width = 18
-    ws_summary.column_dimensions['E'].width = 18
+    ws_summary.column_dimensions['B'].width = 50
+    ws_summary.column_dimensions['C'].width = 18
 
     for item in output_json.get("Summary", []):
         ws_summary.append([
         item.get("Div", 0),
-        item.get("CSI Code", ""),
         item.get("Category", ""),
         item.get("Total Cost", 0)
     ])
 
     # --- Write Details Sheet ---
     ws_details = wb.create_sheet("Details")
-    headers = ["Div", "CSI Code", "Description", "Quant.", "Unit", "Rate", "Total.Material", "Total.Equip", "Total.Labor", "Sub Markups", "Subtotal Cost"]
+    headers = ["Div", "CSI Code", "Description", "Quant.", "Unit", "M.U/Cost", "Total.Material", "Equip.Hrs","Equip.Rate", "Total.Equip","Labor.Hrs","Labor.Rate", "Total.Labor", "Sub Markups", "Subtotal Cost"]
     ws_details.append(headers)
 
     # Style header
-    for col in range(1, 12):
+    for col in range(1, 16):
         cell = ws_details.cell(row=1, column=col)
         cell.font = header_font
         cell.fill = header_fill
@@ -340,21 +494,37 @@ def generate_outputs(output_json: dict, filename: str):
     for col in ['D']:
         ws_details.column_dimensions[col].width = 10
     for col in ['F','G','H','I','J','K','L','M','N','O','P','Q']:
-        ws_details.column_dimensions[col].width = 14
+        ws_details.column_dimensions[col].width = 10
 
     for item in output_json.get("Details", []):
+        ucost = round(item.get("M.UCost", 0), 2)
+        qty = item.get("Quantity", 0)
+        lrate = round(item.get("L.Rate", 0), 2)
+        lhrs = item.get("L.Hrs", 0)
+        erate = round(item.get("E.Rate", 0), 2)
+        ehrs = item.get("E.Hrs", 0)
+        mcost = round(ucost * qty, 2)
+        lcost = round(lrate * lhrs, 2)
+        ecost = round(erate * ehrs, 2)
+        sub_markups = round((mcost + lcost + ecost) * 0.25, 2)
+        subtotal = round(mcost + lcost + ecost + sub_markups, 2)
+
         ws_details.append([
             item.get("Div", 0),
             item.get("CSI Code", ""),
             item.get("Job Activity", ""),
             item.get("Quantity", ""),
             item.get("Unit", ""),
-            item.get("Rate", ""),
-            item.get("Material Cost", ""),
-            item.get("Equipment Cost", ""),
-            item.get("Labor Cost", ""),
-            item.get("Sub Markups", ""),
-            item.get("Subtotal Cost", "")
+            ucost,
+            mcost,
+            ehrs,
+            erate,
+            ecost,
+            lhrs,
+            lrate,
+            lcost,
+            sub_markups,
+            subtotal
         ])
 
     # Save Excel
@@ -366,35 +536,96 @@ def get_page_count(pdf_file):
     reader = PdfReader(pdf_file)
     return len(reader.pages)
 def start_pdf_processing(pdf_path: str, output_pdf: str, output_excel: str, location=None):
-    total_pages = get_page_count(pdf_path)
-    
-    all_texts = [""] * total_pages
+    combined_text = ""
+    txt_path = pdf_path.replace(".pdf", ".txt")
+    json_path = pdf_path.replace(".pdf", ".json")
 
-    def process_page(page_num):
-        img_path = convert_pdf_page_to_image(pdf_path, page_num)
-        if img_path:
-            all_texts[page_num-1] = extract_text_from_image(img_path)
-        progress = round((page_num / total_pages) * 100, 2)
-        notify_frontend(
-            "page_processed",
-            page=page_num,
-            total_pages=total_pages,
-            progress=progress
-        )
+    if not os.path.exists(txt_path):
+        print("File does not exist")
 
-    # 🧵 Run pages concurrently
-    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        executor.map(process_page, range(1, total_pages + 1))
+        total_pages = get_page_count(pdf_path)
+        
+        all_texts = [""] * total_pages
 
-    combined_text = " ".join(all_texts)
-    # Try to extract project location from PDF metadata or text
-    # project_location = extract_project_location(combined_text)
-    res = get_construction_jobs(combined_text, location)
-    jobs_list = json.loads(res)
+        def process_page(page_num):
+            img_path = convert_pdf_page_to_image(pdf_path, page_num)
+            if img_path:
+                all_texts[page_num-1] = extract_text_from_image(img_path)
+            progress = round((page_num / total_pages) * 100, 2)
+            notify_frontend(
+                "page_processed",
+                page=page_num,
+                total_pages=total_pages,
+                progress=progress
+            )
+
+        # 🧵 Run pages concurrently
+        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+            executor.map(process_page, range(1, total_pages + 1))
+
+        combined_text = " ".join(all_texts)
+        with open(txt_path, "w", encoding="utf-8") as file:
+            file.write(combined_text)
+
+    category_text = {cat: [] for cat in category_keywords}
+
+    with open(txt_path, "r", encoding="utf-8") as f:
+        for line in f:
+            line_clean = line.strip().lower()
+            if not line_clean:
+                continue
+            if line_clean in {"gate"}:
+                continue
+            line_clean = preprocess_cad_text(line_clean)
+            for cat, keywords in category_keywords.items():
+                for k in keywords:
+
+                    # Escape keyword, enforce word boundaries
+                    pattern = r"\b" + re.escape(k.lower()) + r"\b"
+
+                    if re.search(pattern, line_clean):
+                        category_text[cat].append(line_clean)
+                        break
+                else:
+                    continue  # inner loop not matched
+                break  # outer loop matched
+
+    with open(json_path, "w", encoding="utf-8") as file:
+        file.write(json.dumps(category_text))
+
+    combined_category_text = {
+        cat: " ".join(lines)
+        for cat, lines in category_text.items()
+        if lines
+    }
+
+    all_jobs = []
+    for cat, text in combined_category_text.items():
+        if not text.strip():
+            continue
+
+        if location is None:
+            # Try to extract project location from text
+            location = extract_project_location(text)
+        
+        try:
+            # Call AI function
+            res = get_construction_jobs(text, cat, location)
+            jobs_list = json.loads(res)  # Try parsing JSON
+            if isinstance(jobs_list, list):
+                all_jobs.extend(jobs_list)  # Add to combined list
+            else:
+                print(f"Warning: JSON is not a list for category {cat}")
+        except json.JSONDecodeError as e:
+            print(f"Error parsing JSON for category {cat}: {e}")
+            print("Response:", res)
+            continue  # skip this category if JSON invalid
+
+        print(f"Total jobs collected: {len(all_jobs)}")
 
     # ✅ Merge duplicate Job Activities across pages
     merged = {}
-    for item in jobs_list: #all_results
+    for item in all_jobs: #all_results
         job_name = item.get("Job Activity", "").strip().lower()
         if not job_name:
             continue
@@ -403,8 +634,7 @@ def start_pdf_processing(pdf_path: str, output_pdf: str, output_excel: str, loca
             merged[job_name] = item
         else:
             for key in [
-                "Category", "Quantity", "Rate", "Material Cost", "Labor Cost",
-                "Equipment Cost", "Sub Markups", "Subtotal Cost"
+                "Category", "Quantity"
             ]:
                 try:
                     merged[job_name][key] = float(merged[job_name].get(key, 0)) + float(item.get(key, 0))
@@ -434,38 +664,8 @@ def normalize_categories(data: list) -> list:
     and sort by Div following the allowed category order.
     """
 
-    allowed_categories = [
-        "General Requirements",
-        "Existing Conditions",
-        "Concrete",
-        "Masonry",
-        "Metal",
-        "Wood, Plastic & Composites",
-        "Thermal & Moisture Protection",
-        "Openings",
-        "Finishes",
-        "Specialties",
-        "Equipment",
-        "Furnishing",
-        "Special Construction",
-        "Conveying Systems",
-        "Fire Suppression",
-        "Plumbing",
-        "HVAC",
-        "Electrical",
-        "Communications",
-        "Electronic Safety & Security",
-        "Earthwork",
-        "Exterior Improvement",
-        "Utilities",
-        "Transportations",
-        "Waterway & marine",
-        "Material Processing & Handling Equipment",
-        "Pollution Control Equipment"
-    ]
-
     # Map category name to its division number
-    category_to_div = {cat: i + 1 for i, cat in enumerate(allowed_categories)}
+    # category_to_div = {cat: i + 1 for i, cat in enumerate(allowed_categories)}
 
     normalized = []
     for item in data:
@@ -475,7 +675,7 @@ def normalize_categories(data: list) -> list:
 
         normalized_item = {**item}
         normalized_item["Category"] = cat
-        normalized_item["Div"] = category_to_div[cat]
+        normalized_item["Div"] = item.get("CSI Code", "")[:2].strip()  # First two digits of CSI Code as Div
 
         normalized.append(normalized_item)
 
@@ -498,12 +698,18 @@ def generate_summary_from_details(details: list) -> dict:
     for item in details:
         category = item.get("Category", "Uncategorized").strip()
         div = item.get("Div", 0)
-
-        try:
-            subtotal = float(item.get("Subtotal Cost", 0))
-        except (TypeError, ValueError):
-            subtotal = 0.0
-
+        csi = item.get("CSI Code", "")
+        ucost = item.get("M.UCost", 0)
+        qty = item.get("Quantity", 0)
+        lrate = item.get("L.Rate", 0)
+        lhrs = item.get("L.Hrs", 0)
+        erate = item.get("E.Rate", 0)
+        ehrs = item.get("E.Hrs", 0)
+        mcost = round(ucost * qty, 2)
+        lcost = round(lrate * lhrs, 2)
+        ecost = round(erate * ehrs, 2)
+        sub_markups = round((mcost + lcost + ecost) * 0.25, 2)
+        subtotal = round(mcost + lcost + ecost + sub_markups, 2)
         key = (div, category)
         summary_map[key] = summary_map.get(key, 0.0) + subtotal
         total_project_cost += subtotal
@@ -512,7 +718,6 @@ def generate_summary_from_details(details: list) -> dict:
     summary_list = [
         {
             "Div": div,
-            "CSI Code": item.get("CSI Code", ""),
             "Category": category,
             "Total Cost": round(total, 2)
         }
@@ -525,7 +730,6 @@ def generate_summary_from_details(details: list) -> dict:
     # Add total project summary (optional Div for consistency)
     summary_list.append({
         "Div": "",  # Keeps it last
-        "CSI Code": "",
         "Category": "Total Project Cost",
         "Total Cost": round(total_project_cost, 2)
     })
@@ -544,11 +748,13 @@ def preprocess_cad_text(cad_text: str) -> str:
     """
 
     text = cad_text.encode('utf-8', 'ignore').decode()
-    text = re.sub(r'\\[uU]\w{4}', ' ', text)
+    text = text.encode('ascii', 'ignore').decode()
+    # text = re.sub(r'\\[uU]\w{4}', ' ', text)
+    text = re.sub(r"[\u2013\u2014\u2018\u2019\u201c\u201d]", "", text)
     
-    # Remove unwanted symbols and multiple spaces
-    text = re.sub(r'[^ -~\n]', ' ', text)
-    text = re.sub(r'\s+', ' ', text)
+    # # Remove unwanted symbols and multiple spaces
+    text = re.sub(r"[\[\]\{\}\|]", "", text)
+    # text = re.sub(r'\s+', '', text)
     
     return text.strip()
 

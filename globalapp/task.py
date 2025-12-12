@@ -190,11 +190,19 @@ category_keywords = {
 
 
 # =================== FRONTEND NOTIFY ===================
-def notify_frontend(event_type, **kwargs):
+def notify_frontend(total_page, cur_page, message, pdf_url, excel_url, session_id):
+    global page_count
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
-        "pdf_processing",
-        {"type": event_type, **kwargs}
+        f"pdf_processing_{session_id}", 
+        {
+            "type": "notify_completion",
+            "message" : message,
+            "total_page" : total_page,
+            "cur_page" : cur_page,
+            "pdf_url": pdf_url,
+            "excel_url": excel_url,
+        }
     )
 
 # =================== OCR ===================
@@ -376,8 +384,8 @@ For each activity:
 - Use 2024 MasterFormat (CSI) codes
 - Assign one of the allowed categories from the predefined list: {','.join(allowed_categories)}
 - Adjust units according to : 
-   • Caribbean/Commonwealth → NRM2 units
-   • Otherwise → RSMeans US units. For RSMeans US: Concrete Paving → SF; other concrete → CY.
+   Caribbean/Commonwealth → NRM2 units.
+   Otherwise → RSMeans US units. For RSMeans US: Concrete Paving → SF; other concrete → CY.
 
 Return a JSON array of objects, one per activity, with these fields:
 - CSI Code (format 01 02 03.04)
@@ -412,7 +420,7 @@ OCR text:
         # Remove markdown fences and extra whitespace
         response_text = re.sub(r"^```json\s*|\s*```$", "", response_text, flags=re.DOTALL).strip()
         response_text = response_text.replace('```', '').strip()
-        print(f"AI response received:: {response_text}")
+        # print(f"AI response received:: {response_text}")
         
         return response_text
     except Exception as e:
@@ -557,24 +565,19 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
             if img_path:
                 all_texts[page_num-1] = extract_text_from_image(img_path)
             progress = round((page_num / total_pages) * 100, 2)
-            notify_frontend(
-                "page_processed",
-                page=page_num,
-                total_pages=total_pages,
-                progress=progress
-            )
+            notify_frontend(total_pages, page_num, "Processing is in progress...", "", "", session_id) 
 
         # 🧵 Run pages concurrently
         with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
             executor.map(process_page, range(1, total_pages + 1))
 
         combined_text = " ".join(all_texts)
-        with open(txt_path, "w", encoding="utf-8") as file:
+        with open(txt_path, "w", encoding="utf-8", errors="ignore") as file:
             file.write(combined_text)
 
     category_text = {cat: [] for cat in category_keywords}
 
-    with open(txt_path, "r", encoding="utf-8") as f:
+    with open(txt_path, "r", encoding="utf-8", errors="ignore") as f:
         for line in f:
             line_clean = line.strip().lower()
             if not line_clean:
@@ -595,7 +598,7 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
                         continue  # inner loop not matched
                     break  # outer loop matched
 
-    with open(json_path, "w", encoding="utf-8") as file:
+    with open(json_path, "w", encoding="utf-8", errors="replace") as file:
         file.write(json.dumps(category_text))
 
     combined_category_text = {
@@ -653,12 +656,12 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
     if final_jobs_list:
         final_output = generate_summary_from_details(final_jobs_list)
         generate_outputs(final_output, output_excel)
-        notify_frontend(
-            "pdf_processing_completed",
-            pdf_path=output_pdf,
-            excel_path=output_excel,
-            progress=100
-        )
+
+        base_path = r"/var/Django/cadProcessor/media"
+        pdf_url=os.path.relpath(output_pdf, base_path).replace("\\", "/")
+        excel_url = os.path.relpath(output_excel, base_path).replace("\\", "/")
+
+        notify_frontend(total_pages, total_pages, "Processing was completed", pdf_url, excel_url, session_id)
         print("✅ PDF processing completed successfully.")
     else:
         print("⚠️ No valid results extracted from PDF.")

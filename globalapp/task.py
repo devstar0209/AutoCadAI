@@ -591,9 +591,9 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
                     if re.search(pattern, line_clean):
                         category_text[cat].append(line_clean)
                         break
-                else:
-                    continue  # inner loop not matched
-                break  # outer loop matched
+                    else:
+                        continue  # inner loop not matched
+                    break  # outer loop matched
 
     with open(json_path, "w", encoding="utf-8") as file:
         file.write(json.dumps(category_text))

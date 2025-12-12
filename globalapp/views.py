@@ -159,7 +159,7 @@ def classify_csi_code(request):
 
         # GPT Prompt
         system_prompt = (
-            "You are a construction estimator AI. Based on the CSI MasterFormat (Divisions 01ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“50), "
+            "You are a construction estimator AI. Based on the CSI MasterFormat, "
             "return the most appropriate CSI code and its description for the given job activity. "
             "Respond with JSON format like: {'code': '31 23 16.13', 'title': 'Trenching for Footings'}"
         )

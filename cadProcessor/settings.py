@@ -31,7 +31,9 @@ DEBUG = True
 #     import mimetypes
 #     mimetypes.add_type("application/pdf", ".pdf", True)
 ALLOWED_HOSTS = ['*']
-
+# Set to 100MB (adjust as needed)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 100 * 1024 * 1024  # 100MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 100 * 1024 * 1024  # 100MB
 
 # Application definition
 
@@ -61,7 +63,8 @@ MIDDLEWARE = [
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
-    "https://admin.globalpreservicesllc.com"  # Allow frontend
+    "https://admin.globalpreservicesllc.com",
+
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = True  # Use with caution
@@ -69,7 +72,9 @@ CORS_ALLOW_ALL_ORIGINS = True  # Use with caution
 CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 # Allow all headers
 CORS_ALLOW_HEADERS = ["*"]
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://admin.globalpreservicesllc.com",
+]
 SECURE_SSL_REDIRECT = False
 # CORS_ALLOW_HEADERS = [
 #     "content-type",
@@ -107,11 +112,14 @@ WSGI_APPLICATION = 'cadProcessor.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'autocad',
+        'USER': 'devuser',
+        'PASSWORD': 'Password783!!!',
+        'HOST': 'localhost',  # or 'localhost' if local
+        'PORT': '3306',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

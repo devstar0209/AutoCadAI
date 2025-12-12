@@ -22,6 +22,7 @@ client = openai.OpenAI(api_key=API_KEY)
 pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"  # Linux
 # pytesseract.pytesseract.tesseract_cmd = r"C:\Path\To\tesseract.exe"  # Windows
 MAX_WORKERS = 4
+_currency = "USD"
 
 allowed_categories = [
     "General Requirements",
@@ -389,6 +390,7 @@ Return a JSON array of objects, one per activity, with these fields:
 - L.Hrs (round number)
 - E.Rate (equipment rate per hour)
 - E.Hrs (round number)
+- Currency
 
 Project Location: {project_location}
 
@@ -468,10 +470,11 @@ def generate_outputs(output_json: dict, filename: str):
     ws_summary.column_dimensions['C'].width = 18
 
     for item in output_json.get("Summary", []):
+        currency = item.get("Currency", "USD")
         ws_summary.append([
         item.get("Div", 0),
         item.get("Category", ""),
-        item.get("Total Cost", 0)
+        currency+"$"+str(format(item.get("Total Cost", 0), ","))
     ])
 
     # --- Write Details Sheet ---
@@ -497,6 +500,7 @@ def generate_outputs(output_json: dict, filename: str):
         ws_details.column_dimensions[col].width = 10
 
     for item in output_json.get("Details", []):
+        currency = item.get("Currency", "USD")
         ucost = round(item.get("M.UCost", 0), 2)
         qty = item.get("Quantity", 0)
         lrate = round(item.get("L.Rate", 0), 2)
@@ -507,24 +511,24 @@ def generate_outputs(output_json: dict, filename: str):
         lcost = round(lrate * lhrs, 2)
         ecost = round(erate * ehrs, 2)
         sub_markups = round((mcost + lcost + ecost) * 0.25, 2)
-        subtotal = round(mcost + lcost + ecost + sub_markups, 2)
+        subtotal = format(round(mcost + lcost + ecost + sub_markups, 2), ",")
 
         ws_details.append([
             item.get("Div", 0),
             item.get("CSI Code", ""),
             item.get("Job Activity", ""),
-            item.get("Quantity", ""),
+            format(qty, ","),
             item.get("Unit", ""),
-            ucost,
-            mcost,
+            currency+"$"+str(format(ucost, ",")),
+            currency+"$"+format(mcost, ","),
             ehrs,
-            erate,
-            ecost,
+            currency+"$"+str(format(erate, ",")),
+            currency+"$"+format(ecost, ","),
             lhrs,
-            lrate,
-            lcost,
-            sub_markups,
-            subtotal
+            currency+"$"+str(format(lrate, ",")),
+            currency+"$"+format(lcost, ","),
+            currency+"$"+format(sub_markups, ","),
+            currency+"$"+str(subtotal)
         ])
 
     # Save Excel
@@ -535,10 +539,11 @@ def generate_outputs(output_json: dict, filename: str):
 def get_page_count(pdf_file):
     reader = PdfReader(pdf_file)
     return len(reader.pages)
-def start_pdf_processing(pdf_path: str, output_pdf: str, output_excel: str, location=None):
+def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, currency, session_id, cad_title):
     combined_text = ""
     txt_path = pdf_path.replace(".pdf", ".txt")
     json_path = pdf_path.replace(".pdf", ".json")
+    _currency = currency
 
     if not os.path.exists(txt_path):
         print("File does not exist")
@@ -694,10 +699,12 @@ def generate_summary_from_details(details: list) -> dict:
 
     summary_map = {}
     total_project_cost = 0.0
+    currency = "USD"
 
     for item in details:
         category = item.get("Category", "Uncategorized").strip()
         div = item.get("Div", 0)
+        currency = item.get("Currency", "USD")
         csi = item.get("CSI Code", "")
         ucost = item.get("M.UCost", 0)
         qty = item.get("Quantity", 0)
@@ -710,7 +717,7 @@ def generate_summary_from_details(details: list) -> dict:
         ecost = round(erate * ehrs, 2)
         sub_markups = round((mcost + lcost + ecost) * 0.25, 2)
         subtotal = round(mcost + lcost + ecost + sub_markups, 2)
-        key = (div, category)
+        key = (div, category, currency)
         summary_map[key] = summary_map.get(key, 0.0) + subtotal
         total_project_cost += subtotal
 
@@ -719,9 +726,10 @@ def generate_summary_from_details(details: list) -> dict:
         {
             "Div": div,
             "Category": category,
+            "Currency": currency,
             "Total Cost": round(total, 2)
         }
-        for (div, category), total in summary_map.items()
+        for (div, category, currency), total in summary_map.items()
     ]
 
     # Sort by Div order
@@ -731,6 +739,7 @@ def generate_summary_from_details(details: list) -> dict:
     summary_list.append({
         "Div": "",  # Keeps it last
         "Category": "Total Project Cost",
+        "Currency": currency,
         "Total Cost": round(total_project_cost, 2)
     })
 

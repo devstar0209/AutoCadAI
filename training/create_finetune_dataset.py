@@ -20,6 +20,170 @@ OUTPUT_FILE = "fine_tune_dataset.jsonl"
 
 MAX_WORKERS = 4
 
+allowed_categories = [
+    "General Requirements",
+    "Existing Conditions",
+    "Concrete",
+    "Masonry",
+    "Metal",
+    "Wood, Plastic & Composites",
+    "Thermal & Moisture Protection",
+    "Openings",
+    "Finishes",
+    "Specialties",
+    "Equipment",
+    "Furnishing",
+    "Special Construction",
+    "Conveying Systems",
+    "Fire Suppression",
+    "Plumbing",
+    "HVAC",
+    "Electrical",
+    "Communications",
+    "Electronic Safety & Security",
+    "Earthwork",
+    "Exterior Improvement",
+    "Utilities",
+    "Transportations",
+    "Waterway & marine",
+    "Material Processing & Handling Equipment",
+    "Pollution Control Equipment"
+]
+
+category_keywords = {
+
+    "Existing Conditions": [
+        "remain","demolish", "protect", "survey", 
+        "remove", "salvage"
+    ],
+
+    "Concrete": [
+        "concrete", "paving", "slab", "footing", "foundation", "patch", "curb", 
+        "sidewalk", "masonry grout", "reinforcing", "rebar", "cast-in-place"
+    ],
+
+    "Masonry": [
+        "masonry", "brick", "CMU", "stone", "veneers", "grout", 
+        "mortar", "joint", "wall unit", "prefabricated masonry"
+    ],
+
+    "Metal": [
+        "steel", "metal", "structural", "beam", "column", "angle", "channel", 
+        "dowel", "weld", "bracket", "stainless steel", "guardrail", "handrail"
+    ],
+
+    "Wood, Plastic & Composites": [
+        "wood", "plywood", "composite", "plastic", "millwork", "laminate", 
+        "finish carpentry", "paneling", "cabinet", "trim"
+    ],
+
+    "Thermal & Moisture Protection": [
+        "insulation", "vapor barrier", "waterproof", "membrane", "roofing", 
+        "sealant", "caulk", "weatherproof", "thermal protection", "moisture barrier"
+    ],
+
+    "Openings": [
+        "door", "window", "frame", "hardware", "curtain wall", "glazing", 
+        "hatch", "shutter", "access panel", "louvers"
+    ],
+
+    "Finishes": [
+        "paint", "coating", "tile", "carpet", "flooring", "plaster", "wall covering", 
+        "ceiling", "stain", "veneer", "finish", "resilient flooring", "epoxy"
+    ],
+
+    "Specialties": [
+        "signage", "toilet accessory", "lockers", "whiteboard", "fire extinguisher", "paper holder",
+        "flagpole", "bicycle rack", "specialty item", "marker board", "wall mirror", "casework", "medicine chest",
+        "closed shelving"
+    ],
+
+    "Equipment": [
+        "turnstile", "entry", "gate", "fountain", "bench", "exercise equipment", "kitchen equipment",
+        "generator", "HVAC unit", "elevator equipment"
+    ],
+
+    "Furnishing": [
+        "furniture", "desk", "chair", "table", "cabinet", "shelving", "fixture", 
+        "casework", "window treatment", "curtain"
+    ],
+
+    "Special Construction": [
+        "special structure", "swimming pool", "roof top platform", "platform", 
+        "greenhouse", "sound barrier", "temporary structure"
+    ],
+
+    "Conveying Systems": [
+        "elevator", "escalator", "conveyor", "lift", "dumbwaiter", "moving walkway", 
+        "hoist", "vertical transport"
+    ],
+
+    "Fire Suppression": [
+        "sprinkler", "fire pump", "standpipe", "fire line", "hydrant", 
+        "fire alarm system", "fire protection", "extinguisher", "suppression system"
+    ],
+
+    "Plumbing": [
+        "pipe", "valve", "plumbing fixture", "drain", "water supply", "sanitary", 
+        "storm drain", "trap", "plumbing line", "hot water", "cold water"
+    ],
+
+    "HVAC": [
+        "duct", "air handler", "vent", "diffuser", "chiller", "heating", 
+        "cooling", "fan", "AHU", "thermostat", "grille", "HVAC equipment"
+    ],
+
+    "Electrical": [
+        "panelboard", "circuit", "breaker", "wire", "receptacle", 
+        "lighting", "switch", "transformer", "distribution", "power", "ATS"
+    ],
+
+    "Communications": [
+        "conduit", "cable", "jack", "network", "fiber", "telecom", 
+        "SYSTIMAX", "riser", "outlet", "structured cabling"
+    ],
+
+    "Electronic Safety & Security": [
+        "camera", "CCTV", "security system", "access control", "alarm", "sensor", 
+        "turnstile", "gate", "motion detector", "security panel"
+    ],
+
+    "Earthwork": [
+        "excavation", "grading", "cut", "fill", "soil", "compaction", "trenching", 
+        "backfill", "site prep", "earth", "subgrade"
+    ],
+
+    "Exterior Improvement": [
+        "landscape", "sidewalk", "curb", "fence", "scrim", 
+        "site furniture", "bollard", "planter", "hardscape"
+    ],
+
+    "Utilities": [
+        "water line", "sewer line", "gas line", "stormwater", "utility trench", 
+        "manhole", "utility connection"
+    ],
+
+    "Transportations": [
+        "roadway", "pavement", "highway", "parking lot", "striping", 
+        "traffic sign", "guardrail", "curb ramp", "transportation"
+    ],
+
+    "Waterway & Marine": [
+        "dock", "pier", "bulkhead", "marina", "jetty", "boat ramp", "waterway", 
+        "wharf", "pile", "marine structure"
+    ],
+
+    "Material Processing & Handling Equipment": [
+        "conveyor", "crusher", "hopper", "mixing equipment", "processing", 
+        "handling system", "material handling", "silo", "bin", "industrial equipment"
+    ],
+
+    "Pollution Control Equipment": [
+        "scrubber", "emission control", "dust collector", 
+        "wastewater treatment", "pollution control", "environmental equipment"
+    ]
+}
+
 def get_page_count(pdf_file):
     reader = PdfReader(pdf_file)
     return len(reader.pages)
@@ -31,6 +195,25 @@ def convert_pdf_page_to_image(pdf_path: str, page_number: int) -> str:
     image_path = os.path.join(directory, f"page_{page_number}.png")
     images[0].save(image_path, "PNG")
     return image_path
+
+def preprocess_cad_text(cad_text: str) -> str:
+    """
+    Preprocess CAD text to preserve multi-line item relationships while cleaning for AI processing.
+    - Preserves line breaks for multi-line items
+    - Groups related lines together
+    - Cleans excessive whitespace while maintaining structure
+    """
+
+    text = cad_text.encode('utf-8', 'ignore').decode()
+    text = text.encode('ascii', 'ignore').decode()
+    # text = re.sub(r'\\[uU]\w{4}', ' ', text)
+    text = re.sub(r"[\u2013\u2014\u2018\u2019\u201c\u201d]", "", text)
+    
+    # # Remove unwanted symbols and multiple spaces
+    text = re.sub(r"[\[\]\{\}\|]", "", text)
+    # text = re.sub(r'\s+', '', text)
+    
+    return text.strip()
 
 def extract_pdf_text(pdf_path: str) -> str:
     total_pages = get_page_count(pdf_path)
@@ -165,8 +348,7 @@ def read_excel_costs(excel_path):
                 if desc and pd.notna(cost) and float(cost) > 0:
                     summary_data.append({
                         "Div": row.get("Div"),
-                        "Category": desc,
-                        "TotalCost": round(float(cost), 2)
+                        "Category": desc
                     })
         else:
             for _, row in df.iterrows():
@@ -184,17 +366,13 @@ def read_excel_costs(excel_path):
                 detail_items.append({
                     "Div": row.get("Div"),
                     "Job Activity": description,
-                    "Quantity": str(row.get("Quant.", "")),
+                    "Quantity": str(row.get("Quant.", 0)),
                     "Unit": str(row.get("Unit", "")),
-                    "Rate": round(float(row.get("Rate", 0) or 0), 2),
-                    "Material Cost": round(float(row.get("T.Mat", 0) or 0), 2),
-                    "Labor Cost": round(float(row.get("T.Labor", 0) or 0), 2),
-                    "Equipment Cost": round(float(row.get("T.Euip", 0) or 0), 2),
-                    "Sub Markups": round(float(row.get("Markups", 0) or 0), 2),
-                    "Subtotal Cost": round(float(subtotal), 2),
+                    "L.hrs": row.get("L.Hrs.", 0),
+                    "E.hrs": row.get("E.Hrs.", 0),
                 })
 
-    return summary_data, detail_items, total_cost
+    return summary_data, detail_items
 
 def clean_ocr_text(text: str) -> str:
     # 1. Remove backslashes, unicode escapes, and control chars
@@ -319,7 +497,7 @@ for pdf_file in os.listdir(PDF_FOLDER):
         continue
     project_name = os.path.splitext(pdf_file)[0]
     pdf_path = os.path.join(PDF_FOLDER, pdf_file)
-    pdf_text = extract_pdf_text(pdf_path)
+    txt_path = pdf_path.replace(".pdf", ".txt")
 
     # Corresponding Excel
     excel_path = os.path.join(EXCEL_FOLDER, project_name + ".xls")
@@ -329,31 +507,54 @@ for pdf_file in os.listdir(PDF_FOLDER):
         print(f"⚠️ Excel file not found for {project_name}")
         continue
 
-    summary_data, detail_items, total_cost = read_excel_costs(excel_path)
+    summary_data, detail_items = read_excel_costs(excel_path)
+
+    if not os.path.exists(txt_path):
+        print("File does not exist")
+        pdf_text = extract_pdf_text(pdf_path)
+        with open(txt_path, "w", encoding="utf-8") as file:
+            file.write(pdf_text)
+
+    category_text = {cat: [] for cat in category_keywords}
+
+    with open(txt_path, "r", encoding="utf-8") as f:
+        for line in f:
+            line_clean = line.strip().lower()
+            if not line_clean:
+                continue
+            if line_clean in {"gate"}:
+                continue
+            line_clean = preprocess_cad_text(line_clean)
+            for cat, keywords in category_keywords.items():
+                for k in keywords:
+
+                    pattern = r"\b" + re.escape(k.lower()) + r"\b"
+
+                    if re.search(pattern, line_clean):
+                        category_text[cat].append(line_clean)
+                        break
+                else:
+                    continue  # inner loop not matched
+                break  # outer loop matched
 
     dataset_entries = []
-
-    user_content = f"Analyze the following drawing OCR text and organize them by trade category and estimate costs. Drawing OCR Text:\n"
-
     # Get unique divisions from summary
-    divisions = set(s["Div"] for s in summary_data if s.get("Div"))
+    divisions = set(s["Div", "Category"] for s in summary_data if s.get("Div"))
     details_clean = []
-    for div in divisions:
+    for div, category in divisions:
         # Filter detail items for this division
         details_div = [d for d in detail_items if d.get("Div") == div]
-        # summary_div = [d for d in summary_data if d.get("Div") == div]
+        ocr_text = category_text[category]
 
         if not details_div:
-            continue  # skip empty div
+            continue 
 
-        # Remove "Div" field from details
+        user_content = f"OCR text: {ocr_text}. Project Location: USA. Extract all job activities for category-{category} with unit, quantity, labor working hours and equipment working hours in JSON.\n"
+        
         details_clean = []
         for d in details_div:
-            d_clean = {k: v for k, v in d.items() if k != "Div"}
-            # Assign category based on summary Description of this Div
-            # Pick first matching summary description for this div
-            summary_descs = [s["Category"] for s in summary_data if s.get("Div") == div]
-            d_clean["Category"] = summary_descs[0] if summary_descs else ""
+            d_clean = {k: v for k, v in d.items() if k != "Div"} # Remove "Div" field from details
+            d_clean["Category"] = category
             details_clean.append(d_clean)
         
         assistant_content = json.dumps(details_clean)
@@ -364,32 +565,6 @@ for pdf_file in os.listdir(PDF_FOLDER):
                 {"role": "assistant", "content": assistant_content}
             ]
         })
-
-    # clean_text = clean_ocr_text(pdf_text)
-    # chunks = smart_chunk_text(clean_text)
-
-    # for chunk in chunks:
-    #     if len(chunk) < 120:
-    #         continue
-
-    #     matched_jobs = match_jobs_to_chunk_ocr_tolerant(chunk, details_clean)
-
-    #     if not matched_jobs:
-    #         continue  # skip irrelevant chunk
-
-    #     entry = {
-    #         "messages": [
-    #             {
-    #                 "role": "user",
-    #                 "content": f"Extract all job activities, quantities, costs, and categories from this OCR text:\n{chunk}"
-    #             },
-    #             {
-    #                 "role": "assistant",
-    #                 "content": json.dumps(matched_jobs, ensure_ascii=False)
-    #             }
-    #         ]
-    #     }
-        # dataset_entries.append(entry)
 
 
 # Write JSONL

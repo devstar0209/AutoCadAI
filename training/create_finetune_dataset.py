@@ -134,7 +134,7 @@ category_keywords = {
     ],
 
     "Electrical": [
-        "panelboard", "circuit", "breaker", "wire", "receptacle", 
+        "panelboard", "circuit", "conduit", "breaker", "wire", "receptacle", 
         "lighting", "switch", "transformer", "distribution", "power", "ATS"
     ],
 
@@ -338,8 +338,6 @@ def read_excel_costs(excel_path):
         # Reload with detected header
         df = pd.read_excel(xls, sheet_name=sheet, header=header_row, engine=engine)
 
-        total_cost = 0
-
         if sheet.lower() == "summary":
             for _, row in df.iterrows():
                 desc = str(row.get("Description", "")).strip()
@@ -347,30 +345,27 @@ def read_excel_costs(excel_path):
 
                 if desc and pd.notna(cost) and float(cost) > 0:
                     summary_data.append({
-                        "Div": row.get("Div"),
+                        "Div": row.get("Div", ""),
                         "Category": desc
                     })
         else:
             for _, row in df.iterrows():
-                subtotal = row.get("Subtotal") or row.get("Sub.Cost") or 0
-                total = row.get("Total") or row.get("Cost") or 0
                 description = str(row.get("DESCRIPTION", ""))
-                if description == "Total Project Cost":
-                    total_cost = total
-                    continue
-                if (pd.isna(subtotal) or float(subtotal) <= 0) and (pd.isna(total) or float(total) <= 0):
-                    continue
-                if (float(total) > 0) and (pd.isna(subtotal) or float(subtotal) <= 0):
-                    subtotal = total
-
-                detail_items.append({
-                    "Div": row.get("Div"),
-                    "Job Activity": description,
-                    "Quantity": str(row.get("Quant.", 0)),
-                    "Unit": str(row.get("Unit", "")),
-                    "L.hrs": row.get("L.Hrs.", 0),
-                    "E.hrs": row.get("E.Hrs.", 0),
-                })
+                div = row.get("Div", "")
+                unit = str(row.get("Unit", "")).strip().lower()
+                if div != "" and unit != "":
+                    try:
+                        detail_items.append({
+                            "Div": div,
+                            "Job Activity": description,
+                            "Quantity": str(row.get("Quant.", 0)),
+                            "Unit": unit,
+                            "L.hrs": round(float(row.get("L.Hrs.", 0)),1),
+                            "E.hrs": round(float(row.get("E.Hrs.", 0)), 1),
+                        })
+                    except Exception as e:
+                        print(f"Error processing row in {sheet}: {e}")
+                        continue
 
     return summary_data, detail_items
 
@@ -389,51 +384,6 @@ def clean_ocr_text(text: str) -> str:
     
     return text
 
-def smart_chunk_text(ocr_text: str, max_chunk_len=1200, min_chunk_len=150):
-    """
-    Splits OCR text into logical 'job activity' chunks using regex patterns.
-    - Groups related lines until likely new activity starts
-    - Keeps chunks semantically complete for fine-tuning
-    """
-
-    lines = [ln.strip() for ln in ocr_text.split("\n") if ln.strip()]
-    chunks = []
-    current_chunk = ""
-
-    job_start_pattern = re.compile(
-        r"^([A-Z][a-zA-Z ]{3,}|Protect|Install|Provide|Remove|Excavate|Construct|Repair|Clean|Paint)",
-        re.IGNORECASE,
-    )
-    has_cost_pattern = re.compile(r"\b\d{2,}\.\d{2}\b")
-    has_unit_pattern = re.compile(r"\b(\d+(\.\d+)?)\s?(ea|lf|sf|ft|allow|each)\b", re.IGNORECASE)
-
-    for line in lines:
-        # Check if this line is likely a new job activity
-        new_job = bool(job_start_pattern.search(line) and (has_cost_pattern.search(line) or has_unit_pattern.search(line)))
-
-        if new_job and len(current_chunk) >= min_chunk_len:
-            chunks.append(current_chunk.strip())
-            current_chunk = line
-        else:
-            if len(current_chunk) + len(line) < max_chunk_len:
-                current_chunk += " " + line
-            else:
-                chunks.append(current_chunk.strip())
-                current_chunk = line
-
-    # Final chunk
-    if len(current_chunk.strip()) > 0:
-        chunks.append(current_chunk.strip())
-
-    # Merge tiny chunks with previous ones
-    merged = []
-    for chunk in chunks:
-        if merged and len(chunk) < min_chunk_len:
-            merged[-1] += " " + chunk
-        else:
-            merged.append(chunk)
-
-    return merged
 # ----------------------------------------
 # 🔸 Utility: text cleanup
 # ----------------------------------------
@@ -452,40 +402,6 @@ def fuzzy_ratio(a, b):
     """Basic fuzzy similarity score."""
     return SequenceMatcher(None, a, b).ratio()
 
-
-# ----------------------------------------
-# 🔸 Advanced fuzzy+keyword matching
-# ----------------------------------------
-def match_jobs_to_chunk_ocr_tolerant(chunk, assistant_json,
-                                     fuzzy_threshold=0.55,
-                                     keyword_overlap_threshold=0.25):
-    """
-    Return only those jobs whose 'Job Activity' roughly appears
-    in the chunk, tolerant to OCR distortions and partial matches.
-    """
-    matched = []
-    chunk_norm = normalize_text(chunk)
-    chunk_tokens = set(chunk_norm.split())
-
-    for job in assistant_json:
-        job_name = job["Job Activity"]
-        if not job_name:
-            continue
-
-        job_norm = normalize_text(job_name)
-        job_tokens = set(job_norm.split())
-
-        # 1️⃣ Fuzzy match on full strings
-        sim = fuzzy_ratio(job_norm, chunk_norm)
-
-        # 2️⃣ Token overlap score (intersection over smaller set)
-        overlap = len(chunk_tokens & job_tokens) / max(1, len(job_tokens))
-
-        # 3️⃣ Decide match
-        if sim >= fuzzy_threshold or overlap >= keyword_overlap_threshold:
-            matched.append(job)
-
-    return matched
 # -----------------------------
 # 3. GENERATE JSONL ENTRIES
 # -----------------------------
@@ -498,6 +414,7 @@ for pdf_file in os.listdir(PDF_FOLDER):
     project_name = os.path.splitext(pdf_file)[0]
     pdf_path = os.path.join(PDF_FOLDER, pdf_file)
     txt_path = pdf_path.replace(".pdf", ".txt")
+    json_path = pdf_path.replace(".pdf", ".json")
 
     # Corresponding Excel
     excel_path = os.path.join(EXCEL_FOLDER, project_name + ".xls")
@@ -533,38 +450,55 @@ for pdf_file in os.listdir(PDF_FOLDER):
                     if re.search(pattern, line_clean):
                         category_text[cat].append(line_clean)
                         break
-                else:
-                    continue  # inner loop not matched
-                break  # outer loop matched
+                    else:
+                        continue  # inner loop not matched
+                    break  # outer loop matched
 
-    dataset_entries = []
+    with open(json_path, "w", encoding="utf-8") as file:
+        file.write(json.dumps(category_text))
+
+    combined_category_text = {
+        cat: " ".join(lines)
+        for cat, lines in category_text.items()
+        if lines
+    }
+    
     # Get unique divisions from summary
-    divisions = set(s["Div", "Category"] for s in summary_data if s.get("Div"))
+    divisions = {
+        (s["Div"], s["Category"])
+        for s in summary_data
+        if s.get("Div") and s.get("Category")
+    }
     details_clean = []
     for div, category in divisions:
         # Filter detail items for this division
-        details_div = [d for d in detail_items if d.get("Div") == div]
-        ocr_text = category_text[category]
-
-        if not details_div:
-            continue 
-
-        user_content = f"OCR text: {ocr_text}. Project Location: USA. Extract all job activities for category-{category} with unit, quantity, labor working hours and equipment working hours in JSON.\n"
+        details_div = [d for d in detail_items if d.get("Div", "") == div]
         
-        details_clean = []
-        for d in details_div:
-            d_clean = {k: v for k, v in d.items() if k != "Div"} # Remove "Div" field from details
-            d_clean["Category"] = category
-            details_clean.append(d_clean)
-        
-        assistant_content = json.dumps(details_clean)
+        try:
+            ocr_text = combined_category_text[category]
+            
+            if not details_div:
+                continue 
 
-        dataset_entries.append({
-            "messages": [
-                {"role": "user", "content": user_content},
-                {"role": "assistant", "content": assistant_content}
-            ]
-        })
+            user_content = f"OCR text: {ocr_text}. Extract all job activities for category-{category} with unit, quantity, labor working hours and equipment working hours in JSON.\n"
+            
+            details_clean = []
+            for d in details_div:
+                d_clean = {k: v for k, v in d.items() if k != "Div"} # Remove "Div" field from details
+                d_clean["Category"] = category
+                details_clean.append(d_clean)
+            
+            assistant_content = json.dumps(details_clean)
+
+            dataset_entries.append({
+                "messages": [
+                    {"role": "user", "content": user_content},
+                    {"role": "assistant", "content": assistant_content}
+                ]
+            })
+        except Exception as e:
+            print(f"Error processing division {div}, category {category}: {e}")
+            continue
 
 
 # Write JSONL

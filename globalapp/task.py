@@ -11,8 +11,11 @@ from concurrent.futures import ThreadPoolExecutor
 from pdf2image import convert_from_path
 from PyPDF2 import PdfReader
 from reportlab.lib import colors
-from reportlab.lib.pagesizes import A3, landscape
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib.pagesizes import letter, landscape, A3, A2
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageTemplate, Frame, PageBreak
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.enums import TA_LEFT
+from datetime import datetime
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
@@ -23,6 +26,9 @@ pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"  # Linux
 # pytesseract.pytesseract.tesseract_cmd = r"C:\Path\To\tesseract.exe"  # Windows
 MAX_WORKERS = 4
 _currency = "USD"
+table_elements = []
+drawing_date=""
+pdf_total_pages = 0
 
 allowed_categories = [
     "General Requirements",
@@ -398,7 +404,7 @@ Return a JSON array of objects, one per activity, with these fields:
 - L.Hrs (round number)
 - E.Rate (equipment rate per hour)
 - E.Hrs (round number)
-- Currency
+- Currency (depends on project location)
 
 Project Location: {project_location}
 
@@ -437,11 +443,14 @@ def convert_pdf_page_to_image(pdf_path: str, page_number: int) -> str:
     return image_path
 
 # =================== OUTPUT GENERATION ===================
-def generate_outputs(output_json: dict, filename: str):
-    print(f"Generating outputs...")
+def generate_outputs(output_json: dict, project_title: str, output_excel: str, output_pdf: str):
+    print(f"Generating Project {project_title} outputs...")
     """
     Save structured JSON estimate into Excel with Summary + Details.
     """
+    summary_table_data = []
+    detail_table_data = []
+
     wb = Workbook()
 
     from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
@@ -449,6 +458,22 @@ def generate_outputs(output_json: dict, filename: str):
 
     ws_summary = wb.active
     ws_summary.title = "Summary"
+
+    ws_summary.merge_cells('A1:O1')
+
+    title_cell = ws_summary['A1']
+    title_cell.value = project_title
+
+    title_cell.font = Font(
+        size=16,
+        bold=True
+    )
+
+    title_cell.alignment = Alignment(
+        horizontal='center',
+        vertical='center'
+    )
+    ws_summary.row_dimensions[1].height = 40
 
     # Define styles
     header_font = Font(bold=True, size=11)
@@ -462,11 +487,12 @@ def generate_outputs(output_json: dict, filename: str):
         bottom=Side(style='thin')
     )
 
+    summary_table_data.append(["Div", "Description", "Total"])  # headers    
     ws_summary.append(["Div", "Description", "Total"]) # headers
 
     # Style header
     for col in range(1, 4):
-        cell = ws_summary.cell(row=1, column=col)
+        cell = ws_summary.cell(row=2, column=col)
         cell.font = header_font
         cell.fill = header_fill
         cell.border = border_style
@@ -479,15 +505,22 @@ def generate_outputs(output_json: dict, filename: str):
 
     for item in output_json.get("Summary", []):
         currency = item.get("Currency", "USD")
+        summary_table_data.append([
+            item.get("Div", 0),
+            item.get("Category", ""),
+            currency+"$"+str(format(item.get("Total Cost", 0), ","))
+        ])
         ws_summary.append([
-        item.get("Div", 0),
-        item.get("Category", ""),
-        currency+"$"+str(format(item.get("Total Cost", 0), ","))
-    ])
+            item.get("Div", 0),
+            item.get("Category", ""),
+            currency+"$"+str(format(item.get("Total Cost", 0), ","))
+        ])
 
+    
     # --- Write Details Sheet ---
     ws_details = wb.create_sheet("Details")
     headers = ["Div", "CSI Code", "Description", "Quant.", "Unit", "M.U/Cost", "Total.Material", "Equip.Hrs","Equip.Rate", "Total.Equip","Labor.Hrs","Labor.Rate", "Total.Labor", "Sub Markups", "Subtotal Cost"]
+    detail_table_data.append(headers)
     ws_details.append(headers)
 
     # Style header
@@ -538,10 +571,88 @@ def generate_outputs(output_json: dict, filename: str):
             currency+"$"+format(sub_markups, ","),
             currency+"$"+str(subtotal)
         ])
-
+        detail_table_data.append([
+            item.get("Div", 0),
+            item.get("CSI Code", ""),
+            item.get("Job Activity", ""),
+            format(qty, ","),
+            item.get("Unit", ""),
+            currency+"$"+str(format(ucost, ",")),
+            currency+"$"+format(mcost, ","),
+            ehrs,
+            currency+"$"+str(format(erate, ",")),
+            currency+"$"+format(ecost, ","),
+            lhrs,
+            currency+"$"+str(format(lrate, ",")),
+            currency+"$"+format(lcost, ","),
+            currency+"$"+format(sub_markups, ","),
+            currency+"$"+str(subtotal)
+        ])
+    
     # Save Excel
-    wb.save(filename)
-    print(f"✅ Exported estimate to {filename}")
+    wb.save(output_excel)
+    print(f"✅ Exported estimate to {output_excel}")
+
+    # --- Generate PDF ---
+    page_width, page_height = landscape(A2)
+    table_width = page_width * 0.90
+
+    frame = Frame(page_width * 0.05,  # Left margin
+                  60,                 # Bottom margin (leave space for footer)
+                  table_width,        # Content width
+                  page_height - 120,  # Content height (leave space for header & footer)
+                  id='main_frame')
+    template = PageTemplate(id='custom', frames=[frame], onPage=lambda canvas, doc: header_footer(canvas, doc, project_title, pdf_total_pages))
+    
+    table = Table(detail_table_data, repeatRows=1)
+    
+    style = TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                    ('ALIGN', (0, 0), (2, -1), 'LEFT'),
+                    ('ALIGN', (3, 0), (-1, -1), 'RIGHT'),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                    ('FONTSIZE', (0, 0), (-1, 0), 12),
+                    ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+                    ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                    ('BACKGROUND', (0, -1), (-1, -1), colors.lightgrey),  # Light grey background
+                    ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),  # Bold text
+                    ('TEXTCOLOR', (0, -1), (-1, -1), colors.black),  # Black text
+                ])
+    table.setStyle(style)
+    
+    summary_table = Table(summary_table_data, repeatRows=1)
+    summary_style = TableStyle([
+                    ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                    ('ALIGN', (0, 0), (1, -1), 'LEFT'),
+                    ('ALIGN', (2, 0), (-1, -1), 'RIGHT'),
+                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                    ('FONTSIZE', (0, 0), (-1, 0), 12),
+                    ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+                    ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                    ('BACKGROUND', (0, -1), (-1, -1), colors.lightgrey),  # Light grey background
+                    ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),  # Bold text
+                    ('TEXTCOLOR', (0, -1), (-1, -1), colors.black),  # Black text
+                ])
+    summary_table.setStyle(summary_style)
+
+    table_elements.append(summary_table)
+    table_elements.append(PageBreak())
+    table_elements.append(table)
+
+    dummy_elements = []
+    dummy_elements.append(summary_table)
+    dummy_elements.append(PageBreak())
+    dummy_elements.append(table)
+    dummy_doc = SimpleDocTemplate("dummy.pdf", pagesize=landscape(A2))
+    dummy_doc.addPageTemplates([template])
+    dummy_doc.build(dummy_elements, onLaterPages=lambda canvas, doc: count_pages(canvas, doc), onFirstPage=lambda canvas, doc: count_pages(canvas, doc))
+    print("pdf total pages=======>", pdf_total_pages)
+    
+    doc = SimpleDocTemplate(output_pdf, pagesize=landscape(A2))
+    doc.addPageTemplates([template])
+    doc.build(table_elements, onFirstPage=lambda canvas, doc: header_footer(canvas, doc, project_title, pdf_total_pages), onLaterPages=lambda canvas, doc: header_footer(canvas, doc, project_title, pdf_total_pages))
 
 # =================== MAIN PDF PROCESSING WITH LIVE PROGRESS ===================
 def get_page_count(pdf_file):
@@ -553,10 +664,11 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
     json_path = pdf_path.replace(".pdf", ".json")
     _currency = currency
 
+    total_pages = get_page_count(pdf_path)
+
     if not os.path.exists(txt_path):
         print("File does not exist")
 
-        total_pages = get_page_count(pdf_path)
         
         all_texts = [""] * total_pages
 
@@ -655,7 +767,7 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
     # ✅ Generate Excel output
     if final_jobs_list:
         final_output = generate_summary_from_details(final_jobs_list)
-        generate_outputs(final_output, output_excel)
+        generate_outputs(final_output, cad_title, output_excel, output_pdf)
 
         base_path = r"/var/Django/cadProcessor/media"
         pdf_url=os.path.relpath(output_pdf, base_path).replace("\\", "/")
@@ -778,3 +890,65 @@ def extract_json_from_response(response_text: str):
 
 def validate_data(data: list) -> bool:
     return isinstance(data, list) and len(data) > 0
+
+def header_footer(canvas, doc, project_title, pdf_total_pages):
+    """
+    Custom function to add header and footer on each page.
+    """
+    global  drawing_date
+    page_width, page_height = landscape(A2)
+    table_width = page_width * 0.90  # 90% of A3 width
+    styles = getSampleStyleSheet()
+    try:
+        current_page = canvas.getPageNumber()  # Get current page number
+        print("Current Page:", current_page)
+        title_style = ParagraphStyle('TitleStyle', parent=styles['Heading1'], fontSize=12, spaceAfter=10)
+        date_style = ParagraphStyle('DateStyle', parent=styles['Normal'], alignment=2, fontSize=12)
+        title = Paragraph(f"<b>{project_title}</b>", title_style)
+        date = Paragraph(f"<b>{'Estimate Published Date: '+ datetime.today().strftime('%m/%d/%Y')}</b>", date_style)
+        # Create a table for alignment
+        title_date_table = Table([[title, date]], colWidths=[table_width * 0.5, table_width * 0.5])
+        title_date_table.setStyle(TableStyle([
+            ('ALIGN', (0, 0), (0, 0), 'LEFT'),
+            ('ALIGN', (1, 0), (1, 0), 'RIGHT'),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
+        ]))
+        if current_page == 0:
+            summary_title = "Project Cost Summary"
+            title = Paragraph(f"<b>{project_title}</b><br/><b>{summary_title}</b>", title_style)
+            title_date_table = Table([[title, date]], colWidths=[table_width * 0.5, table_width * 0.5])
+            title_date_table.setStyle(TableStyle([
+            ('ALIGN', (0, 0), (0, 0), 'LEFT'),
+            ('ALIGN', (1, 0), (1, 0), 'RIGHT'),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
+        ]))
+            
+        # Header: Project Title (Left) and Date (Right)
+        
+        
+
+        # Draw the header
+        width, height = landscape(A2)
+        title_date_table.wrapOn(canvas, width, height)
+        if current_page == pdf_total_pages:
+            title_date_table.drawOn(canvas, width * 0.05, height - 80)  # Positioning at the top (5% margin)
+        else:
+            title_date_table.drawOn(canvas, width * 0.05, height - 50)
+        footer_date_style = ParagraphStyle('FooterDateStyle', parent=date_style, alignment=TA_LEFT)
+        if drawing_date:
+            footer_date = Paragraph(f"<b>{'Drawing  Published Date: ' + str(drawing_date)}</b>", footer_date_style)
+        else:
+            footer_date = Paragraph(f"<b>{'Drawing  Published Date: ' + datetime.today().strftime('%m/%d/%Y')}</b>", footer_date_style)
+        footer_date.wrapOn(canvas, page_width*0.90, page_height)
+        footer_date.drawOn(canvas, page_width*0.05, 40)  # Adjusted Y position
+    except Exception as e:
+        print("Error in header_footer:", e)
+def on_page(canvas, doc):
+        global project_title, pdf_total_pages
+        """Apply headers and footers with correct page numbering"""
+        header_footer(canvas, doc, project_title, pdf_total_pages)
+def count_pages(canvas, doc):
+        global pdf_total_pages
+        """Counts the total number of pages"""
+        pdf_total_pages = canvas.getPageNumber()
+        print("Total Pages=>>", pdf_total_pages)  

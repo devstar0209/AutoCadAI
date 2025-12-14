@@ -384,17 +384,18 @@ Only use the information explicitly present in the OCR text provided.
 
     user_prompt = f"""
 Extract all job activities from the following OCR text for category: {category}.
-Project Location: {project_location}.
+Project Location is {project_location}.
 For each activity:
 - Skip exact duplicate activities
 - Use 2024 MasterFormat (CSI) codes
 - Assign one of the allowed categories from the predefined list: {','.join(allowed_categories)}
-- If Project Location is in the Caribbean or any Commonwealth country, use NRM2/RICS cost standards and metric units (metres, cubic metres, etc.).
-  Otherwise, use US construction cost standards (RSMeans US) with imperial units (Concrete paving, flatwork, slabs, sidewalks, pads → SF; other concrete → CY).
+- If Project Location is USA or non-Commonwealth country, use only RSMeans cost standards and imperial units (feet, cubic yards, etc.). Electrical labor follows NECA 2023-2024. Units is SF for concrete paving, CY for other concrete works.
+- If Project Location is in the Caribbean or any Commonwealth country, use only NRM2/RICS cost standards and ONLY metric units (metres, cubic metres, etc.).
+
 Return a JSON array of objects, one per activity, with these fields:
 - CSI Code (format 01 02 03.04)
 - Category
-- Job Activity (only exact or relative description as it appears in OCR text)
+- Job Activity (only exact description as it appears in OCR text)
 - Quantity (number, use default only if missing)
 - Unit (use default only if missing)
 - M.UCost (material cost per unit)
@@ -402,6 +403,8 @@ Return a JSON array of objects, one per activity, with these fields:
 - L.Hrs (round number)
 - E.Rate (equipment rate per hour)
 - E.Hrs (round number)
+- IS_ELE (true if used NECA 2023-2024 for electrical labor, else false)
+- IS_NRM2 (true if NRM2/RICS standards were used, else false)
 
 OCR text:
 {cad_text}
@@ -421,7 +424,7 @@ OCR text:
         # Remove markdown fences and extra whitespace
         response_text = re.sub(r"^```json\s*|\s*```$", "", response_text, flags=re.DOTALL).strip()
         response_text = response_text.replace('```', '').strip()
-        # print(f"AI response received:: {response_text}")
+        print(f"AI response received:: {response_text}")
         
         return response_text
     except Exception as e:

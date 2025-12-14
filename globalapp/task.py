@@ -25,7 +25,6 @@ client = openai.OpenAI(api_key=API_KEY)
 pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"  # Linux
 # pytesseract.pytesseract.tesseract_cmd = r"C:\Path\To\tesseract.exe"  # Windows
 MAX_WORKERS = 4
-_currency = "USD"
 table_elements = []
 drawing_date=""
 pdf_total_pages = 0
@@ -385,14 +384,13 @@ Only use the information explicitly present in the OCR text provided.
 
     user_prompt = f"""
 Extract all job activities from the following OCR text for category: {category}.
+Project Location: {project_location}.
 For each activity:
 - Skip exact duplicate activities
 - Use 2024 MasterFormat (CSI) codes
 - Assign one of the allowed categories from the predefined list: {','.join(allowed_categories)}
-- Adjust units according to : 
-   Caribbean/Commonwealth → NRM2 units.
-   Otherwise → RSMeans US units. For RSMeans US: Concrete Paving → SF; other concrete → CY.
-
+- If Project Location is in the Caribbean or any Commonwealth country, use NRM2/RICS cost standards and metric units (metres, cubic metres, etc.).
+  Otherwise, use US construction cost standards (RSMeans US) with imperial units (Concrete paving, flatwork, slabs, sidewalks, pads → SF; other concrete → CY).
 Return a JSON array of objects, one per activity, with these fields:
 - CSI Code (format 01 02 03.04)
 - Category
@@ -404,9 +402,6 @@ Return a JSON array of objects, one per activity, with these fields:
 - L.Hrs (round number)
 - E.Rate (equipment rate per hour)
 - E.Hrs (round number)
-- Currency (depends on project location)
-
-Project Location: {project_location}
 
 OCR text:
 {cad_text}
@@ -443,7 +438,7 @@ def convert_pdf_page_to_image(pdf_path: str, page_number: int) -> str:
     return image_path
 
 # =================== OUTPUT GENERATION ===================
-def generate_outputs(output_json: dict, project_title: str, output_excel: str, output_pdf: str):
+def generate_outputs(output_json: dict, project_title: str, currency: str, output_excel: str, output_pdf: str):
     print(f"Generating Project {project_title} outputs...")
     """
     Save structured JSON estimate into Excel with Summary + Details.
@@ -504,7 +499,6 @@ def generate_outputs(output_json: dict, project_title: str, output_excel: str, o
     ws_summary.column_dimensions['C'].width = 18
 
     for item in output_json.get("Summary", []):
-        currency = item.get("Currency", "USD")
         summary_table_data.append([
             item.get("Div", 0),
             item.get("Category", ""),
@@ -541,7 +535,7 @@ def generate_outputs(output_json: dict, project_title: str, output_excel: str, o
         ws_details.column_dimensions[col].width = 10
 
     for item in output_json.get("Details", []):
-        currency = item.get("Currency", "USD")
+        
         ucost = round(item.get("M.UCost", 0), 2)
         qty = item.get("Quantity", 0)
         lrate = round(item.get("L.Rate", 0), 2)
@@ -662,7 +656,7 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
     combined_text = ""
     txt_path = pdf_path.replace(".pdf", ".txt")
     json_path = pdf_path.replace(".pdf", ".json")
-    _currency = currency
+    
 
     total_pages = get_page_count(pdf_path)
 
@@ -767,7 +761,7 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
     # ✅ Generate Excel output
     if final_jobs_list:
         final_output = generate_summary_from_details(final_jobs_list)
-        generate_outputs(final_output, cad_title, output_excel, output_pdf)
+        generate_outputs(final_output, cad_title, currency, output_excel, output_pdf)
 
         base_path = r"/var/Django/cadProcessor/media"
         pdf_url=os.path.relpath(output_pdf, base_path).replace("\\", "/")

@@ -18,6 +18,7 @@ from reportlab.lib.enums import TA_LEFT
 from datetime import datetime
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+import base64
 
 # =================== CONFIG ===================
 API_KEY = ""
@@ -67,8 +68,8 @@ category_keywords = {
     ],
 
     "Concrete": [
-        "concrete", "paving", "slab", "footing", "foundation", "patch", "curb", 
-        "sidewalk", "masonry grout", "reinforcing", "rebar", "cast-in-place"
+        "slab", "footing", "foundation", "patch", "curb", 
+        "masonry grout", "reinforcing", "rebar", "cast-in-place"
     ],
 
     "Masonry": [
@@ -81,14 +82,14 @@ category_keywords = {
         "dowel", "weld", "bracket", "stainless steel", "guardrail", "handrail"
     ],
 
-    "Wood, Plastic & Composites": [
+    "Wood, Plastic and Composites": [
         "wood", "plywood", "composite", "plastic", "millwork", "laminate", 
-        "finish carpentry", "paneling", "cabinet", "trim"
+        "finish carpentry", "paneling", "cabinet", "trim", "fascia boards", "roof framing"
     ],
 
     "Thermal & Moisture Protection": [
-        "insulation", "vapor barrier", "waterproof", "membrane", "roofing", 
-        "sealant", "caulk", "weatherproof", "thermal protection", "moisture barrier"
+        "insulation", "vapor barrier", "waterproof", "membrane", "roofing", "shingle", "pitched roof", "sloped roof", "roof covering",
+        "roof finish", "sealant", "caulk", "weatherproof", "thermal protection", "moisture barrier", "fascia"
     ],
 
     "Openings": [
@@ -163,7 +164,7 @@ category_keywords = {
     ],
 
     "Exterior Improvement": [
-        "landscape", "sidewalk", "curb", "fence", "scrim", 
+        "paving","landscape", "sidewalk", "curb", "fence", "scrim", "sidewalk",
         "site furniture", "bollard", "planter", "hardscape"
     ],
 
@@ -365,8 +366,21 @@ def extract_project_location(cad_text):
 
     return 'USA'
 
+def getQuantityTakeoff(base64):
+    print("here")
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {"role": "user", "content": [
+                {"type": "text", "text": "Provide a take-off of the  quantities using the scale from this engineering drawing  returning as a json formart"},
+                {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{base64}"}}
+            ]}
+        ]
+    )
+    print(f"AI response received:: {response.choices[0].message.content}")
+    return response.choices[0].message.content
 
-def get_construction_jobs(cad_text, category, project_location='USA'):
+def get_construction_jobs(cad_text, category, project_title, project_location='USA'):
     print(f"Starting construction category {category} jobs analysis...")
 
     # Determine if NRM2 standards should be used
@@ -383,31 +397,46 @@ Only use the information explicitly present in the OCR text provided.
 
 
     user_prompt = f"""
-Extract all job activities from the following OCR text for category: {category}.
-Project Location is {project_location}.
-For each activity:
-- Skip exact duplicate activities
-- Use 2024 MasterFormat (CSI) codes
+Estimate construction cost for {category} in the {project_location}. Based on the following OCR text:
+{cad_text}
+Location: {project_location}.
+Project Title: {project_title}.
+For each item:
+- Skip exact duplicate description.
+- Use 2024 MasterFormat (CSI) codes.
 - Assign one of the allowed categories from the predefined list: {','.join(allowed_categories)}
-- If Project Location is USA or non-Commonwealth country, use only RSMeans cost standards and imperial units (feet, cubic yards, etc.). Electrical labor follows NECA 2023-2024. Units is SF for concrete paving, CY for other concrete works.
-- If Project Location is in the Caribbean or any Commonwealth country, use only NRM2/RICS cost standards and ONLY metric units (metres, cubic metres, etc.).
+- The assigned Category MUST match the CSI Division.
+- If OCR text references pitched roof, roof covering, or shingles, you MUST also check for and extract related roofing scopes present in the OCR text.
+- If Location is USA or non-Commonwealth country, adjust only RSMeans cost standards and imperial units (SF, CY, LF, EA, etc.). Electrical labor follows NECA 2023-2024. Units is SF for concrete paving, CY for other concrete works.
+- If Location is in the Caribbean or any Commonwealth country, adjust local market benchmarks and ONLY RICS/NRM2 metric units (m, m2, m3, nr, kg, tonnes).
+- Unit can't be "wk".
+- Apply net quantity measurement principles (measure to structural faces, exclude waste unless specified)
+- Currency must be native currency for the location (e.g., JMD for Jamaica, BBD for Barbados, etc.)
+- Material cost should be 0 for Earth work.
+- M.UCost = material cost PER UNIT ONLY.
+- L.Rate = labor cost PER HOUR ONLY.
+- E.Rate = equipment cost PER HOUR ONLY.
+- ANTI-HALLUCINATION: Use ONLY items that exist in OCR text - do not generate additional similar items.
 
-Return a JSON array of objects, one per activity, with these fields:
+Return a JSON array of objects, one per item, with these fields:
 - CSI Code (format 01 02 03.04)
 - Category
-- Job Activity (only exact description as it appears in OCR text)
-- Quantity (number, use default only if missing)
-- Unit (use default only if missing)
-- M.UCost (material cost per unit)
-- L.Rate (labor rate per hour)
+- Job Activity (description based on OCR text)
+- Quantity (round number, use default only if missing)
+- Unit
+- M.UCost
+- L.Rate
 - L.Hrs (round number)
-- E.Rate (equipment rate per hour)
+- E.Rate
 - E.Hrs (round number)
 - IS_ELE (true if used NECA 2023-2024 for electrical labor, else false)
 - IS_NRM2 (true if NRM2/RICS standards were used, else false)
+- Country
+- Currency
 
-OCR text:
-{cad_text}
+Validation:
+- If a selected Category does not match the CSI Division, you MUST correct the Category to the proper one.
+- NEVER change the CSI code to fit the Category.
 """
 
     try:
@@ -540,7 +569,7 @@ def generate_outputs(output_json: dict, project_title: str, currency: str, outpu
     for item in output_json.get("Details", []):
         
         ucost = round(item.get("M.UCost", 0), 2)
-        qty = item.get("Quantity", 0)
+        qty = round(item.get("Quantity", 0), 2)
         lrate = round(item.get("L.Rate", 0), 2)
         lhrs = item.get("L.Hrs", 0)
         erate = round(item.get("E.Rate", 0), 2)
@@ -673,6 +702,8 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
             img_path = convert_pdf_page_to_image(pdf_path, page_num)
             if img_path:
                 all_texts[page_num-1] = extract_text_from_image(img_path)
+                # base64_image = encode_image(img_path)
+                # job_data = getQuantityTakeoff(base64_image)
             progress = round((page_num / total_pages) * 100, 2)
             notify_frontend(total_pages, page_num, "Processing is in progress...", "", "", session_id) 
 
@@ -727,7 +758,7 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
         
         try:
             # Call AI function
-            res = get_construction_jobs(text, cat, location)
+            res = get_construction_jobs(text, cat, cad_title, location)
             jobs_list = json.loads(res)  # Try parsing JSON
             if isinstance(jobs_list, list):
                 all_jobs.extend(jobs_list)  # Add to combined list
@@ -949,3 +980,6 @@ def count_pages(canvas, doc):
         """Counts the total number of pages"""
         pdf_total_pages = canvas.getPageNumber()
         print("Total Pages=>>", pdf_total_pages)  
+def encode_image(image_path):
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode("utf-8")

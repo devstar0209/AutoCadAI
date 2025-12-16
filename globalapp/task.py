@@ -36,8 +36,8 @@ allowed_categories = [
     "Concrete",
     "Masonry",
     "Metal",
-    "Wood, Plastic & Composites",
-    "Thermal & Moisture Protection",
+    "Wood, Plastics, and Composites",
+    "Thermal and Moisture Protection",
     "Openings",
     "Finishes",
     "Specialties",
@@ -82,12 +82,12 @@ category_keywords = {
         "dowel", "weld", "bracket", "stainless steel", "guardrail", "handrail"
     ],
 
-    "Wood, Plastic and Composites": [
+    "Wood, Plastics, and Composites": [
         "wood", "plywood", "composite", "plastic", "millwork", "laminate", 
-        "finish carpentry", "paneling", "cabinet", "trim", "fascia boards", "roof framing"
+        "finish carpentry", "paneling", "cabinet", "trim", "fascia board", "roof framing"
     ],
 
-    "Thermal & Moisture Protection": [
+    "Thermal and Moisture Protection": [
         "insulation", "vapor barrier", "waterproof", "membrane", "roofing", "shingle", "pitched roof", "sloped roof", "roof covering",
         "roof finish", "sealant", "caulk", "weatherproof", "thermal protection", "moisture barrier", "fascia"
     ],
@@ -154,8 +154,7 @@ category_keywords = {
     ],
 
     "Electronic Safety & Security": [
-        "camera", "CCTV", "security system", "access control", "alarm", "sensor", 
-        "turnstile", "gate", "motion detector", "security panel"
+        "camera", "CCTV", "security system", "access control", "alarm", "sensor", "motion detector", "security panel"
     ],
 
     "Earthwork": [
@@ -385,40 +384,39 @@ def get_construction_jobs(cad_text, category, project_title, project_location='U
 
     # Determine if NRM2 standards should be used
     use_nrm2 = should_use_nrm2(project_location, cad_text)
-    # print(f"Using NRM2 standards: {use_nrm2}")
-
-    # Build system prompt based on standards to use
 
     system_prompt = """
 You are an expert construction cost estimator.
-Your job is to extract job activities only from the OCR text of CAD drawings and provide detailed cost estimates.
+Your job is to extract job activities only from the OCR text of CAD drawings and provide detailed quantity take-offs and Material cost per Unit and Labor/Equipment rates in local market benchmark corresponding to project location.
 Only use the information explicitly present in the OCR text provided.
 """
 
 
     user_prompt = f"""
-Estimate construction cost for {category} in the {project_location}. Based on the following OCR text:
-{cad_text}
+I'm looking for a detailed construction cost estimate from AutoCAD drawing text. 
+Please provide detailed construction cost estimate.
+Based on the following Category:{category} and OCR text:
+{cad_text}.
+
 Location: {project_location}.
-Project Title: {project_title}.
-For each item:
+Project Type: {project_title}.
+
+Consider following rules for each item in your estimate:
 - Skip exact duplicate description.
 - Use 2024 MasterFormat (CSI) codes.
-- Assign one of the allowed categories from the predefined list: {','.join(allowed_categories)}
 - The assigned Category MUST match the CSI Division.
-- If OCR text references pitched roof, roof covering, or shingles, you MUST also check for and extract related roofing scopes present in the OCR text.
+- If OCR text references  Pitch Roof, Hip Roof, Slope Roof, Lean-to-Roof, Flat Roof, Mansard Roof, Open Gable End Roof, Dome Roof,  Butterfly Roof A-Farme Roof, Pyramid Roof, Gambrel Roof, Dutch Gable Roof, Bonnet Roof, A-Frame you must add Roof felt,  roof covering ( like.. asphalt, torch down, membrain, wood shingle) and  2x6 Rafters,  2x8 Valley Rafter, 2×10, Ridge Board, 2x10 Fascia Board, 1x12 Notched  Blocking Board to roof  eave, You MUST also check for exact related roof Slope/ Pitch and roofing scope present.
+- Currency must be native currency for the location (e.g., JMD for Jamaica, BBD for Barbados, etc.)
 - If Location is USA or non-Commonwealth country, adjust only RSMeans cost standards and imperial units (SF, CY, LF, EA, etc.). Electrical labor follows NECA 2023-2024. Units is SF for concrete paving, CY for other concrete works.
 - If Location is in the Caribbean or any Commonwealth country, adjust local market benchmarks and ONLY RICS/NRM2 metric units (m, m2, m3, nr, kg, tonnes).
-- Unit can't be "wk".
 - Apply net quantity measurement principles (measure to structural faces, exclude waste unless specified)
-- Currency must be native currency for the location (e.g., JMD for Jamaica, BBD for Barbados, etc.)
-- Material cost should be 0 for Earth work.
+- Material cost should be 0 for Earthwork.
 - M.UCost = material cost PER UNIT ONLY.
 - L.Rate = labor cost PER HOUR ONLY.
 - E.Rate = equipment cost PER HOUR ONLY.
 - ANTI-HALLUCINATION: Use ONLY items that exist in OCR text - do not generate additional similar items.
 
-Return a JSON array of objects, one per item, with these fields:
+Return a valid JSON array of objects, one per item, with these fields:
 - CSI Code (format 01 02 03.04)
 - Category
 - Job Activity (description based on OCR text)
@@ -429,14 +427,14 @@ Return a JSON array of objects, one per item, with these fields:
 - L.Hrs (round number)
 - E.Rate
 - E.Hrs (round number)
-- IS_ELE (true if used NECA 2023-2024 for electrical labor, else false)
-- IS_NRM2 (true if NRM2/RICS standards were used, else false)
-- Country
-- Currency
 
 Validation:
 - If a selected Category does not match the CSI Division, you MUST correct the Category to the proper one.
 - NEVER change the CSI code to fit the Category.
+- CSI code MUST be no empty.
+- Category MUST be no empty.
+- Unit can't be "wk".
+- Return only valid JSON array, no extra text.
 """
 
     try:
@@ -453,7 +451,7 @@ Validation:
         # Remove markdown fences and extra whitespace
         response_text = re.sub(r"^```json\s*|\s*```$", "", response_text, flags=re.DOTALL).strip()
         response_text = response_text.replace('```', '').strip()
-        print(f"AI response received:: {response_text}")
+        # print(f"AI response received:: {response_text}")
         
         return response_text
     except Exception as e:
@@ -822,7 +820,7 @@ def normalize_categories(data: list) -> list:
             continue
 
         normalized_item = {**item}
-        normalized_item["Category"] = cat
+        # normalized_item["Category"] = cat
         normalized_item["Div"] = item.get("CSI Code", "")[:2].strip()  # First two digits of CSI Code as Div
 
         normalized.append(normalized_item)
@@ -842,12 +840,10 @@ def generate_summary_from_details(details: list) -> dict:
 
     summary_map = {}
     total_project_cost = 0.0
-    currency = "USD"
 
     for item in details:
         category = item.get("Category", "Uncategorized").strip()
         div = item.get("Div", 0)
-        currency = item.get("Currency", "USD")
         csi = item.get("CSI Code", "")
         ucost = item.get("M.UCost", 0)
         qty = item.get("Quantity", 0)
@@ -860,7 +856,7 @@ def generate_summary_from_details(details: list) -> dict:
         ecost = round(erate * ehrs, 2)
         sub_markups = round((mcost + lcost + ecost) * 0.25, 2)
         subtotal = round(mcost + lcost + ecost + sub_markups, 2)
-        key = (div, category, currency)
+        key = (div, category)
         summary_map[key] = summary_map.get(key, 0.0) + subtotal
         total_project_cost += subtotal
 
@@ -869,10 +865,9 @@ def generate_summary_from_details(details: list) -> dict:
         {
             "Div": div,
             "Category": category,
-            "Currency": currency,
             "Total Cost": round(total, 2)
         }
-        for (div, category, currency), total in summary_map.items()
+        for (div, category), total in summary_map.items()
     ]
 
     # Sort by Div order
@@ -882,7 +877,6 @@ def generate_summary_from_details(details: list) -> dict:
     summary_list.append({
         "Div": "",  # Keeps it last
         "Category": "Total Project Cost",
-        "Currency": currency,
         "Total Cost": round(total_project_cost, 2)
     })
 

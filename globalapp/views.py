@@ -34,6 +34,7 @@ def upload_pdf(request):
             form = PDFUploadForm(request.POST, request.FILES)
             country= request.POST.get('country')
             currency = request.POST.get('currency')
+            unit= request.POST.get('unit')
             # country = "Jamaica"
             # currency = "JMD"
             session_id = request.POST.get('session_id')
@@ -64,6 +65,7 @@ def upload_pdf(request):
                 session_data.pdf_uploaded = True
                 session_data.country = country
                 session_data.currency = currency
+                session_data.unit = unit
                 session_data.status = 'pdf_uploaded'
                 session_data.project_title = project_title
                 session_data.save()
@@ -138,11 +140,12 @@ def stripe_webhook(request):
         output_pdf_path = session_data.output_pdf_path
         country = session_data.country
         currency = session_data.currency
+        unit = session_data.unit
         project_title = session_data.project_title
         session_data.payment_completed = True
         session_data.status = 'payment_completed'
         session_data.save()
-        future = executor.submit(start_pdf_processing, file_path, excel_path, output_pdf_path, country, currency, pdf_id, project_title)
+        future = executor.submit(start_pdf_processing, file_path, excel_path, output_pdf_path, country, currency, pdf_id, project_title, unit)
         # Resume processing
         # process_pdf_after_payment(pdf_id)
 

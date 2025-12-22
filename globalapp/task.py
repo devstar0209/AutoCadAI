@@ -379,7 +379,7 @@ def getQuantityTakeoff(base64):
     print(f"AI response received:: {response.choices[0].message.content}")
     return response.choices[0].message.content
 
-def get_construction_jobs(cad_text, category, project_title, project_location='USA'):
+def get_construction_jobs(cad_text, category, project_title, project_location, unit):
     print(f"Starting construction category {category} jobs analysis...")
 
     # Determine if NRM2 standards should be used
@@ -405,10 +405,12 @@ Consider following rules for each item in your estimate:
 - Skip exact duplicate description.
 - Use 2024 MasterFormat (CSI) codes.
 - The assigned Category MUST match the CSI Division.
-- If OCR text references  Pitch Roof, Hip Roof, Slope Roof, Lean-to-Roof, Flat Roof, Mansard Roof, Open Gable End Roof, Dome Roof,  Butterfly Roof A-Farme Roof, Pyramid Roof, Gambrel Roof, Dutch Gable Roof, Bonnet Roof, A-Frame you must add Roof felt,  roof covering ( like.. asphalt, torch down, membrain, wood shingle) and  2x6 Rafters,  2x8 Valley Rafter, 2×10, Ridge Board, 2x10 Fascia Board, 1x12 Notched  Blocking Board to roof  eave, You MUST also check for exact related roof Slope/ Pitch and roofing scope present.
+- If OCR references Pitch Roof, Hip Roof, Slope Roof, Lean-to-Roof, Flat Roof, Mansard Roof, Open Gable End Roof, Dome Roof, Butterfly Roof, A-Farme Roof, Pyramid Roof, Gambrel Roof, Dutch Gable Roof, Bonnet Roof, A-Frame Roof, you must add Roof felt, roof covering ( like..Decking board, Roof Sheathing, Asphalt Shingle, Torch down membrain, wood shingle, Aluminum Standing Seam, Sheeting, Metal Tile Roofing, Clay Tile Roofing, and the like) and 2*2 lath, 2*4 Wall Plate, 2*6 Rafters, 2*8 Hip Rafter, Valley Rafters, 2*10, Ridge Board, 2*10 Fascia Board, 1*12 Notched Blocking Board to roof eave. You MUST also check for exact related roof Slope/ Pitch and roofing scope present.
+- If OCR references sewage manhole with frame and cover or MH#1, MH#2, etc. You MUST check for exact manhole quantity, size, depth, and inter level, including related  manhole scope present.
 - Currency must be native currency for the location (e.g., JMD for Jamaica, BBD for Barbados, etc.)
-- If Location is USA or non-Commonwealth country, adjust only RSMeans cost standards and imperial units (SF, CY, LF, EA, etc.). Electrical labor follows NECA 2023-2024. Units is SF for concrete paving, CY for other concrete works.
-- If Location is in the Caribbean or any Commonwealth country, adjust local market benchmarks and ONLY RICS/NRM2 metric units (m, m2, m3, nr, kg, tonnes).
+- Apply {unit} units. If adjust imperial unit, Unit is SF for concrete paving, CY for other concrete works. Otherwise Base concrete material unit cost (M.UCost) is defined per cubic metre (m3).If concrete work is measured in square metres (m2), the M.UCost MUST be adjusted based on slab thickness.
+- If Location is USA or non-Commonwealth country, adjust only RSMeans cost standards. Electrical labor follows NECA 2023-2024.
+- If Location is in the Caribbean or any Commonwealth country, adjust local market benchmarks and ONLY RICS/NRM2 measurement.
 - Apply net quantity measurement principles (measure to structural faces, exclude waste unless specified)
 - Material cost should be 0 for Earthwork.
 - M.UCost = material cost PER UNIT ONLY.
@@ -434,6 +436,7 @@ Validation:
 - CSI code MUST be no empty.
 - Category MUST be no empty.
 - Unit can't be "wk".
+- You MUST produce accurate market rate and cost for labor , equipment, material for country selected for cost estimate
 - Return only valid JSON array, no extra text.
 """
 
@@ -682,7 +685,7 @@ def generate_outputs(output_json: dict, project_title: str, currency: str, outpu
 def get_page_count(pdf_file):
     reader = PdfReader(pdf_file)
     return len(reader.pages)
-def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, currency, session_id, cad_title):
+def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, currency, session_id, cad_title, unit):
     combined_text = ""
     txt_path = pdf_path.replace(".pdf", ".txt")
     json_path = pdf_path.replace(".pdf", ".json")
@@ -756,7 +759,7 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
         
         try:
             # Call AI function
-            res = get_construction_jobs(text, cat, cad_title, location)
+            res = get_construction_jobs(text, cat, cad_title, location, unit)
             jobs_list = json.loads(res)  # Try parsing JSON
             if isinstance(jobs_list, list):
                 all_jobs.extend(jobs_list)  # Add to combined list

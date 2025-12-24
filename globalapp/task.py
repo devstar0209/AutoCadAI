@@ -402,20 +402,20 @@ Location: {project_location}.
 Project Type: {project_title}.
 
 Consider following rules for each item in your estimate:
-- Skip exact duplicate description.
-- Use 2024 MasterFormat (CSI) codes.
-- The assigned Category MUST match the CSI Division.
-- If OCR references Pitch Roof, Hip Roof, Slope Roof, Lean-to-Roof, Flat Roof, Mansard Roof, Open Gable End Roof, Dome Roof, Butterfly Roof, A-Farme Roof, Pyramid Roof, Gambrel Roof, Dutch Gable Roof, Bonnet Roof, A-Frame Roof, you must add Roof felt, roof covering ( like..Decking board, Roof Sheathing, Asphalt Shingle, Torch down membrain, wood shingle, Aluminum Standing Seam, Sheeting, Metal Tile Roofing, Clay Tile Roofing, and the like) and 2*2 lath, 2*4 Wall Plate, 2*6 Rafters, 2*8 Hip Rafter, Valley Rafters, 2*10, Ridge Board, 2*10 Fascia Board, 1*12 Notched Blocking Board to roof eave. You MUST also check for exact related roof Slope/ Pitch and roofing scope present.
-- If OCR references sewage manhole with frame and cover or MH#1, MH#2, etc. You MUST check for exact manhole quantity, size, depth, and inter level, including related  manhole scope present.
-- Currency must be native currency for the location (e.g., JMD for Jamaica, BBD for Barbados, etc.)
-- Apply {unit} units. If adjust imperial unit, Unit is SF for concrete paving, CY for other concrete works. Otherwise Base concrete material unit cost (M.UCost) is defined per cubic metre (m3).If concrete work is measured in square metres (m2), the M.UCost MUST be adjusted based on slab thickness.
-- If Location is USA or non-Commonwealth country, adjust only RSMeans cost standards. Electrical labor follows NECA 2023-2024.
-- If Location is in the Caribbean or any Commonwealth country, adjust local market benchmarks and ONLY RICS/NRM2 measurement.
-- Apply net quantity measurement principles (measure to structural faces, exclude waste unless specified)
-- Material cost should be 0 for Earthwork.
 - M.UCost = material cost PER UNIT ONLY.
 - L.Rate = labor cost PER HOUR ONLY.
 - E.Rate = equipment cost PER HOUR ONLY.
+- Skip exact duplicate description.
+- Use 2024 MasterFormat (CSI) codes.
+- The assigned Category MUST match the CSI Division.
+- Apply net quantity measurement principles (measure to structural faces, exclude waste unless specified)
+- If OCR references Pitch Roof, Hip Roof, Slope Roof, Lean-to-Roof, Flat Roof, Mansard Roof, Open Gable End Roof, Dome Roof, Butterfly Roof, A-Farme Roof, Pyramid Roof, Gambrel Roof, Dutch Gable Roof, Bonnet Roof, A-Frame Roof, you must add Roof felt, roof covering ( like..Decking board, Roof Sheathing, Asphalt Shingle, Torch down membrain, wood shingle, Aluminum Standing Seam, Sheeting, Metal Tile Roofing, Clay Tile Roofing, and the like) and 2*2 lath, 2*4 Wall Plate, 2*6 Rafters, 2*8 Hip Rafter, Valley Rafters, 2*10, Ridge Board, 2*10 Fascia Board, 1*12 Notched Blocking Board to roof eave. You MUST also check for exact related roof Slope/ Pitch and roofing scope present.
+- If OCR references sewage manhole with frame and cover or MH#1, MH#2, etc. You MUST check for exact manhole quantity, size, depth, and inter level, including related  manhole scope present.
+- Currency must be native currency for the location (e.g., JMD for Jamaica, BBD for Barbados, etc.)
+- Apply {unit} units. If unit is imperial unit, Unit is SF for concrete paving, CY for other concrete works. If metric unit, Base concrete works measured in cubic metres (m3) and M.UCost MUST be defined per cubic metre (m3),and other concrete works measured in square metres (m2) and the M.UCost MUST be recalculated using slab thickness (M.UCost (m2) = M.UCost (m3) × slab thickness (in metres)).
+- If Location is USA or non-Commonwealth country, adjust only RSMeans cost standards. Electrical labor follows NECA 2023-2024.
+- If Location is in the Caribbean or any Commonwealth country, adjust local market benchmarks and ONLY RICS/NRM2 measurement.
+- Material cost should be 0 for Earthwork.
 - ANTI-HALLUCINATION: Use ONLY items that exist in OCR text - do not generate additional similar items.
 
 Return a valid JSON array of objects, one per item, with these fields:
@@ -431,12 +431,13 @@ Return a valid JSON array of objects, one per item, with these fields:
 - E.Hrs (round number)
 
 Validation:
-- If a selected Category does not match the CSI Division, you MUST correct the Category to the proper one.
 - NEVER change the CSI code to fit the Category.
 - CSI code MUST be no empty.
 - Category MUST be no empty.
 - Unit can't be "wk".
-- You MUST produce accurate market rate and cost for labor , equipment, material for country selected for cost estimate
+- You MUST produce accurate market rate and cost for labor , equipment, material for country selected for cost estimate.
+- If conversion is applied, the resulting M.UCost MUST be lower than the m3 rate.
+- If m2 and m3 M.UCost are equal, output is INVALID.
 - Return only valid JSON array, no extra text.
 """
 

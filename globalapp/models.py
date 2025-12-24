@@ -29,12 +29,13 @@ class UploadSession(models.Model):
     payment_completed = models.BooleanField(default=False)
     country = models.CharField(max_length=100, null=True, blank=True)
     currency = models.CharField(max_length=10, null=True, blank=True)
+    unit = models.CharField(max_length=50, null=True, blank=True)
     project_title = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return f"Session {self.session_id} - {self.status}"
 class Cost(models.Model):
-    cost_per_page = models.DecimalField(max_digits=10, decimal_places=2)
+    cost_per_page = models.DecimalField(max_digits=10, decimal_places=0)
 
     def __str__(self):
         return f"{self.cost_per_page}"

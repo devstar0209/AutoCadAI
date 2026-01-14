@@ -19,6 +19,8 @@ from datetime import datetime
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 import base64
+from typing import List, Dict
+import tiktoken
 
 # =================== CONFIG ===================
 API_KEY = ""
@@ -26,6 +28,8 @@ client = openai.OpenAI(api_key=API_KEY)
 pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"  # Linux
 # pytesseract.pytesseract.tesseract_cmd = r"C:\Path\To\tesseract.exe"  # Windows
 MAX_WORKERS = 4
+MAX_TOKENS_PER_CHUNK = 8000
+MODEL = "gpt-4o-2024-08-06" # "ft:gpt-4o-2024-08-06:global-precisional-services-llc::CSwogr3u"
 table_elements = []
 drawing_date=""
 pdf_total_pages = 0
@@ -59,140 +63,6 @@ allowed_categories = [
     "Material Processing & Handling Equipment",
     "Pollution Control Equipment"
 ]
-
-category_keywords = {
-
-    "Existing Conditions": [
-        "remain","demolish", "protect", "survey", 
-        "remove", "salvage"
-    ],
-
-    "Concrete": [
-        "slab", "footing", "foundation", "patch", "curb", 
-        "masonry grout", "reinforcing", "rebar", "cast-in-place"
-    ],
-
-    "Masonry": [
-        "masonry", "brick", "CMU", "stone", "veneers", "grout", 
-        "mortar", "joint", "wall unit", "prefabricated masonry"
-    ],
-
-    "Metal": [
-        "steel", "metal", "structural", "beam", "column", "angle", "channel", 
-        "dowel", "weld", "bracket", "stainless steel", "guardrail", "handrail"
-    ],
-
-    "Wood, Plastics, and Composites": [
-        "wood", "plywood", "composite", "plastic", "millwork", "laminate", 
-        "finish carpentry", "paneling", "cabinet", "trim", "fascia board", "roof framing"
-    ],
-
-    "Thermal and Moisture Protection": [
-        "insulation", "vapor barrier", "waterproof", "membrane", "roofing", "shingle", "pitched roof", "sloped roof", "roof covering",
-        "roof finish", "sealant", "caulk", "weatherproof", "thermal protection", "moisture barrier", "fascia"
-    ],
-
-    "Openings": [
-        "door", "window", "frame", "hardware", "curtain wall", "glazing", 
-        "hatch", "shutter", "access panel", "louvers"
-    ],
-
-    "Finishes": [
-        "paint", "coating", "tile", "carpet", "flooring", "plaster", "wall covering", 
-        "ceiling", "stain", "veneer", "finish", "resilient flooring", "epoxy"
-    ],
-
-    "Specialties": [
-        "signage", "toilet accessory", "lockers", "whiteboard", "fire extinguisher", "paper holder",
-        "flagpole", "bicycle rack", "specialty item", "marker board", "wall mirror", "casework", "medicine chest",
-        "closed shelving"
-    ],
-
-    "Equipment": [
-        "turnstile", "entry", "gate", "fountain", "bench", "exercise equipment", "kitchen equipment",
-        "generator", "HVAC unit", "elevator equipment"
-    ],
-
-    "Furnishing": [
-        "furniture", "desk", "chair", "table", "cabinet", "shelving", "fixture", 
-        "casework", "window treatment", "curtain"
-    ],
-
-    "Special Construction": [
-        "special structure", "swimming pool", "roof top platform", "platform", 
-        "greenhouse", "sound barrier", "temporary structure"
-    ],
-
-    "Conveying Systems": [
-        "elevator", "escalator", "conveyor", "lift", "dumbwaiter", "moving walkway", 
-        "hoist", "vertical transport"
-    ],
-
-    "Fire Suppression": [
-        "sprinkler", "fire pump", "standpipe", "fire line", "hydrant", 
-        "fire alarm system", "fire protection", "extinguisher", "suppression system"
-    ],
-
-    "Plumbing": [
-        "pipe", "valve", "plumbing fixture", "drain", "water supply", "sanitary", 
-        "storm drain", "trap", "plumbing line", "hot water", "cold water"
-    ],
-
-    "HVAC": [
-        "duct", "air handler", "vent", "diffuser", "chiller", "heating", 
-        "cooling", "fan", "AHU", "thermostat", "grille", "HVAC equipment"
-    ],
-
-    "Electrical": [
-        "panelboard", "circuit", "breaker", "wire", "receptacle", 
-        "lighting", "switch", "transformer", "distribution", "power", "ATS"
-    ],
-
-    "Communications": [
-        "conduit", "cable", "jack", "network", "fiber", "telecom", 
-        "SYSTIMAX", "riser", "outlet", "structured cabling"
-    ],
-
-    "Electronic Safety & Security": [
-        "camera", "CCTV", "security system", "access control", "alarm", "sensor", "motion detector", "security panel"
-    ],
-
-    "Earthwork": [
-        "excavation", "grading", "cut", "fill", "soil", "compaction", "trenching", 
-        "backfill", "site prep", "earth", "subgrade"
-    ],
-
-    "Exterior Improvement": [
-        "paving","landscape", "sidewalk", "curb", "fence", "scrim", "sidewalk",
-        "site furniture", "bollard", "planter", "hardscape"
-    ],
-
-    "Utilities": [
-        "water line", "sewer line", "gas line", "stormwater", "utility trench", 
-        "manhole", "utility connection"
-    ],
-
-    "Transportations": [
-        "roadway", "pavement", "highway", "parking lot", "striping", 
-        "traffic sign", "guardrail", "curb ramp", "transportation"
-    ],
-
-    "Waterway & Marine": [
-        "dock", "pier", "bulkhead", "marina", "jetty", "boat ramp", "waterway", 
-        "wharf", "pile", "marine structure"
-    ],
-
-    "Material Processing & Handling Equipment": [
-        "conveyor", "crusher", "hopper", "mixing equipment", "processing", 
-        "handling system", "material handling", "silo", "bin", "industrial equipment"
-    ],
-
-    "Pollution Control Equipment": [
-        "scrubber", "emission control", "dust collector", 
-        "wastewater treatment", "pollution control", "environmental equipment"
-    ]
-}
-
 
 # =================== FRONTEND NOTIFY ===================
 def notify_frontend(total_page, cur_page, message, pdf_url, excel_url, session_id):
@@ -268,7 +138,7 @@ def extract_text_from_image(image_path: str) -> str:
                 continue
             # collapse extra spaces
             line = " ".join(line.split())
-            line = re.sub(r'(M\.?H\.?)[.,]?', 'manhole', line, flags=re.IGNORECASE)
+            # line = re.sub(r'(M\.?H\.?)[.,]?', 'manhole', line, flags=re.IGNORECASE)
             cleaned_lines.append(line)
 
         structured_text = "\n".join(cleaned_lines)
@@ -366,20 +236,6 @@ def extract_project_location(cad_text):
 
     return 'USA'
 
-def getQuantityTakeoff(base64):
-    print("here")
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[
-            {"role": "user", "content": [
-                {"type": "text", "text": "Provide a take-off of the  quantities using the scale from this engineering drawing  returning as a json formart"},
-                {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{base64}"}}
-            ]}
-        ]
-    )
-    print(f"AI response received:: {response.choices[0].message.content}")
-    return response.choices[0].message.content
-
 def get_construction_jobs(cad_text, category, project_title, project_location, unit):
     print(f"Starting construction category {category} jobs analysis...")
 
@@ -387,42 +243,42 @@ def get_construction_jobs(cad_text, category, project_title, project_location, u
     use_nrm2 = should_use_nrm2(project_location, cad_text)
 
     system_prompt = """
-You are an expert construction cost estimator.
-Your job is to extract job activities only from the OCR text of CAD drawings and provide detailed quantity take-offs and Material cost per Unit and Labor/Equipment rates in local market benchmark corresponding to project location.
+You are an expert construction take-off extractor and material cost and labor/equipment rate provider.
+Refer local market benchmark corresponding to project location.
+Your job is to extract job activities from the OCR text of CAD drawings and provide detailed quantity take-offs and Material cost per Unit and Labor/Equipment rates in local market benchmark corresponding to project location.
 Only use the information explicitly present in the OCR text provided.
 """
 
 
     user_prompt = f"""
-I'm looking for a detailed construction cost estimate from AutoCAD drawing text. 
-Please provide detailed construction cost estimate.
-Based on the following Category:{category} and OCR text:
+Please provide detailed construction take-off activities, quantities, material cost and labor/equipment rates from the following
+OCR text:
 {cad_text}.
 
 Location: {project_location}.
 Project Type: {project_title}.
-Apply measurement units: {unit}.
+Apply {unit} units.
+Allow categories in {', '.join(allowed_categories)}.
 
 Consider following rules for each item in your estimate:
+- CONVERT text dimensions from OCR text If Imperal units is selected. (for example, 50 or 50 mm convert to 2" ; 150 or 150 mm convert to 6"; 100 or 100 mm concert to 4" ; 50x150 convert to 2x6; 50x200 convert to 2x8; 12mm to 0.5"). If Metric units is selected, convert text dimensions to Metric. ( for example 2 or 2" convert to 50mm; 4" convert to 100 mm; 6" convert to 150mm ; 8" convert to 200mm; 2x6 convert to 50x150; 2x8 convert to 50x200)
 - M.UCost = material cost PER UNIT ONLY.
 - L.Rate = labor cost PER HOUR ONLY.
 - E.Rate = equipment cost PER HOUR ONLY.
 - Skip exact duplicate description.
 - Use 2024 MasterFormat (CSI) codes.
 - The assigned Category MUST match the CSI Division.
-- Apply net quantity measurement principles (measure to structural faces, exclude waste unless specified)
-- If OCR references Pitch Roof, Hip Roof, Slope Roof, Lean-to-Roof, Flat Roof, Mansard Roof, Open Gable End Roof, Dome Roof, Butterfly Roof, A-Farme Roof, Pyramid Roof, Gambrel Roof, Dutch Gable Roof, Bonnet Roof, A-Frame Roof, you must add Roof felt, roof covering ( like..Decking board, Roof Sheathing, Asphalt Shingle, Torch down membrain, wood shingle, Aluminum Standing Seam, Sheeting, Metal Tile Roofing, Clay Tile Roofing, and the like) and 2*2 lath, 2*4 Wall Plate, 2*6 Rafters, 2*8 Hip Rafter, 2*8 Valley Rafters, 2*10 Ridge Board, 2*10 Fascia Board, 1*12 Notched Blocking Board to roof eave. You MUST also check for exact related roof Slope/ Pitch and roofing scope present.
-- If OCR references sewage manhole with frame and cover or MH#1, MH#2, etc. You MUST check for exact manhole quantity, size, depth, and inter level, including related  manhole scope present.
+- Apply net quantity measurement principles (measure to structural faces, exclude waste unless specified. based on converted dimensions)
+- If OCR text includes Pitch Roof, Hip Roof, Slope Roof, Lean-to-Roof, Flat Roof, Mansard Roof, Open Gable End Roof, Dome Roof, Butterfly Roof, A-Farme Roof, Pyramid Roof, Gambrel Roof, Dutch Gable Roof, Bonnet Roof, A-Frame Roof, you must add Roof felt, roof covering ( like..Decking board, Roof Sheathing, Asphalt Shingle, Torch down membrain, wood shingle, Aluminum Standing Seam, Sheeting, Metal Tile Roofing, Clay Tile Roofing, and the like) and 2*2 lath, 2*4 Wall Plate, 2*6 Rafters, 2*8 Hip Rafter, 2*8 Valley Rafters, 2*10 Ridge Board, 2*10 Fascia Board, 1*12 Notched Blocking Board to roof eave. You MUST also check for exact related roof Slope/ Pitch and roofing scope present.
+- If OCR text includes sewage manhole with frame and cover or MH#1, MH#2, etc. You MUST check for exact manhole quantity, size, depth, and inter level, including related  manhole scope present.
 - Currency must be native currency for the location (e.g., JMD for Jamaica, BBD for Barbados, etc.)
 - If Location is USA or non-Commonwealth country, adjust only RSMeans cost standards. Electrical labor follows NECA 2023-2024.
 - If Location is in the Caribbean or any Commonwealth country, adjust local market benchmarks and ONLY RICS/NRM2 measurement.
-- Material cost should be 0 for Earthwork.
-- ANTI-HALLUCINATION: Use ONLY items that exist in OCR text - do not generate additional similar items.
 
 Return a valid JSON array of objects, one per item, with these fields:
 - CSI Code (format 01 02 03.04)
 - Category
-- Job Activity (description based on OCR text)
+- Job Activity
 - Quantity (round number, use default only if missing)
 - Unit
 - M.UCost
@@ -437,16 +293,20 @@ Validation:
 - Category MUST be no empty.
 - Unit can't be "wk".
 - If unit is imperial unit, Unit is SF for concrete paving, CY for other concrete works. If metric unit, Base concrete works measured in cubic metres (m3) and M.UCost MUST be defined per cubic metre (m3),and other concrete works measured in square metres (m2) and the M.UCost MUST be recalculated using slab thickness (M.UCost (m2) = M.UCost (m3) * slab thickness (in metres)).
-- Output units must be EXCLUSIVELY {unit}. Do not include the other system.
+- Output units must be EXCLUSIVELY {unit}. Do not include the other measurement system.
+- Output job activity must include EXCLUSIVELY {unit}. Do not include the other measurement system.
 - You MUST produce accurate market rate and cost for labor, equipment, material for {project_location} for cost estimate.
+- Material cost for Only Earthwork should be 0.
 - If conversion is applied, the resulting M.UCost MUST be lower than the m3 rate.
 - If m2 and m3 M.UCost are equal, output is INVALID.
+- When selected Imperial unit of measurement, all dimensions in Job Activity MUST be in imperial units (inches, feet, etc). Anything else, it's INVALID.
+- When selected Metric unit of measurement, all dimensions in Job Activity MUST be in metric units (m, mm, etc). Anything else, it's INVALID.
 - Return only valid JSON array, no extra text.
 """
 
     try:
         response = client.chat.completions.create(
-            model="ft:gpt-4o-2024-08-06:global-precisional-services-llc::CSwogr3u",
+            model=MODEL,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
@@ -458,7 +318,7 @@ Validation:
         # Remove markdown fences and extra whitespace
         response_text = re.sub(r"^```json\s*|\s*```$", "", response_text, flags=re.DOTALL).strip()
         response_text = response_text.replace('```', '').strip()
-        # print(f"AI response received:: {response_text}")
+        print(f"AI response received:: {response_text}")
         
         return response_text
     except Exception as e:
@@ -697,84 +557,42 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
 
     total_pages = get_page_count(pdf_path)
 
-    if not os.path.exists(txt_path):
-        print("File does not exist")
+    # if not os.path.exists(txt_path):
+    #     print("File does not exist")
 
         
-        all_texts = [""] * total_pages
+    all_texts = [""] * total_pages
 
-        def process_page(page_num):
-            img_path = convert_pdf_page_to_image(pdf_path, page_num)
-            if img_path:
-                all_texts[page_num-1] = extract_text_from_image(img_path)
-                # base64_image = encode_image(img_path)
-                # job_data = getQuantityTakeoff(base64_image)
-            progress = round((page_num / total_pages) * 100, 2)
-            notify_frontend(total_pages, page_num, "Processing is in progress...", "", "", session_id) 
+    def process_page(page_num):
+        img_path = convert_pdf_page_to_image(pdf_path, page_num)
+        if img_path:
+            all_texts[page_num-1] = extract_text_from_image(img_path)
+        progress = round((page_num / total_pages) * 100, 2)
+        notify_frontend(total_pages, page_num, "Processing is in progress...", "", "", session_id) 
 
-        # 🧵 Run pages concurrently
-        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-            executor.map(process_page, range(1, total_pages + 1))
+    # 🧵 Run pages concurrently
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        executor.map(process_page, range(1, total_pages + 1))
 
-        combined_text = " ".join(all_texts)
-        with open(txt_path, "w", encoding="utf-8", errors="ignore") as file:
-            file.write(combined_text)
+    # combined_text = " ".join(all_texts)
+    # with open(txt_path, "w", encoding="utf-8", errors="ignore") as file:
+    #     file.write(combined_text)
 
-    category_text = {cat: [] for cat in category_keywords}
-
-    with open(txt_path, "r", encoding="utf-8", errors="ignore") as f:
-        for line in f:
-            line_clean = line.strip().lower()
-            if not line_clean:
-                continue
-            if line_clean in {"gate"}:
-                continue
-            line_clean = preprocess_cad_text(line_clean)
-            for cat, keywords in category_keywords.items():
-                for k in keywords:
-
-                    # Escape keyword, enforce word boundaries
-                    pattern = r"\b" + re.escape(k.lower()) + r"\b"
-
-                    if re.search(pattern, line_clean):
-                        category_text[cat].append(line_clean)
-                        break
-                    else:
-                        continue  # inner loop not matched
-                    break  # outer loop matched
-
-    with open(json_path, "w", encoding="utf-8", errors="replace") as file:
-        file.write(json.dumps(category_text))
-
-    combined_category_text = {
-        cat: " ".join(lines)
-        for cat, lines in category_text.items()
-        if lines
-    }
-
+    # 1. Chunk OCR dynamically by tokens
+    chunks = chunk_ocr_text_tokenwise(all_texts)
+    with open("chunks.json", "w") as f:
+        json.dump(chunks, f, indent=2)
+    print("Chunks length:", len(chunks))
+    stage1_items = []
     all_jobs = []
-    for cat, text in combined_category_text.items():
-        if not text.strip():
-            continue
+    # 2. extraction per chunk
+    for chunk in chunks:
+        extracted = get_construction_jobs(chunk['ocr_text'], None, cad_title, location, unit)
+        jobs_list = json.loads(extracted)
+        all_jobs.extend(jobs_list)
 
-        if location is None:
-            # Try to extract project location from text
-            location = extract_project_location(text)
-        
-        try:
-            # Call AI function
-            res = get_construction_jobs(text, cat, cad_title, location, unit)
-            jobs_list = json.loads(res)  # Try parsing JSON
-            if isinstance(jobs_list, list):
-                all_jobs.extend(jobs_list)  # Add to combined list
-            else:
-                print(f"Warning: JSON is not a list for category {cat}")
-        except json.JSONDecodeError as e:
-            print(f"Error parsing JSON for category {cat}: {e}")
-            print("Response:", res)
-            continue  # skip this category if JSON invalid
-
-        print(f"Total jobs collected: {len(all_jobs)}")
+    with open("result.json", "w") as f:
+        json.dump(all_jobs, f, indent=2)
 
     # ✅ Merge duplicate Job Activities across pages
     merged = {}
@@ -793,6 +611,9 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
                     merged[job_name][key] = float(merged[job_name].get(key, 0)) + float(item.get(key, 0))
                 except (ValueError, TypeError):
                     pass
+
+    with open("merged.json", "w") as f:
+        json.dump(merged, f, indent=2)
 
     final_jobs_list = list(merged.values())
     final_jobs_list = normalize_categories(final_jobs_list)
@@ -984,3 +805,82 @@ def count_pages(canvas, doc):
 def encode_image(image_path):
     with open(image_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode("utf-8")
+
+
+# ---------------- MOCK OPENAI CALL ----------------
+def call_openai(system_prompt: str, user_prompt: str) -> str:
+    """
+    Mock function: replace with actual OpenAI API call.
+    """
+    try:
+        response = client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            store= True,
+        )
+        response_text = response.choices[0].message.content
+
+        # Remove markdown fences and extra whitespace
+        response_text = re.sub(r"^```json\s*|\s*```$", "", response_text, flags=re.DOTALL).strip()
+        response_text = response_text.replace('```', '').strip()
+        # print(f"AI response received:: {response_text}")
+        
+        return response_text
+    except Exception as e:
+        print(f"Error in call_openai: {e}")
+        return ""
+
+
+# ---------------- TOKEN COUNT ----------------
+def count_tokens(text: str, model: str = MODEL) -> int:
+    """
+    Counts tokens using tiktoken.
+    """
+    enc = tiktoken.encoding_for_model(model)
+    return len(enc.encode(text))
+
+
+# ---------------- 1️⃣ DYNAMIC TOKEN CHUNKING ----------------
+def chunk_ocr_text_tokenwise(ocr_pages: List[str], max_tokens: int = MAX_TOKENS_PER_CHUNK) -> List[Dict]:
+    """
+    Splits OCR pages into chunks by token count.
+    Returns list of dicts with metadata.
+    """
+    chunks = []
+    current_chunk_pages = []
+    current_tokens = 0
+    chunk_id = 1
+
+    for i, page_text in enumerate(ocr_pages):
+        page_tokens = count_tokens(page_text)
+
+        # Check if adding this page exceeds max_tokens
+        if current_tokens + page_tokens > max_tokens and current_chunk_pages:
+            # Save current chunk
+            chunk_text = "\n".join(current_chunk_pages)
+            chunks.append({
+                "chunk_id": f"CHUNK_{chunk_id:03d}",
+                "page_range": f"{i - len(current_chunk_pages) + 1}-{i}",
+                "ocr_text": chunk_text
+            })
+            chunk_id += 1
+            current_chunk_pages = []
+            current_tokens = 0
+
+        # Add page to current chunk
+        current_chunk_pages.append(page_text)
+        current_tokens += page_tokens
+
+    # Add last chunk
+    if current_chunk_pages:
+        chunk_text = "\n".join(current_chunk_pages)
+        chunks.append({
+            "chunk_id": f"CHUNK_{chunk_id:03d}",
+            "page_range": f"{len(ocr_pages) - len(current_chunk_pages) + 1}-{len(ocr_pages)}",
+            "ocr_text": chunk_text
+        })
+
+    return chunks

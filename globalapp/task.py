@@ -270,7 +270,7 @@ Consider following rules for each item in your estimate:
 - The assigned Category MUST match the CSI Division.
 - Apply net quantity measurement principles (measure to structural faces, exclude waste unless specified. based on converted dimensions)
 - If OCR text includes Pitch Roof, Hip Roof, Slope Roof, Lean-to-Roof, Flat Roof, Mansard Roof, Open Gable End Roof, Dome Roof, Butterfly Roof, A-Farme Roof, Pyramid Roof, Gambrel Roof, Dutch Gable Roof, Bonnet Roof, A-Frame Roof, you must add Roof felt, roof covering ( like..Decking board, Roof Sheathing, Asphalt Shingle, Torch down membrain, wood shingle, Aluminum Standing Seam, Sheeting, Metal Tile Roofing, Clay Tile Roofing, and the like) and 2*2 lath, 2*4 Wall Plate, 2*6 Rafters, 2*8 Hip Rafter, 2*8 Valley Rafters, 2*10 Ridge Board, 2*10 Fascia Board, 1*12 Notched Blocking Board to roof eave. You MUST also check for exact related roof Slope/ Pitch and roofing scope present.
-- If OCR text includes sewage manhole with frame and cover or MH#1, MH#2, etc. You MUST check for exact manhole quantity, size, depth, and inter level, including related  manhole scope present.
+- If OCR text includes MH#1, MH#2, etc. You MUST check for exact manhole quantity, size, depth, and inter level, including related  manhole scope present.
 - Currency must be native currency for the location (e.g., JMD for Jamaica, BBD for Barbados, etc.)
 - If Location is USA or non-Commonwealth country, adjust only RSMeans cost standards. Electrical labor follows NECA 2023-2024.
 - If Location is in the Caribbean or any Commonwealth country, adjust local market benchmarks and ONLY RICS/NRM2 measurement.
@@ -294,6 +294,7 @@ Validation:
 - Unit can't be "wk".
 - If unit is imperial unit, Unit is SF for concrete paving, CY for other concrete works. If metric unit, Base concrete works measured in cubic metres (m3) and M.UCost MUST be defined per cubic metre (m3),and other concrete works measured in square metres (m2) and the M.UCost MUST be recalculated using slab thickness (M.UCost (m2) = M.UCost (m3) * slab thickness (in metres)).
 - Output units must be EXCLUSIVELY {unit}. Do not include the other measurement system.
+- Unit is a DERIVED FIELD. Do not infer units semantically.
 - Output job activity must include EXCLUSIVELY {unit}. Do not include the other measurement system.
 - You MUST produce accurate market rate and cost for labor, equipment, material for {project_location} for cost estimate.
 - Material cost for Only Earthwork should be 0.

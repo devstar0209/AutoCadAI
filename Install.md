@@ -13,6 +13,12 @@ pip install -r requirements.txt
 sudo apt install tesseract-ocr
 sudo apt install libtesseract-dev
 
+## Migration Models
+python manage.py makemigrations
+
+## Migrate
+python manage.py migrate
+
 ## Test
 python test_cad_estimation.py
 

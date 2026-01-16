@@ -80,6 +80,15 @@ def notify_frontend(total_page, cur_page, message, pdf_url, excel_url, session_i
         }
     )
 
+# =================== PDF PAGE PROCESSING ===================
+def convert_pdf_page_to_image(pdf_path: str, page_number: int) -> str:
+    images = convert_from_path(pdf_path, dpi=200, first_page=page_number, last_page=page_number, poppler_path="/usr/bin")
+    if not images: return ""
+    directory = os.path.dirname(pdf_path)
+    image_path = os.path.join(directory, f"page_{page_number}.png")
+    images[0].save(image_path, "PNG")
+    return image_path
+
 # =================== OCR ===================
 def extract_text_from_image(image_path: str) -> str:
     print(f"Entered OCR function: {image_path}")
@@ -150,97 +159,9 @@ def extract_text_from_image(image_path: str) -> str:
 
 # =================== AI COST ESTIMATION ===================
 
-
-def should_use_nrm2(project_location=None, cad_text=""):
-    """Determine if NRM2 standards should be used based on project characteristics"""
-
-    # Caribbean countries that commonly use NRM2/RICS standards
-    caribbean_countries = [
-        "barbados", "trinidad", "tobago", "jamaica", "bahamas", "grenada",
-        "st lucia", "dominica", "antigua", "barbuda", "st kitts", "nevis",
-        "st vincent", "grenadines", "belize", "guyana", "suriname"
-    ]
-
-    # Commonwealth countries that may use NRM2
-    commonwealth_indicators = [
-        "commonwealth", "rics", "nrm2", "british", "uk standard",
-        "metres", "cubic metres", "square metres"
-    ]
-
-    # Check project location
-    if project_location:
-        location_lower = project_location.lower()
-        if any(country in location_lower for country in caribbean_countries):
-            return True
-
-    # Check CAD text for indicators
-    # cad_lower = cad_text.lower()
-
-    # # Look for metric units (strong indicator of NRM2)
-    # metric_indicators = ["m³", "m²", "metres", "cubic metres", "square metres", "linear metres"]
-    # if any(indicator in cad_lower for indicator in metric_indicators):
-    #     return True
-
-    # # Look for NRM2/RICS references
-    # if any(indicator in cad_lower for indicator in commonwealth_indicators):
-    #     return True
-
-    # # Look for Caribbean location references in CAD text
-    # if any(country in cad_lower for country in caribbean_countries):
-    #     return True
-
-    return False
-
-
-def extract_project_location(cad_text):
-    """Extract project location from CAD text to determine if NRM2 should be used"""
-    if not cad_text:
-        return 'USA'
-
-    text_lower = cad_text.lower()
-
-    # Caribbean countries and territories
-    caribbean_locations = {
-        "barbados": "Barbados",
-        "trinidad": "Trinidad and Tobago",
-        "tobago": "Trinidad and Tobago",
-        "jamaica": "Jamaica",
-        "bahamas": "Bahamas",
-        "grenada": "Grenada",
-        "st lucia": "Saint Lucia",
-        "saint lucia": "Saint Lucia",
-        "dominica": "Dominica",
-        "antigua": "Antigua and Barbuda",
-        "barbuda": "Antigua and Barbuda",
-        "st kitts": "Saint Kitts and Nevis",
-        "saint kitts": "Saint Kitts and Nevis",
-        "nevis": "Saint Kitts and Nevis",
-        "st vincent": "Saint Vincent and the Grenadines",
-        "saint vincent": "Saint Vincent and the Grenadines",
-        "grenadines": "Saint Vincent and the Grenadines",
-        "belize": "Belize",
-        "guyana": "Guyana",
-        "suriname": "Suriname"
-    }
-
-    # Check for location indicators
-    for location_key, location_name in caribbean_locations.items():
-        if location_key in text_lower:
-            return location_name
-
-    # Check for other Commonwealth indicators
-    commonwealth_indicators = ["commonwealth", "rics", "nrm2", "british standard"]
-    for indicator in commonwealth_indicators:
-        if indicator in text_lower:
-            return "Commonwealth"
-
-    return 'USA'
-
-def get_construction_jobs(cad_text, category, project_title, project_location, unit):
+def get_construction_jobs(cad_text, category, project_title, project_location, unit, prompt):
     print(f"Starting construction category {category} jobs analysis...")
-
-    # Determine if NRM2 standards should be used
-    use_nrm2 = should_use_nrm2(project_location, cad_text)
+    print(f"Custome prompt:: {prompt}")
 
     system_prompt = """
 You are an expert construction take-off extractor and material cost and labor/equipment rate provider.
@@ -251,6 +172,7 @@ Only use the information explicitly present in the OCR text provided.
 
 
     user_prompt = f"""
+{prompt}
 Please provide detailed construction take-off activities, quantities, material cost and labor/equipment rates from the following
 OCR text:
 {cad_text}.
@@ -319,21 +241,12 @@ Validation:
         # Remove markdown fences and extra whitespace
         response_text = re.sub(r"^```json\s*|\s*```$", "", response_text, flags=re.DOTALL).strip()
         response_text = response_text.replace('```', '').strip()
-        print(f"AI response received:: {response_text}")
+        # print(f"AI response received:: {response_text}")
         
         return response_text
     except Exception as e:
         print(f"Error in get_construction_jobs: {e}")
         return ""
-
-# =================== PDF PAGE PROCESSING ===================
-def convert_pdf_page_to_image(pdf_path: str, page_number: int) -> str:
-    images = convert_from_path(pdf_path, dpi=200, first_page=page_number, last_page=page_number, poppler_path="/usr/bin")
-    if not images: return ""
-    directory = os.path.dirname(pdf_path)
-    image_path = os.path.join(directory, f"page_{page_number}.png")
-    images[0].save(image_path, "PNG")
-    return image_path
 
 # =================== OUTPUT GENERATION ===================
 def generate_outputs(output_json: dict, project_title: str, currency: str, output_excel: str, output_pdf: str):
@@ -550,7 +463,7 @@ def generate_outputs(output_json: dict, project_title: str, currency: str, outpu
 def get_page_count(pdf_file):
     reader = PdfReader(pdf_file)
     return len(reader.pages)
-def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, currency, session_id, cad_title, unit):
+def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, currency, session_id, cad_title, unit, prompt):
     combined_text = ""
     txt_path = pdf_path.replace(".pdf", ".txt")
     json_path = pdf_path.replace(".pdf", ".json")
@@ -588,7 +501,7 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
     all_jobs = []
     # 2. extraction per chunk
     for chunk in chunks:
-        extracted = get_construction_jobs(chunk['ocr_text'], None, cad_title, location, unit)
+        extracted = get_construction_jobs(chunk['ocr_text'], None, cad_title, location, unit, prompt)
         jobs_list = json.loads(extracted)
         all_jobs.extend(jobs_list)
 
@@ -807,34 +720,6 @@ def encode_image(image_path):
     with open(image_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode("utf-8")
 
-
-# ---------------- MOCK OPENAI CALL ----------------
-def call_openai(system_prompt: str, user_prompt: str) -> str:
-    """
-    Mock function: replace with actual OpenAI API call.
-    """
-    try:
-        response = client.chat.completions.create(
-            model=MODEL,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt}
-            ],
-            store= True,
-        )
-        response_text = response.choices[0].message.content
-
-        # Remove markdown fences and extra whitespace
-        response_text = re.sub(r"^```json\s*|\s*```$", "", response_text, flags=re.DOTALL).strip()
-        response_text = response_text.replace('```', '').strip()
-        # print(f"AI response received:: {response_text}")
-        
-        return response_text
-    except Exception as e:
-        print(f"Error in call_openai: {e}")
-        return ""
-
-
 # ---------------- TOKEN COUNT ----------------
 def count_tokens(text: str, model: str = MODEL) -> int:
     """
@@ -844,7 +729,7 @@ def count_tokens(text: str, model: str = MODEL) -> int:
     return len(enc.encode(text))
 
 
-# ---------------- 1️⃣ DYNAMIC TOKEN CHUNKING ----------------
+# ---------------- DYNAMIC TOKEN CHUNKING ----------------
 def chunk_ocr_text_tokenwise(ocr_pages: List[str], max_tokens: int = MAX_TOKENS_PER_CHUNK) -> List[Dict]:
     """
     Splits OCR pages into chunks by token count.

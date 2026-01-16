@@ -35,11 +35,10 @@ def upload_pdf(request):
             country= request.POST.get('country')
             currency = request.POST.get('currency')
             unit= request.POST.get('unit')
-            # country = "Jamaica"
-            # currency = "JMD"
             session_id = request.POST.get('session_id')
             project_title = request.POST.get('project_title')
-            print("country===>", country, currency, session_id, project_title)
+            prompt = request.POST.get('prompt')
+            print("country===>", country, currency,unit, session_id, project_title)
             if form.is_valid():
                 pdf_instance = form.save()
                 file_path = pdf_instance.pdf_file.path
@@ -68,6 +67,7 @@ def upload_pdf(request):
                 session_data.unit = unit
                 session_data.status = 'pdf_uploaded'
                 session_data.project_title = project_title
+                session_data.prompt = prompt
                 session_data.save()
                 
                 if not os.path.exists(directory_path):
@@ -122,14 +122,18 @@ def stripe_webhook(request):
     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
     endpoint_secret = 'whsec_IQzs9bd8N7r2HbXtoH1MpZTFVJEUvsdR'
 
+    print("Stripe webhook received")
+
     try:
         event = stripe.Webhook.construct_event(
             payload, sig_header, endpoint_secret
         )
     except ValueError:
-        return JsonResponse(status=400)
+        return JsonResponse({}, status=400)
     except stripe.error.SignatureVerificationError:
-        return JsonResponse(status=400)
+        return JsonResponse({}, status=400)
+
+    print("Stripe webhook received:", event['type'])
 
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
@@ -142,14 +146,15 @@ def stripe_webhook(request):
         currency = session_data.currency
         unit = session_data.unit
         project_title = session_data.project_title
+        prompt = session_data.prompt
         session_data.payment_completed = True
         session_data.status = 'payment_completed'
         session_data.save()
-        future = executor.submit(start_pdf_processing, file_path, excel_path, output_pdf_path, country, currency, pdf_id, project_title, unit)
+        future = executor.submit(start_pdf_processing, file_path, excel_path, output_pdf_path, country, currency, pdf_id, project_title, unit, prompt)
         # Resume processing
         # process_pdf_after_payment(pdf_id)
 
-    return JsonResponse(status=200)
+    return JsonResponse({}, status=200)
 
 @csrf_exempt
 def classify_csi_code(request):

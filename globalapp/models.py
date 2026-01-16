@@ -31,6 +31,7 @@ class UploadSession(models.Model):
     currency = models.CharField(max_length=10, null=True, blank=True)
     unit = models.CharField(max_length=50, null=True, blank=True)
     project_title = models.CharField(max_length=255, null=True, blank=True)
+    prompt = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):
         return f"Session {self.session_id} - {self.status}"

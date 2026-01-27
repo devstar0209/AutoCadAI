@@ -144,9 +144,11 @@ def is_valid_filter_prompt(filter_sentence: Optional[str]) -> bool:
     # Heuristic: must contain at least 2 words and a system hint word.
     if len(s.split()) < 2:
         return False
-    hint_words = ["only", "just", "focus", "include", "exclude", "roof", "hvac", "plumb",
-                  "elect", "fire", "stairs", "concrete", "masonry", "finishes", "openings"]
-    return any(w in s for w in hint_words)
+
+    return True
+    # hint_words = ["only", "just", "focus", "include", "exclude", "roof", "hvac", "plumb",
+    #               "elect", "fire", "stairs", "concrete", "masonry", "finishes", "openings"]
+    # return any(w in s for w in hint_words)
 
 def fuzzy_merge_names(names: List[str], cutoff: float = 0.82) -> List[str]:
     merged = []
@@ -649,8 +651,6 @@ def run(
 ):
     client = OpenAI()
 
-    user_prompt_extra = "when quantity is missing, refer to standard default dimensions for it."
-
     print_step("1) OCR PDF")
     ocr_pages = ocr_pdf(
         pdf_path=pdf_path,
@@ -710,7 +710,7 @@ def run(
             system_text=sc.referenced_text,
             allowed_categories=ALLOWED_CATEGORIES,
             region=region,
-            user_prompt_extra=user_prompt_extra
+            user_prompt_extra=user_filter_sentence
         )
         system_to_items[sc.system_name] = items
         print(f"  Items extracted: {len(items)}")
@@ -731,7 +731,7 @@ if __name__ == "__main__":
     OUT_XLSX = os.getenv("OUT_XLSX", "estimate.xlsx")
 
     REGION = os.getenv("REGION", "US")  # "US" or "COMMONWEALTH"
-    USER_FILTER = os.getenv("USER_FILTER", "").strip() or None
+    USER_FILTER = "Please estimate only manholes." # os.getenv("USER_FILTER", "").strip() or None
 
     POPPLER_PATH = os.getenv("POPPLER_PATH")  # optional (Windows)
     TESSERACT_CMD = os.getenv("TESSERACT_CMD")  # optional (Windows)

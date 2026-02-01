@@ -63,25 +63,99 @@ ALLOWED_CATEGORIES = [
 # =====================================================
 
 SYSTEM_ONTOLOGY = {
-    "General Requirements": ["general requirements", "temporary", "mobilization"],
-    "Concrete": ["concrete", "footing", "slab"],
-    "Masonry": ["masonry", "cmu", "brick"],
-    "Roofing": ["roof", "roofing", "flashing", "gutter", "downspout", "membrane", "shingle", "fascia"],
-    "Stairs": ["stair", "handrail", "guardrail"],
-    "Metal": ["metal", "steel", "structural framing", "railing"],
-    "Fire Protection": ["fire protection", "sprinkler", "standpipe", "fire alarm"],
-    "Plumbing": ["plumbing", "domestic water", ],
-    "Utilities": ["utilities", "water", "storm", "gas", "sanitary sewer"],
-    "HVAC": ["hvac", "mechanical", "air handling", "duct"],
-    "Electrical": ["electrical", "power", "lighting"],
-    "Communications": ["data", "telecom"],
-    "Security": ["security", "cctv", "access control"],
-    "Site / Earthwork": ["site", "earthwork", "grading", "excavation", "backfill", "paving","foundation"],
-    "Landscaping": ["landscape", "irrigation"],
-    "Floor": ["floor", "tile", "carpet", "hardwood"],
-    "Finish": ["finish", "paint", "stain", "wallcovering", "plaster", "drywall", "gypsum", "taping", "mudding", "tile"],
-    "Ceilings": ["ceiling", "acoustic ceiling", "suspended ceiling"],
+
+    "General Conditions": [
+        "general conditions", "temporary facilities", "mobilization",
+        "supervision", "project management", "permits"
+    ],
+
+    "Earthwork System": [
+        "earthwork", "excavation", "grading", "trenching",
+        "backfill", "compaction", "cut and fill", "dewatering"
+    ],
+
+    "Concrete Structure System": [
+        "concrete", "cast-in-place", "foundation", "footing",
+        "slab", "structural concrete", "rebar", "reinforcing"
+    ],
+
+    "Masonry System": [
+        "masonry", "cmu", "concrete block", "brick",
+        "stone", "mortar", "grout"
+    ],
+
+    "Structural Steel System": [
+        "structural steel", "steel framing", "steel beam",
+        "steel column", "metal deck", "joist"
+    ],
+
+    "Wood Framing System": [
+        "wood framing", "stud", "joist", "truss",
+        "sheathing", "plywood", "osb", "blocking"
+    ],
+
+    "Roofing System": [
+        "roofing", "roof membrane", "shingle",
+        "tpo", "epdm", "bur", "flashing", "roof insulation"
+    ],
+
+    "Exterior Envelope System": [
+        "exterior wall", "facade", "cladding",
+        "curtain wall", "eifs", "siding", "air barrier"
+    ],
+
+    "Interior Finishes System": [
+        "interior finishes", "drywall", "gypsum board",
+        "partition", "ceiling", "flooring", "paint"
+    ],
+
+    "Doors and Windows System": [
+        "door", "window", "frame", "hardware",
+        "storefront", "glazing", "louvers", "skylight"
+    ],
+
+    "Plumbing System": [
+        "plumbing", "domestic water", "water supply",
+        "hot water", "cold water", "plumbing fixtures", "valve"
+    ],
+
+    "Sanitary Sewer System": [
+        "sanitary sewer", "sanitary drainage", "waste piping",
+        "soil pipe", "vent piping", "cleanout", "manhole"
+    ],
+
+    "Storm Drainage System": [
+        "storm drainage", "storm sewer", "roof drain",
+        "area drain", "catch basin", "downspout", "leader"
+    ],
+
+    "HVAC System": [
+        "hvac", "mechanical", "heating", "cooling",
+        "ventilation", "air handling", "ductwork", "exhaust"
+    ],
+
+    "Electrical System": [
+        "electrical", "power", "lighting",
+        "panel", "feeder", "branch circuit", "grounding"
+    ],
+
+    "Fire Protection System": [
+        "fire protection", "sprinkler", "standpipe",
+        "fire pump", "fire riser"
+    ],
+
+    "Low Voltage / Communications System": [
+        "low voltage", "communications", "data", "telecom",
+        "cabling", "fire alarm", "security", "cctv", "access control"
+    ],
+
+    "Site Utilities System": [
+        "site utilities", "underground utilities",
+        "water service", "sanitary service",
+        "storm service", "gas service"
+    ]
 }
+
 
 REGION_PROFILES = {
     "US": {
@@ -355,6 +429,29 @@ def build_region_instruction(region: str) -> str:
 
 SYSTEM_CLASSIFIER_SYS = """You are a construction estimator assistant.
 Task: From OCR text, identify building systems mentioned (assemblies/trades).
+
+SYSTEM RESTRICTION (MANDATORY)
+You may ONLY output systems that exactly match one of the following
+canonical system names:
+- General Conditions
+- Earthwork System
+- Concrete Structure System
+- Masonry System
+- Structural Steel System
+- Wood Framing System
+- Roofing System
+- Exterior Envelope System
+- Interior Finishes System
+- Doors and Windows System
+- Plumbing System
+- Sanitary Sewer System
+- Storm Drainage System
+- HVAC System
+- Electrical System
+- Fire Protection System
+- Low Voltage / Communications System
+- Site Utilities System
+
 Prefer brief system names (2-5 words). Use MasterFormat-like thinking.
 Leverage General Notes / Special Notes if they specify scope or systems.
 Avoid creating many near-duplicate systems; consolidate synonyms.
@@ -731,7 +828,7 @@ if __name__ == "__main__":
     OUT_XLSX = os.getenv("OUT_XLSX", "estimate.xlsx")
 
     REGION = os.getenv("REGION", "US")  # "US" or "COMMONWEALTH"
-    USER_FILTER = "Please estimate only manholes." # os.getenv("USER_FILTER", "").strip() or None
+    USER_FILTER = None #"Please estimate only manholes." # os.getenv("USER_FILTER", "").strip() or None
 
     POPPLER_PATH = os.getenv("POPPLER_PATH")  # optional (Windows)
     TESSERACT_CMD = os.getenv("TESSERACT_CMD")  # optional (Windows)

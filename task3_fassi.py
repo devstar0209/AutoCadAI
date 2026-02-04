@@ -11,6 +11,7 @@ from difflib import SequenceMatcher
 from collections import defaultdict
 import numpy as np
 from functools import lru_cache
+import faiss
 
 # OCR / PDF
 from pdf2image import convert_from_path
@@ -38,14 +39,20 @@ load_dotenv()
 OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=OPENAI_API_KEY)
 MODEL = "gpt-5.2"
-MATCH_MODEL = SentenceTransformer("all-MiniLM-L6-v2", cache_folder="./models")
 
-CACHE_DIR = "cache"
-CANDIDATES_JSON = os.path.join(CACHE_DIR, "csi_to_candidates.json")
-EMBEDDINGS_PKL = os.path.join(CACHE_DIR, "csi_to_embeddings.pkl")
-price_data_path = "resources_enriched.json"
+PRICE_JSON = "resources_enriched.json"
+CACHE_DIR = "cache-fassi"
+CANDIDATES_JSON = os.path.join(CACHE_DIR, "csi_candidates.json")
+FAISS_PKL = os.path.join(CACHE_DIR, "csi_faiss.pkl")
 
-os.makedirs(CACHE_DIR, exist_ok=True)
+FAISS_THRESHOLD = 0.6
+TOP_K = 3
+
+# -------------------------------
+# MODELS
+# -------------------------------
+MATCH_MODEL = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2", cache_folder="./models")
+
 
 ALLOWED_CATEGORIES = [
     "General Requirements",
@@ -88,7 +95,7 @@ SYSTEM_ONTOLOGY = {
         "supervision", "project management", "permits"
     ],
 
-    "Earthwork System": [
+    "Excavation & Earthwork System": [
         "earthwork", "excavation", "grading", "trenching",
         "backfill", "compaction", "cut and fill", "dewatering"
     ],
@@ -217,220 +224,214 @@ class SystemChunk:
     system_name: str
     referenced_text: str
 
-# -----------------------------
-# CACHE UTILITIES
-# -----------------------------
-def save_candidates(path: str, data: Dict[str, Any]):
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+# ============================================================
+# Cache Builders
+# ============================================================
 
-def save_embeddings(path: str, data: Dict[str, Any]):
-    with open(path, "wb") as f:
-        pickle.dump(data, f, protocol=pickle.HIGHEST_PROTOCOL)
-
-def load_cache():
-    if not os.path.exists(CANDIDATES_JSON) or not os.path.exists(EMBEDDINGS_PKL):
-        return None, None
-
-    with open(CANDIDATES_JSON, "r", encoding="utf-8") as f:
-        csi_to_candidates = json.load(f)
-
-    with open(EMBEDDINGS_PKL, "rb") as f:
-        csi_to_embeddings = pickle.load(f)
-
-    return csi_to_candidates, csi_to_embeddings
-
-# -----------------------------
-# BUILD CACHE
-# -----------------------------
-def build_csi_cache(price_data: List[Dict[str, Any]]):
-    csi_to_candidates = defaultdict(lambda: {
-        "material": [],
-        "labor": [],
-        "equipment": []
-    })
-
-    csi_to_embeddings = defaultdict(lambda: {
-        "material": None,
-        "labor": None,
-        "equipment": None
-    })
+def build_csi_candidates(price_data: List[Dict[str, Any]]) -> Dict[str, Dict[str, List]]:
+    csi_map: Dict[str, Dict[str, List]] = {}
 
     for p in price_data:
         csi = p.get("CSI", "").strip()
-        item_text = p.get("item", "").strip()
-        if not csi or not item_text:
+        text = p.get("item", "").strip()
+        if not csi or not text:
             continue
 
+        if csi not in csi_map:
+            csi_map[csi] = {
+                "material": [],
+                "labor": [],
+                "equipment": []
+            }
+
         if p.get("material_unit_cost", 0) > 0:
-            csi_to_candidates[csi]["material"].append(p)
+            csi_map[csi]["material"].append(p)
         if p.get("labor_rate", 0) > 0:
-            csi_to_candidates[csi]["labor"].append(p)
+            csi_map[csi]["labor"].append(p)
         if p.get("equipment_rate", 0) > 0:
-            csi_to_candidates[csi]["equipment"].append(p)
+            csi_map[csi]["equipment"].append(p)
 
-    # Precompute embeddings
+    return csi_map
+
+
+def build_faiss_indices(csi_to_candidates: Dict[str, Dict[str, List]]) -> Dict:
+    csi_to_index: Dict[str, Dict[str, Any]] = {}
+
     for csi, groups in csi_to_candidates.items():
-        for key in ["material", "labor", "equipment"]:
-            texts = [p["item"] for p in groups[key]]
-            if texts:
-                csi_to_embeddings[csi][key] = MATCH_MODEL.encode(texts)
+        csi_to_index[csi] = {}
 
-    # 🔑 CONVERT defaultdict → dict BEFORE PICKLE
-    save_candidates(CANDIDATES_JSON, dict(csi_to_candidates))
-    save_embeddings(EMBEDDINGS_PKL, dict(csi_to_embeddings))
+        for res, items in groups.items():
+            if not items:
+                continue
 
-    return csi_to_candidates, csi_to_embeddings
+            texts = [p["item"] for p in items]
+            embeddings = MATCH_MODEL.encode(texts).astype("float32")
+            faiss.normalize_L2(embeddings)
 
-# -----------------------------
-# MAIN ENTRY
-# -----------------------------
-def load_or_build_cache():
-    print("🔍 Checking cache...")
+            index = faiss.IndexFlatIP(embeddings.shape[1])
+            index.add(embeddings)
 
-    csi_to_candidates, csi_to_embeddings = load_cache()
+            csi_to_index[csi][res] = {
+                "index": index,
+                "items": items
+            }
 
-    if csi_to_candidates is not None:
-        print("⚡ Loaded CSI cache from disk")
-        return csi_to_candidates, csi_to_embeddings
+    return csi_to_index
 
-    print("⚙️ Cache not found, building...")
 
-    with open(price_data_path, "r", encoding="utf-8") as f:
+def load_or_build_cache() -> Tuple[Dict, Dict]:
+    os.makedirs(CACHE_DIR, exist_ok=True)
+
+    if os.path.exists(CANDIDATES_JSON) and os.path.exists(FAISS_PKL):
+        try:
+            print("🔍 Loading cache...")
+            with open(CANDIDATES_JSON, "r", encoding="utf-8") as f:
+                csi_to_candidates = json.load(f)
+            with open(FAISS_PKL, "rb") as f:
+                csi_to_index = pickle.load(f)
+            return csi_to_candidates, csi_to_index
+        except Exception:
+            print("⚠️ Cache corrupted. Rebuilding...")
+
+    print("⚙️ Building cache...")
+    with open(PRICE_JSON, "r", encoding="utf-8") as f:
         price_data = json.load(f)
 
-    return build_csi_cache(price_data)
+    csi_to_candidates = build_csi_candidates(price_data)
+    csi_to_index = build_faiss_indices(csi_to_candidates)
 
-# -----------------------------
+    with open(CANDIDATES_JSON, "w", encoding="utf-8") as f:
+        json.dump(csi_to_candidates, f)
+
+    with open(FAISS_PKL, "wb") as f:
+        pickle.dump(csi_to_index, f, protocol=pickle.HIGHEST_PROTOCOL)
+
+    return csi_to_candidates, csi_to_index
+
+# ============================================================
+# Matching Logic
+# ============================================================
+
+def faiss_match(
+    query: str,
+    csi: str,
+    resource: str,
+    csi_to_index: Dict
+) -> Tuple[Any, float, List[Any]]:
+
+    bucket = csi_to_index.get(csi, {}).get(resource)
+    if not bucket:
+        return None, 0.0, []
+
+    q_emb = MATCH_MODEL.encode([query]).astype("float32")
+    faiss.normalize_L2(q_emb)
+
+    scores, idxs = bucket["index"].search(q_emb, TOP_K)
+    scores = scores[0]
+    idxs = idxs[0]
+
+    candidates = []
+    final_scores = []
+
+    print("\n" + "=" * 80)
+    print(f"🔎 FAISS MATCH")
+    print(f"CSI      : {csi}")
+    print(f"Resource : {resource}")
+    print(f"Query    : {query}")
+    print("-" * 80)
+
+    for rank, idx in enumerate(idxs):
+        item = bucket["items"][idx]
+        kw = keyword_similarity(query, item["item"])
+        score = 0.8 * scores[rank] + 0.2 * kw
+        candidates.append(item)
+        final_scores.append(score)
+
+        print(
+            f"[{rank}] "
+            f"SEM={scores[rank]:.3f} "
+            f"KW={kw:.3f} "
+            f"SCORE={score:.3f} | "
+            f"{item['item']}"
+        )
+
+    best_idx = int(np.argmax(final_scores))
+    best_score = float(final_scores[best_idx])
+    best_item = candidates[best_idx]
+
+    print("-" * 80)
+    print(
+        f"✅ BEST (FAISS) → "
+        f"SCORE={best_score:.3f} | "
+        f"{best_item['item']}"
+    )
+    print("=" * 80)
+    return best_item, best_score, candidates
+
+
+def llm_fallback(
+    query: str,
+    csi: str,
+    candidates: List[Dict[str, Any]]
+) -> Tuple[Any, float]:
+
+    print("⚠️ FAISS CONFIDENCE LOW → LLM FALLBACK")
+    print(f"Query: {query}")
+    print("Candidates sent to LLM:")
+    for i, c in enumerate(candidates):
+        print(f"  [{i}] {c['item']}")
+
+    options = [{"id": i, "item": c["item"]} for i, c in enumerate(candidates)]
+
+    prompt = f"""
+You are a construction estimator.
+
+CSI: {csi}
+Job Activity: "{query}"
+
+Choose the BEST matching item.
+Return JSON only.
+
+Options:
+{json.dumps(options, indent=2)}
+
+{{"id": number, "confidence": number}}
+"""
+
+    resp = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        temperature=0,
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    try:
+        data = json.loads(resp.choices[0].message.content)
+        idx = int(data.get("id", -1))
+        conf = float(data.get("confidence", 0))
+        if idx < 0 or idx >= len(candidates):
+            return None, conf
+
+        print(
+            f"🤖 LLM SELECTED → "
+            f"[{idx}] {candidates[idx]['item']} "
+            f"(confidence={conf:.2f})"
+        )
+
+        return candidates[idx], conf
+    except Exception:
+        print("❌ LLM FAILED TO SELECT")
+        return None, 0.0
+        
+# ===============================
 # UTILS
-# -----------------------------
-
-@lru_cache(maxsize=50_000)
-def _tokenize(text: str):
-    return [
-        t for t in TOKEN_RE.findall(text.lower())
-        if t not in STOPWORDS and len(t) > 2
-    ]
-
+# ===============================
 
 def keyword_similarity(a: str, b: str) -> float:
-    """
-    Lightweight keyword similarity.
-    Returns value in range [0.0, 1.0]
-    """
     if not a or not b:
         return 0.0
-
-    tokens_a = _tokenize(a)
-    tokens_b = _tokenize(b)
-
-    if not tokens_a or not tokens_b:
-        return 0.0
-
-    set_a = set(tokens_a)
-    set_b = set(tokens_b)
-
-    # Jaccard similarity
-    intersection = set_a & set_b
-    union = set_a | set_b
-
-    jaccard = len(intersection) / len(union)
-
-    # Partial match boost (e.g., "reinforce" vs "reinforcing")
-    partial_hits = 0
-    for ta in set_a:
-        for tb in set_b:
-            if ta in tb or tb in ta:
-                partial_hits += 1
-
-    partial_boost = min(partial_hits / max(len(set_a), len(set_b)), 0.3)
-
-    return round(min(jaccard + partial_boost, 1.0), 3)
-
-def csi_weight(query_csi: str, candidate_csi: str) -> float:
-    """
-    Returns multiplier in range [0.6, 1.2]
-    """
-    if not query_csi or not candidate_csi:
-        return 0.85
-
-    if query_csi == candidate_csi:
-        return 1.20  # strong boost
-
-    # Same division (03 vs 03 30 00)
-    if query_csi.split()[0] == candidate_csi.split()[0]:
-        return 1.05
-
-    return 0.75
-
-def item_match(
-    job_activity: str,
-    candidates: List[Dict[str, Any]],
-    embeddings,
-    query_csi: str = "",
-    semantic_weight: float = 0.7,
-    keyword_weight: float = 0.3,
-    similarity_threshold: float = 0.70,
-    fallback_threshold: float = 0.4,
-    top_k: int = 3
-):
-    if not job_activity or not candidates or embeddings is None or len(candidates) == 0:
-        return None, 0.0
-
-    # Encode query
-    query_emb = MATCH_MODEL.encode([job_activity])[0]
-
-    # Semantic similarity
-    semantic_scores = cosine_similarity([query_emb], embeddings)[0]
-
-    # Keyword similarity
-    keyword_scores = np.array([
-        keyword_similarity(job_activity, p.get("Item", ""))
-        for p in candidates
-    ])
-
-    # Safety
-    if len(semantic_scores) == 0:
-        return None, 0.0
-
-    # CSI-aware weighting
-    csi_weights = np.array([
-        csi_weight(query_csi, p.get("CSI", ""))
-        for p in candidates
-    ])
-
-    # Hybrid score
-    # final_scores = (
-    #     semantic_weight * semantic_scores +
-    #     keyword_weight * keyword_scores
-    # )
-    final_scores = (
-        semantic_weight * semantic_scores +
-        keyword_weight * keyword_scores
-    ) * csi_weights
-
-    # best_idx = int(final_scores.argmax())
-    # Rank Top-K
-    top_indices = np.argsort(final_scores)[::-1][:top_k]
-    best_idx = int(top_indices[0])
-    best_score = float(final_scores[best_idx])
-
-    # Primary acceptance
-    if best_score >= similarity_threshold:
-        return candidates[best_idx], round(best_score, 3)
-
-    # Fallback acceptance
-    if best_score >= fallback_threshold:
-        # Ensure it's not a random spike
-        if len(top_indices) == 1:
-            return candidates[best_idx], round(best_score, 3)
-
-        second_score = float(final_scores[top_indices[1]])
-        if best_score - second_score <= 0.15:
-            return candidates[best_idx], round(best_score, 3)
-
-    return None, round(best_score, 3)
-
+    a_tokens = set(a.lower().split())
+    b_tokens = set(b.lower().split())
+    return len(a_tokens & b_tokens) / max(len(a_tokens), 1)
 
 def print_step(title: str):
     print("\n" + "=" * 80)
@@ -908,91 +909,55 @@ Referenced Text:
 # -----------------------------
 # Cost Estimate (material costs + labor + equipment)
 # -----------------------------
-COST_EXTRACTOR_SYS = """You are a construction cost estimator.
-Estimate material unit cost, labor rate and equipment rate based on Referenced price JSON array.
-Output JSON only.
 
-Schema:
-{
-  "items":[
-    {"DIV":"##","CSI":"## ## ##","Category":"...allowed...","Item":"...","quantity":number,"unit":"...", "material_unit_cost":"...", "labor_rate":"...", "equipment_rate":"...", "labor_hours_per_unit":number,"equipment_hours_per_unit":number}
-  ]
-}
-"""
 def estimate_costs_for_items(
     system_to_items: Dict[str, List[Dict[str, Any]]],
-    region: str = "US",
-    csi_to_candidates: Dict[str, Dict[str, List[Dict[str, Any]]]] = {},
-    csi_to_embeddings: Dict[str, Dict[str, Any]] = {}
+    region: str,
+    csi_to_index: Dict
 ) -> Dict[str, List[Dict[str, Any]]]:
-    
 
     cost_items = {}
-    for system_name in sorted(system_to_items.keys(), key=lambda x: x.lower()):
-        items = system_to_items[system_name]
-        if not items:
-            continue
 
-        enriched_items = []
-        
+    for system_name, items in system_to_items.items():
+        enriched = []
+
         for item in items:
+            qty = item.get("quantity", 0)
 
-            item["L.Hrs"] = item.get("labor_hours_per_unit", 0) * item.get("quantity", 0)
-            item["E.Hrs"] = item.get("equipment_hours_per_unit", 0) * item.get("quantity", 0)
+            item["L.Hrs"] = item.get("labor_hours_per_unit", 0) * qty
+            item["E.Hrs"] = item.get("equipment_hours_per_unit", 0) * qty
 
-            item.setdefault("material", {})
-            item.setdefault("labor", {})
-            item.setdefault("equipment", {})
+            for res, rate_key, rate_out, total_out in [
+                ("material", "material_unit_cost", "M.Cost", "T.Mat"),
+                ("labor", "labor_rate", "L.Rate", "T.Labor"),
+                ("equipment", "equipment_rate", "E.Rate", "T.Equip"),
+            ]:
+                best, score, topk = faiss_match(
+                    item["Item"], item["CSI"], res, csi_to_index
+                )
 
-            csi_code = item.get("CSI").strip()
-            job_activity = item.get("Item").strip()
-            candidates = csi_to_candidates.get(csi_code, {"material": [], "labor": [], "equipment": []})["material"]
-            embeddings = csi_to_embeddings.get(csi_code, {"material": None, "labor": None, "equipment": None})["material"]
-            # print(f"""Materils: candidates:  {candidates}, embeddings: {embeddings}""")
-            
-            best_price, score = item_match(job_activity, candidates, embeddings, query_csi=csi_code)
-            if best_price is not None:
-                item["M.Cost"] = best_price.get("material_unit_cost", 0)
-            else:
-                item["M.Cost"] = 0.0
-            item["T.Mat"] = item.get("M.Cost", 0) * item.get("quantity", 0)
-            item["material"]["matched_price"] = best_price
-            item["material"]["similarity"] = score
+                source = "faiss"
+                if score < FAISS_THRESHOLD:
+                    llm_best, llm_score = llm_fallback(
+                        item["Item"], item["CSI"], topk
+                    )
+                    if llm_best:
+                        best = llm_best
+                        score = llm_score
+                        source = "llm"
 
-            candidates = csi_to_candidates.get(csi_code, {"material": [], "labor": [], "equipment": []})["labor"]
-            embeddings = csi_to_embeddings.get(csi_code, {"material": None, "labor": None, "equipment": None})["labor"]
-            # print(f"""Labor: candidates:  {candidates}, embeddings: {embeddings}""")
+                rate = best.get(rate_key, 0) if best else 0
+                item[rate_out] = rate
+                item[total_out] = rate * qty
 
-            best_price, score = item_match(job_activity, candidates, embeddings, query_csi=csi_code)
+                item.setdefault(res, {})
+                item[res]["matched_price"] = best
+                item[res]["similarity"] = round(score, 3)
+                item[res]["source"] = source
 
-            if best_price is not None:
-                item["L.Rate"] = best_price.get("labor_rate", 0)
-            else:
-                item["L.Rate"] = 0.0
-            item["T.Labor"] = item.get("L.Rate", 0) * item.get("quantity", 0)
-            item["labor"]["matched_price"] = best_price
-            item["labor"]["similarity"] = score
+            enriched.append(item)
 
-            candidates = csi_to_candidates.get(csi_code, {"material": [], "labor": [], "equipment": []})["equipment"]
-            embeddings = csi_to_embeddings.get(csi_code, {"material": None, "labor": None, "equipment": None})["equipment"]
-            # print(f"""Equipment: candidates:  {candidates}, embeddings: {embeddings}""")
-
-            best_price, score = item_match(job_activity, candidates, embeddings, query_csi=csi_code)
-
-            if best_price is not None:
-                item["E.Rate"] = best_price.get("equipment_rate", 0)
-            else:
-                item["E.Rate"] = 0.0
-            item["T.Equip"] = item.get("E.Rate", 0) * item.get("quantity", 0)
-            item["equipment"]["matched_price"] = best_price
-            item["equipment"]["similarity"] = score
-
-
-            enriched_items.append(item)
-
-            print(item)
-
-        cost_items[system_name] = enriched_items
+        cost_items[system_name] = enriched
 
     return cost_items
 
@@ -1089,7 +1054,7 @@ def run(
     # Preprocess: group by CSI and pre-embed items
     # --------------------------------------------------
 
-    csi_to_candidates, csi_to_embeddings = load_or_build_cache()
+    csi_to_candidates, csi_to_index = load_or_build_cache()
 
 
     # --------------------------------------------------
@@ -1160,7 +1125,7 @@ def run(
             print(f"   - {it['CSI']} | {it['Category']} | {it['Item']} | {it['quantity']} {it['unit']}")
 
     print_step("7) Estimate costs for items (GPT)")
-    cost_items = estimate_costs_for_items(system_to_items, region, csi_to_candidates, csi_to_embeddings)
+    cost_items = estimate_costs_for_items(system_to_items, region, csi_to_index)
 
     print_step("8) Export to Excel (one sheet, system name as merged row)")
     export_to_excel(out_xlsx, cost_items)

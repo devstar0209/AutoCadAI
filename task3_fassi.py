@@ -101,7 +101,7 @@ SYSTEM_ONTOLOGY = {
     ],
 
     "Concrete Structure System": [
-        "concrete", "cast-in-place", "foundation", "footing",
+        "cast-in-place", "foundation", "footing",
         "slab", "structural concrete", "rebar", "reinforcing"
     ],
 
@@ -147,7 +147,13 @@ SYSTEM_ONTOLOGY = {
 
     "Sanitary Sewer System": [
         "sanitary sewer", "sanitary drainage", "waste piping",
-        "soil pipe", "vent piping", "cleanout", "manhole"
+        "soil pipe", "vent piping", "cleanout"
+    ],
+
+    "Manhole and Structure": [
+        "manhole", "mh#", "mh ", "access structure",
+        "catch basin", "inspection chamber",
+        "precast manhole", "utility vault"
     ],
 
     "Storm Drainage System": [
@@ -193,13 +199,6 @@ REGION_PROFILES = {
         "typical_units": ["nr", "m", "m2", "m3", "t", "item", "sum", "hr", "l"]
     }
 }
-
-STOPWORDS = {
-    "the", "and", "of", "for", "to", "in", "on", "with",
-    "by", "at", "as", "is", "are", "be", "or"
-}
-
-TOKEN_RE = re.compile(r"[a-zA-Z0-9]+")
 
 
 # -----------------------------
@@ -333,12 +332,12 @@ def faiss_match(
     candidates = []
     final_scores = []
 
-    print("\n" + "=" * 80)
-    print(f"🔎 FAISS MATCH")
-    print(f"CSI      : {csi}")
-    print(f"Resource : {resource}")
-    print(f"Query    : {query}")
-    print("-" * 80)
+    # print("\n" + "=" * 80)
+    # print(f"🔎 FAISS MATCH")
+    # print(f"CSI      : {csi}")
+    # print(f"Resource : {resource}")
+    # print(f"Query    : {query}")
+    # print("-" * 80)
 
     for rank, idx in enumerate(idxs):
         item = bucket["items"][idx]
@@ -347,25 +346,25 @@ def faiss_match(
         candidates.append(item)
         final_scores.append(score)
 
-        print(
-            f"[{rank}] "
-            f"SEM={scores[rank]:.3f} "
-            f"KW={kw:.3f} "
-            f"SCORE={score:.3f} | "
-            f"{item['item']}"
-        )
+        # print(
+        #     f"[{rank}] "
+        #     f"SEM={scores[rank]:.3f} "
+        #     f"KW={kw:.3f} "
+        #     f"SCORE={score:.3f} | "
+        #     f"{item['item']}"
+        # )
 
     best_idx = int(np.argmax(final_scores))
     best_score = float(final_scores[best_idx])
     best_item = candidates[best_idx]
 
-    print("-" * 80)
-    print(
-        f"✅ BEST (FAISS) → "
-        f"SCORE={best_score:.3f} | "
-        f"{best_item['item']}"
-    )
-    print("=" * 80)
+    # print("-" * 80)
+    # print(
+    #     f"✅ BEST (FAISS) → "
+    #     f"SCORE={best_score:.3f} | "
+    #     f"{best_item['item']}"
+    # )
+    # print("=" * 80)
     return best_item, best_score, candidates
 
 
@@ -375,11 +374,11 @@ def llm_fallback(
     candidates: List[Dict[str, Any]]
 ) -> Tuple[Any, float]:
 
-    print("⚠️ FAISS CONFIDENCE LOW → LLM FALLBACK")
-    print(f"Query: {query}")
-    print("Candidates sent to LLM:")
-    for i, c in enumerate(candidates):
-        print(f"  [{i}] {c['item']}")
+    # print("⚠️ FAISS CONFIDENCE LOW → LLM FALLBACK")
+    # print(f"Query: {query}")
+    # print("Candidates sent to LLM:")
+    # for i, c in enumerate(candidates):
+    #     print(f"  [{i}] {c['item']}")
 
     options = [{"id": i, "item": c["item"]} for i, c in enumerate(candidates)]
 
@@ -411,15 +410,15 @@ Options:
         if idx < 0 or idx >= len(candidates):
             return None, conf
 
-        print(
-            f"🤖 LLM SELECTED → "
-            f"[{idx}] {candidates[idx]['item']} "
-            f"(confidence={conf:.2f})"
-        )
+        # print(
+        #     f"🤖 LLM SELECTED → "
+        #     f"[{idx}] {candidates[idx]['item']} "
+        #     f"(confidence={conf:.2f})"
+        # )
 
         return candidates[idx], conf
     except Exception:
-        print("❌ LLM FAILED TO SELECT")
+        # print("❌ LLM FAILED TO SELECT")
         return None, 0.0
         
 # ===============================
@@ -656,7 +655,7 @@ def build_region_instruction(region: str) -> str:
     return (
         f"Region standard: {profile['standard']}. "
         f"Prefer these units: {', '.join(profile['typical_units'])}. "
-        "Use region-appropriate unit conventions."
+        "Use region-appropriate unit conventions. DON't include another measure units."
     )
 
 
@@ -664,34 +663,19 @@ def build_region_instruction(region: str) -> str:
 # SYSTEM CLASSIFICATION + MERGE
 # -----------------------------
 
-SYSTEM_CLASSIFIER_SYS = """You are a construction estimator assistant.
-Task: From OCR text, identify building systems mentioned (assemblies/trades).
+SYSTEM_CLASSIFIER_SYS = f"""You are a construction estimator assistant.
+Task: From OCR text, identify building systems mentioned (assemblies).
 
 SYSTEM RESTRICTION (MANDATORY)
 You may ONLY output systems that exactly match one of the following
 canonical system names:
-- General Conditions
-- Earthwork System
-- Concrete Structure System
-- Masonry System
-- Structural Steel System
-- Wood Framing System
-- Roofing System
-- Exterior Envelope System
-- Interior Finishes System
-- Doors and Windows System
-- Plumbing System
-- Sanitary Sewer System
-- Storm Drainage System
-- HVAC System
-- Electrical System
-- Fire Protection System
-- Low Voltage / Communications System
-- Site Utilities System
+{list(SYSTEM_ONTOLOGY.keys())}
 
-Prefer brief system names (2-5 words). Use MasterFormat-like thinking.
-Leverage General Notes / Special Notes if they specify scope or systems.
-Avoid creating many near-duplicate systems; consolidate synonyms.
+CRITICAL OWNERSHIP RULE:
+- Each OCR sentence or paragraph may belong to ONE system only.
+- If scope overlaps, assign the text to the system that CONSUMES the work.
+- Do NOT duplicate the same OCR text across multiple systems.
+
 Return JSON only.
 """
 
@@ -702,9 +686,10 @@ Extract top-level systems from the following OCR chunk.
 Rules:
 - Return a list of systems with brief names.
 - Prefer common systems such as Roofing, Stairs, HVAC, Plumbing, Electrical, Fire Protection, etc.
+- An item belongs to the system that consumes it.
 - Ignore any notes, instructions, disclaimers or code references
 - Include "General Requirements" only if scope/admin requirements are explicit.
-- M.H is manhole
+- M.H is manhole and manhole MUST be in Manhole and Structure system, not in Sanitary Sewer System. Item will be Manhole Installation (Including Frame and Cover).
 
 For each system include:
   - system_name (brief)
@@ -861,7 +846,7 @@ Allowed categories (must choose one exactly):
 Region:
 {region_instruction}
 
-Estimator instruction (always apply; NOT a filter):
+Estimator instruction (Just filter):
 {user_prompt_extra}
 
 Now extract line items from the referenced text below.

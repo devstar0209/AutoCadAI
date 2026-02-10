@@ -13,6 +13,7 @@ from collections import defaultdict
 import numpy as np
 from functools import lru_cache
 import faiss
+from datetime import datetime
 
 # OCR / PDF
 from pdf2image import convert_from_path
@@ -212,6 +213,18 @@ REGION_PROFILES = {
         "standard": "NRM2/RICS",
         "typical_units": ["nr", "m", "m2", "m3", "t", "item", "sum", "hr", "l"]
     }
+}
+
+CONVERSATION_RATES = {
+    "US": 1.0,
+    "JMD": 150,    # 1 USD = 150 JMD -> 1 JMD = 0.007 USD
+    "CAD": 1.33,   # 1 USD = 1.33 CAD -> 1 CAD = 0.75 USD
+    "EUR": 0.92,   # 1 USD = 0.92 EUR -> 1 EUR = 1.09 USD
+    "ECD": 2.70,   # 1 USD = 2.70 ECD -> 1 ECD = 0.37 USD
+    "BBD": 2.00,   # 1 USD = 2.00 BBD -> 1 BBD = 0.50 USD
+    "BZD": 2.00,   # 1 USD = 2.00 BZD -> 1 BZD = 0.50 USD
+    "KYD": 0.83,   # 1 USD = 0.83 KYD -> 1 KYD = 1.20 USD
+    "MRU": 36.00,  # 1 USD = 36.00 MRU -> 1 MRU = 0.028 USD
 }
 
 
@@ -533,6 +546,12 @@ def normalize_whitespace(s: str) -> str:
     s = re.sub(r"[ \t]+", " ", s)
     s = re.sub(r"\n{3,}", "\n\n", s)
     return s.strip()
+
+def extract_json_from_response(response_text: str):
+    match = re.search(r"```json\n(.*?)\n```", response_text, re.DOTALL)
+    if match: return match.group(1)
+    match2 = re.search(r'\[.*\]', response_text, re.DOTALL)
+    return match2.group(0) if match2 else None
 
 def estimate_tokens(text: str) -> int:
     # Rough token estimate: ~4 chars/token typical for English.
@@ -914,7 +933,9 @@ Do not invent scope not supported by the text; but you may infer standard compon
 Ensure CSI division and section are plausible.
 
 INVALID RULES:
-- M.H is not "main panel". M.H is manhole.
+- M.H is not "main panel". M.H is manhole and manhole MUST belongs to Manhole and Structure system, not to Sanitary Sewer System.
+- HVAC MUST not be in Electrical System. HVAC items should be classified under HVAC system.
+- DIV MUST match the CSI.
 
 Schema:
 {
@@ -996,10 +1017,12 @@ Referenced Text:
 def estimate_costs_for_items(
     system_to_items: Dict[str, List[Dict[str, Any]]],
     region: str,
+    currency: str,
     csi_to_index: Dict
 ) -> Dict[str, List[Dict[str, Any]]]:
 
     cost_items = {}
+    currency_rate = CONVERSION_RATES.get(currency.upper(), 1.0)
 
     for system_name, items in system_to_items.items():
         enriched = []
@@ -1030,8 +1053,8 @@ def estimate_costs_for_items(
                         source = "llm"
 
                 rate = best.get(rate_key, 0) if best else 0
-                item[rate_out] = rate
-                item[total_out] = rate * qty
+                item[rate_out] = rate * currency_rate
+                item[total_out] = rate * currency_rate * qty
 
                 item.setdefault(res, {})
                 item[res]["matched_price"] = best
@@ -1088,7 +1111,7 @@ def generate_cost_summary(
         )
 
         summary.append({
-            "DIV": div,
+            "Div": div,
             "Category": category,
             "Material": round(costs["Material"], 2),
             "Labor": round(costs["Labor"], 2),
@@ -1123,7 +1146,7 @@ def generate_outputs(
     ws_summary = wb.active
     ws_summary.title = "Summary"
 
-    ws_summary.merge_cells('A1:O1')
+    ws_summary.merge_cells('A1:C1')
 
     title_cell = ws_summary['A1']
     title_cell.value = project_title
@@ -1171,14 +1194,25 @@ def generate_outputs(
         summary_table_data.append([
             item.get("Div", 0),
             item.get("Category", ""),
-            currency+"$"+str(format(item.get("Subtotal", 0), ","))
+            currency+"$"+str(format(item.get("Subtotal", 0), ",.2f"))
         ])
+        
         ws_summary.append([
             item.get("Div", 0),
             item.get("Category", ""),
-            currency+"$"+str(format(item.get("Subtotal", 0), ","))
+            currency+"$"+str(format(item.get("Subtotal", 0), ",.2f"))
         ])
-
+        
+    summary_table_data.append([
+        "",
+        "Total Cost",
+        currency+"$"+str(format(summary_data["grand_total"], ",.2f"))
+    ])
+    ws_summary.append([
+        "",
+        "Total Cost",
+        currency+"$"+str(format(summary_data["grand_total"], ",.2f"))
+    ])
 
     # --- Write Details Sheet ---
     ws = wb.create_sheet(title="Details")
@@ -1219,10 +1253,10 @@ def generate_outputs(
                 it.get("T.Labor", 0),
                 it.get("T.Equip", 0)
             ])
-            it["Sub Total"] = currency+"$"+str(format(row_total, ","))
-            it["T.Mat"] = currency+"$"+str(format(it.get("T.Mat", 0), ","))
-            it["T.Labor"] = currency+"$"+str(format(it.get("T.Labor", 0), ","))
-            it["T.Equip"] = currency+"$"+str(format(it.get("T.Equip", 0), ","))
+            it["Sub Total"] = currency+"$"+str(format(row_total, ",.2f"))
+            it["T.Mat"] = currency+"$"+str(format(it.get("T.Mat", 0), ",.2f"))
+            it["T.Labor"] = currency+"$"+str(format(it.get("T.Labor", 0), ",.2f"))
+            it["T.Equip"] = currency+"$"+str(format(it.get("T.Equip", 0), ",.2f"))
             detail_table_data.append([it.get(h, "") for h in headers])
             ws.append([it.get(h, "") for h in headers])
             row += 1
@@ -1401,7 +1435,7 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
             print(f"   - {it['CSI']} | {it['Category']} | {it['Item']} | {it['quantity']} {it['unit']}")
 
     print_step("7) Estimate costs for items (GPT)")
-    cost_items = estimate_costs_for_items(system_to_items, location, csi_to_index)
+    cost_items = estimate_costs_for_items(system_to_items, location, currency, csi_to_index)
 
     print_step("8) Export to Excel (one sheet, system name as merged row)")
     generate_outputs(cost_items, cad_title, currency, output_excel, output_pdf)

@@ -52,16 +52,14 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 MODEL = "gpt-5.2"
 
 BASE_DIR = settings.BASE_DIR
-PRICE_JSON = os.path.join(BASE_DIR, "resources_enriched.json")
 CACHE_DIR = os.path.join(BASE_DIR, "cache-fassi")
 os.makedirs(CACHE_DIR, exist_ok=True)
-CANDIDATES_JSON = os.path.join(CACHE_DIR, "csi_candidates.json")
-FAISS_PKL = os.path.join(CACHE_DIR, "csi_faiss.pkl")
 
 FAISS_THRESHOLD = 0.6
 TOP_K = 3
 
 pdf_total_pages = 0
+drawing_date=""
 
 # -------------------------------
 # MODELS
@@ -215,19 +213,6 @@ REGION_PROFILES = {
     }
 }
 
-CONVERSATION_RATES = {
-    "US": 1.0,
-    "JMD": 150,    # 1 USD = 150 JMD -> 1 JMD = 0.007 USD
-    "CAD": 1.33,   # 1 USD = 1.33 CAD -> 1 CAD = 0.75 USD
-    "EUR": 0.92,   # 1 USD = 0.92 EUR -> 1 EUR = 1.09 USD
-    "ECD": 2.70,   # 1 USD = 2.70 ECD -> 1 ECD = 0.37 USD
-    "BBD": 2.00,   # 1 USD = 2.00 BBD -> 1 BBD = 0.50 USD
-    "BZD": 2.00,   # 1 USD = 2.00 BZD -> 1 BZD = 0.50 USD
-    "KYD": 0.83,   # 1 USD = 0.83 KYD -> 1 KYD = 1.20 USD
-    "MRU": 36.00,  # 1 USD = 36.00 MRU -> 1 MRU = 0.028 USD
-}
-
-
 # -----------------------------
 # DATA STRUCTURES
 # -----------------------------
@@ -305,8 +290,10 @@ def build_faiss_indices(csi_to_candidates: Dict[str, Dict[str, List]]) -> Dict:
     return csi_to_index
 
 
-def load_or_build_cache() -> Tuple[Dict, Dict]:
-    os.makedirs(CACHE_DIR, exist_ok=True)
+def load_or_build_cache(currency:str) -> Tuple[Dict, Dict]:
+
+    CANDIDATES_JSON = os.path.join(CACHE_DIR, f"csi_candidates_{currency.lower()}.json")
+    FAISS_PKL = os.path.join(CACHE_DIR, f"csi_faiss_{currency.lower()}.pkl")
 
     if os.path.exists(CANDIDATES_JSON) and os.path.exists(FAISS_PKL):
         try:
@@ -320,6 +307,7 @@ def load_or_build_cache() -> Tuple[Dict, Dict]:
             print("⚠️ Cache corrupted. Rebuilding...")
 
     print("⚙️ Building cache...")
+    PRICE_JSON = os.path.join(BASE_DIR, f"resources_priced_{currency.lower()}.json")
     with open(PRICE_JSON, "r", encoding="utf-8") as f:
         price_data = json.load(f)
 
@@ -636,10 +624,10 @@ def ocr_pdf(
     pages: List[OCRPage] = []
 
     for i, img in enumerate(images, start=1):
+        notify_frontend(total_pages, i, "PDF Processing is in progress...", "", "", session_id)
         text = pytesseract.image_to_string(img, lang=lang)
         text = normalize_whitespace(text)
         pages.append(OCRPage(page_num=i, text=text))
-        notify_frontend(total_pages, i, "PDF Processing is in progress...", "", "", session_id)
         print(f"OCR page {i}/{len(images)}: {len(text)} chars")
 
     return pages
@@ -1017,12 +1005,10 @@ Referenced Text:
 def estimate_costs_for_items(
     system_to_items: Dict[str, List[Dict[str, Any]]],
     region: str,
-    currency: str,
     csi_to_index: Dict
 ) -> Dict[str, List[Dict[str, Any]]]:
 
     cost_items = {}
-    currency_rate = CONVERSION_RATES.get(currency.upper(), 1.0)
 
     for system_name, items in system_to_items.items():
         enriched = []
@@ -1053,8 +1039,8 @@ def estimate_costs_for_items(
                         source = "llm"
 
                 rate = best.get(rate_key, 0) if best else 0
-                item[rate_out] = rate * currency_rate
-                item[total_out] = rate * currency_rate * qty
+                item[rate_out] = rate
+                item[total_out] = rate * qty
 
                 item.setdefault(res, {})
                 item[res]["matched_price"] = best
@@ -1358,7 +1344,7 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
     # Preprocess: group by CSI and pre-embed items
     # --------------------------------------------------
 
-    csi_to_candidates, csi_to_index = load_or_build_cache()
+    csi_to_candidates, csi_to_index = load_or_build_cache(currency)
 
 
     # --------------------------------------------------
@@ -1435,7 +1421,7 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
             print(f"   - {it['CSI']} | {it['Category']} | {it['Item']} | {it['quantity']} {it['unit']}")
 
     print_step("7) Estimate costs for items (GPT)")
-    cost_items = estimate_costs_for_items(system_to_items, location, currency, csi_to_index)
+    cost_items = estimate_costs_for_items(system_to_items, location, csi_to_index)
 
     print_step("8) Export to Excel (one sheet, system name as merged row)")
     generate_outputs(cost_items, cad_title, currency, output_excel, output_pdf)

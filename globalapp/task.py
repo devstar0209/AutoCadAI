@@ -55,7 +55,7 @@ BASE_DIR = settings.BASE_DIR
 CACHE_DIR = os.path.join(BASE_DIR, "cache-fassi")
 os.makedirs(CACHE_DIR, exist_ok=True)
 
-FAISS_THRESHOLD = 0.6
+FAISS_THRESHOLD = 0.3
 TOP_K = 3
 
 pdf_total_pages = 0
@@ -778,8 +778,6 @@ CRITICAL OWNERSHIP RULE:
 - Each OCR sentence or paragraph may belong to ONE system only.
 - If scope overlaps, assign the text to the system that CONSUMES the work.
 - Do NOT duplicate the same OCR text across multiple systems.
-- M.H is manhole and manhole MUST belongs to Manhole and Structure system, not to Sanitary Sewer System. Item will be Manhole Installation (With Frame and Cover).
-- Electronic Safety & Security system includes fire alarm, cctv, access control, and security systems, etc. Do not classify these items under Electrical System.
 
 Return JSON only.
 """
@@ -794,6 +792,8 @@ Rules:
 - An item belongs to the system that consumes it.
 - Ignore any notes, instructions, disclaimers or code references
 - Include "General Requirements" only if scope/admin requirements are explicit.
+- M.H is manhole and manhole MUST belongs to Manhole and Structure system, not to Sanitary Sewer System. Means M.H is not related to Sanitary Sewer System.
+- Electronic Safety & Security system includes fire alarm, cctv, access control, and security systems, etc. Do not classify these items under Electrical System.
 
 For each system include:
   - system_name (brief)
@@ -920,11 +920,6 @@ If quantity is missing, choose a reasonable default dimension/quantity assumptio
 Do not invent scope not supported by the text; but you may infer standard components when notes imply them.
 Ensure CSI division and section are plausible.
 
-INVALID RULES:
-- M.H is not "main panel". M.H is manhole and manhole MUST belongs to Manhole and Structure system, not to Sanitary Sewer System.
-- HVAC MUST not be in Electrical System. HVAC items should be classified under HVAC system.
-- DIV MUST match the CSI.
-
 Schema:
 {
   "items":[
@@ -957,6 +952,12 @@ Estimator instruction (Just filter):
 {user_prompt_extra}
 
 Now extract line items from the referenced text below.
+
+INVALID RULES:
+- M.H is not "main panel". M.H is manhole and manhole MUST belongs to Manhole and Structure system, not to Sanitary Sewer System.
+- INVALID if Manhole is in Sanitary Sewer System.
+- HVAC MUST not be in Electrical System. HVAC items should be classified under HVAC system.
+- DIV MUST match the CSI.
 
 Referenced Text:
 {system_text}
@@ -1030,13 +1031,14 @@ def estimate_costs_for_items(
 
                 source = "faiss"
                 if score < FAISS_THRESHOLD:
-                    llm_best, llm_score = llm_fallback(
-                        item["Item"], item["CSI"], topk
-                    )
-                    if llm_best:
-                        best = llm_best
-                        score = llm_score
-                        source = "llm"
+                    # llm_best, llm_score = llm_fallback(
+                    #     item["Item"], item["CSI"], topk
+                    # )
+                    # if llm_best:
+                    #     best = llm_best
+                    #     score = llm_score
+                    #     source = "llm"
+                    continue
 
                 rate = best.get(rate_key, 0) if best else 0
                 item[rate_out] = rate
@@ -1240,8 +1242,11 @@ def generate_outputs(
                 it.get("T.Equip", 0)
             ])
             it["Sub Total"] = currency+"$"+str(format(row_total, ",.2f"))
+            it["M.Cost"] = currency+"$"+str(format(it.get("M.Cost", 0), ",.2f"))
             it["T.Mat"] = currency+"$"+str(format(it.get("T.Mat", 0), ",.2f"))
+            it["L.Rate"] = currency+"$"+str(format(it.get("L.Rate", 0), ",.2f"))
             it["T.Labor"] = currency+"$"+str(format(it.get("T.Labor", 0), ",.2f"))
+            it["E.Rate"] = currency+"$"+str(format(it.get("E.Rate", 0), ",.2f"))
             it["T.Equip"] = currency+"$"+str(format(it.get("T.Equip", 0), ",.2f"))
             detail_table_data.append([it.get(h, "") for h in headers])
             ws.append([it.get(h, "") for h in headers])
@@ -1253,17 +1258,17 @@ def generate_outputs(
         "B": 12,  # CSI
         "C": 15,  # Category
         "D": 60,  # Item
-        "E": 12,  # quantity
-        "F": 10,  # unit
-        "G": 12,  # M.Cost
-        "H": 12,  # T.Mat
-        "I": 12,  # L.Rate
-        "J": 12,  # L.Hrs
-        "K": 12,  # T.Labor
-        "L": 12,  # E.Rate
-        "M": 12,  # E.Hrs
-        "N": 12,  # T.Equip
-        "O": 12   # Sub Total
+        "E": 10,  # quantity
+        "F": 8,  # unit
+        "G": 15,  # M.Cost
+        "H": 15,  # T.Mat
+        "I": 15,  # L.Rate
+        "J": 10,  # L.Hrs
+        "K": 15,  # T.Labor
+        "L": 15,  # E.Rate
+        "M": 10,  # E.Hrs
+        "N": 15,  # T.Equip
+        "O": 15   # Sub Total
     }
     for col_letter, w in widths.items():
         ws.column_dimensions[col_letter].width = w
@@ -1288,8 +1293,8 @@ def generate_outputs(
     style = TableStyle([
                     ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
                     ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                    ('ALIGN', (0, 0), (2, -1), 'LEFT'),
-                    ('ALIGN', (3, 0), (-1, -1), 'RIGHT'),
+                    ('ALIGN', (0, 0), (3, -1), 'LEFT'),
+                    ('ALIGN', (4, 0), (-1, -1), 'RIGHT'),
                     ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
                     ('FONTSIZE', (0, 0), (-1, 0), 12),
                     ('BOTTOMPADDING', (0, 0), (-1, 0), 8),

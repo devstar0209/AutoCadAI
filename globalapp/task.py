@@ -54,12 +54,17 @@ MODEL = "gpt-5.2"
 BASE_DIR = settings.BASE_DIR
 CACHE_DIR = os.path.join(BASE_DIR, "cache-fassi")
 os.makedirs(CACHE_DIR, exist_ok=True)
+CANDIDATES_JSON = os.path.join(CACHE_DIR, "csi_candidates.json")
+FAISS_PKL = os.path.join(CACHE_DIR, "csi_faiss.pkl")
+RESOURCE_JSON = os.path.join(BASE_DIR, "resources_csi.json")
 
 FAISS_THRESHOLD = 0.3
 TOP_K = 3
 
 pdf_total_pages = 0
 drawing_date=""
+price_candidates={}
+currencies = ["USD", "BBD", "BZD", "ECD", "JMD", "KYD", "TTD"]
 
 # -------------------------------
 # MODELS
@@ -239,79 +244,70 @@ class SystemChunk:
 # Cache Builders
 # ============================================================
 
-def build_csi_candidates(price_data: List[Dict[str, Any]]) -> Dict[str, Dict[str, List]]:
+def build_csi_candidates(resouce_data: List[Dict[str, Any]]) -> Dict[str, Dict[str, List]]:
     csi_map: Dict[str, Dict[str, List]] = {}
 
-    for p in price_data:
+    for p in resouce_data:
         csi = p.get("CSI", "").strip()
         text = p.get("item", "").strip()
         if not csi or not text:
             continue
 
         if csi not in csi_map:
-            csi_map[csi] = {
-                "material": [],
-                "labor": [],
-                "equipment": []
-            }
+            csi_map[csi] = []
 
-        if p.get("material_unit_cost", 0) > 0:
-            csi_map[csi]["material"].append(p)
-        if p.get("labor_rate", 0) > 0:
-            csi_map[csi]["labor"].append(p)
-        if p.get("equipment_rate", 0) > 0:
-            csi_map[csi]["equipment"].append(p)
+        csi_map[csi].append(p)
 
     return csi_map
 
 
-def build_faiss_indices(csi_to_candidates: Dict[str, Dict[str, List]]) -> Dict:
+def build_faiss_indices(csi_to_candidates: Dict[str, list]) -> Dict[str, Dict[str, Any]]:
     csi_to_index: Dict[str, Dict[str, Any]] = {}
 
-    for csi, groups in csi_to_candidates.items():
-        csi_to_index[csi] = {}
+    for csi, items in csi_to_candidates.items():
+        if not items:
+            continue
 
-        for res, items in groups.items():
-            if not items:
-                continue
+        texts = [p["item"] for p in items]
+        embeddings = MATCH_MODEL.encode(texts).astype("float32")
+        faiss.normalize_L2(embeddings)
 
-            texts = [p["item"] for p in items]
-            embeddings = MATCH_MODEL.encode(texts).astype("float32")
-            faiss.normalize_L2(embeddings)
+        index = faiss.IndexFlatIP(embeddings.shape[1])
+        index.add(embeddings)
 
-            index = faiss.IndexFlatIP(embeddings.shape[1])
-            index.add(embeddings)
-
-            csi_to_index[csi][res] = {
-                "index": index,
-                "items": items
-            }
+        # Store index + items for this CSI
+        csi_to_index[csi] = {
+            "index": index,
+            "items": items
+        }
 
     return csi_to_index
 
+def load_or_build_cache() -> Tuple[Dict, Dict]:
 
-def load_or_build_cache(currency:str) -> Tuple[Dict, Dict]:
-
-    CANDIDATES_JSON = os.path.join(CACHE_DIR, f"csi_candidates_{currency.lower()}.json")
-    FAISS_PKL = os.path.join(CACHE_DIR, f"csi_faiss_{currency.lower()}.pkl")
+    for curr in currencies:
+        file_path = os.path.join(BASE_DIR, f"resources_priced_{curr.lower()}.json")
+        with open(file_path, "r", encoding="utf-8") as f:
+            price_candidates[curr] = json.load(f)
 
     if os.path.exists(CANDIDATES_JSON) and os.path.exists(FAISS_PKL):
         try:
             print("🔍 Loading cache...")
             with open(CANDIDATES_JSON, "r", encoding="utf-8") as f:
                 csi_to_candidates = json.load(f)
+
             with open(FAISS_PKL, "rb") as f:
                 csi_to_index = pickle.load(f)
+
             return csi_to_candidates, csi_to_index
         except Exception:
             print("⚠️ Cache corrupted. Rebuilding...")
 
     print("⚙️ Building cache...")
-    PRICE_JSON = os.path.join(BASE_DIR, f"resources_priced_{currency.lower()}.json")
-    with open(PRICE_JSON, "r", encoding="utf-8") as f:
-        price_data = json.load(f)
+    with open(RESOURCE_JSON, "r", encoding="utf-8") as f:
+        resouce_data = json.load(f)
 
-    csi_to_candidates = build_csi_candidates(price_data)
+    csi_to_candidates = build_csi_candidates(resouce_data)
     csi_to_index = build_faiss_indices(csi_to_candidates)
 
     with open(CANDIDATES_JSON, "w", encoding="utf-8") as f:
@@ -319,6 +315,7 @@ def load_or_build_cache(currency:str) -> Tuple[Dict, Dict]:
 
     with open(FAISS_PKL, "wb") as f:
         pickle.dump(csi_to_index, f, protocol=pickle.HIGHEST_PROTOCOL)
+
 
     return csi_to_candidates, csi_to_index
 
@@ -329,11 +326,10 @@ def load_or_build_cache(currency:str) -> Tuple[Dict, Dict]:
 def faiss_match(
     query: str,
     csi: str,
-    resource: str,
     csi_to_index: Dict
 ) -> Tuple[Any, float, List[Any]]:
 
-    bucket = csi_to_index.get(csi, {}).get(resource)
+    bucket = csi_to_index.get(csi, {})
     if not bucket:
         return None, 0.0, []
 
@@ -1006,6 +1002,7 @@ Referenced Text:
 def estimate_costs_for_items(
     system_to_items: Dict[str, List[Dict[str, Any]]],
     region: str,
+    currency: str,
     csi_to_index: Dict
 ) -> Dict[str, List[Dict[str, Any]]]:
 
@@ -1020,34 +1017,41 @@ def estimate_costs_for_items(
             item["L.Hrs"] = item.get("labor_hours_per_unit", 0) * qty
             item["E.Hrs"] = item.get("equipment_hours_per_unit", 0) * qty
 
-            for res, rate_key, rate_out, total_out in [
-                ("material", "material_unit_cost", "M.Cost", "T.Mat"),
-                ("labor", "labor_rate", "L.Rate", "T.Labor"),
-                ("equipment", "equipment_rate", "E.Rate", "T.Equip"),
-            ]:
-                best, score, topk = faiss_match(
-                    item["Item"], item["CSI"], res, csi_to_index
-                )
+            best, score, topk = faiss_match(
+                item["Item"], item["CSI"], csi_to_index
+            )
 
-                source = "faiss"
-                if score < FAISS_THRESHOLD:
-                    # llm_best, llm_score = llm_fallback(
-                    #     item["Item"], item["CSI"], topk
-                    # )
-                    # if llm_best:
-                    #     best = llm_best
-                    #     score = llm_score
-                    #     source = "llm"
-                    continue
+            source = "faiss"
+            if score < FAISS_THRESHOLD:
+                # llm_best, llm_score = llm_fallback(
+                #     item["Item"], item["CSI"], topk
+                # )
+                # if llm_best:
+                #     best = llm_best
+                #     score = llm_score
+                #     source = "llm"
+                continue
 
-                rate = best.get(rate_key, 0) if best else 0
-                item[rate_out] = rate
-                item[total_out] = rate * qty
+            best_item = next(
+                (obj for obj in price_candidates[currency] if obj.get("item") == best["item"]),
+                None
+            )
 
-                item.setdefault(res, {})
-                item[res]["matched_price"] = best
-                item[res]["similarity"] = round(score, 3)
-                item[res]["source"] = source
+            rate = best_item.get("material_unit_cost", 0) if best_item else 0
+            item["M.Cost"] = rate
+            item["T.Mat"] = rate * qty
+
+            rate = best_item.get("labor_rate", 0) if best_item else 0
+            item["L.Rate"] = rate
+            item["T.Labor"] = rate * item["L.Hrs"]
+
+            rate = best_item.get("equipment_rate", 0) if best_item else 0
+            item["E.Rate"] = rate
+            item["T.Equip"] = rate * item["E.Hrs"]
+
+            item["matched_item"] = best
+            item["similarity"] = round(score, 3)
+            item["source"] = source
 
             enriched.append(item)
 
@@ -1220,6 +1224,7 @@ def generate_outputs(
     row = 2
     system_fill = PatternFill("solid", fgColor="D9E1F2")
     system_font = Font(bold=True)
+    styles = getSampleStyleSheet()
 
     for system_name in sorted(system_to_items.keys(), key=lambda x: x.lower()):
         items = system_to_items[system_name]
@@ -1242,14 +1247,17 @@ def generate_outputs(
                 it.get("T.Equip", 0)
             ])
             it["Sub Total"] = currency+"$"+str(format(row_total, ",.2f"))
+            it["L.Hrs"] = str(format(it.get("L.Hrs", 0), ",.2f"))
+            it["E.Hrs"] = str(format(it.get("E.Hrs", 0), ",.2f"))
             it["M.Cost"] = currency+"$"+str(format(it.get("M.Cost", 0), ",.2f"))
             it["T.Mat"] = currency+"$"+str(format(it.get("T.Mat", 0), ",.2f"))
             it["L.Rate"] = currency+"$"+str(format(it.get("L.Rate", 0), ",.2f"))
             it["T.Labor"] = currency+"$"+str(format(it.get("T.Labor", 0), ",.2f"))
             it["E.Rate"] = currency+"$"+str(format(it.get("E.Rate", 0), ",.2f"))
             it["T.Equip"] = currency+"$"+str(format(it.get("T.Equip", 0), ",.2f"))
-            wrapped_row = []
-            detail_table_data.append([wrapped_row.append(Paragraph(it.get(h, ""), styles["Normal"])) for h in headers])
+            # wrapped_row = []
+            # detail_table_data.append([wrapped_row.append(Paragraph(it.get(h, ""), styles["Normal"])) for h in headers])
+            detail_table_data.append([it.get(h, "") for h in headers])
             ws.append([it.get(h, "") for h in headers])
             row += 1
 
@@ -1350,7 +1358,7 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
     # Preprocess: group by CSI and pre-embed items
     # --------------------------------------------------
 
-    csi_to_candidates, csi_to_index = load_or_build_cache(currency)
+    csi_to_candidates, csi_to_index = load_or_build_cache()
 
 
     # --------------------------------------------------
@@ -1427,7 +1435,7 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
             print(f"   - {it['CSI']} | {it['Category']} | {it['Item']} | {it['quantity']} {it['unit']}")
 
     print_step("7) Estimate costs for items (GPT)")
-    cost_items = estimate_costs_for_items(system_to_items, location, csi_to_index)
+    cost_items = estimate_costs_for_items(system_to_items, location, currency, csi_to_index)
 
     print_step("8) Export to Excel (one sheet, system name as merged row)")
     generate_outputs(cost_items, cad_title, currency, output_excel, output_pdf)

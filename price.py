@@ -9,13 +9,16 @@ from dotenv import load_dotenv
 # CONFIG
 # ==========================
 INPUT_FILE = "resources_enriched.json"
-OUTPUT_FILE = "resources_priced_jmd.json"
+
 BATCH_SIZE = 50
 MODEL = "gpt-5.2"
 
-LOCATION = {
-    "country": "Jamaica",     # change to "UK", "IE", "EU" for NRM2
-}
+COUNTRIES = [
+    "US", "Barbados", "Belize",
+    "Dominica", "Cayman Islands", "Jamaica",
+    "Trinidad and Tobago"
+]
+
 
 CURRENCY_MAP = {
     "US": "USD",
@@ -54,7 +57,7 @@ def save_json(path: str, data: List[Dict]):
         json.dump(data, f, indent=2)
 
 def chunks(data, size):
-    for i in range(21941, len(data), size):
+    for i in range(0, len(data), size):
         yield data[i:i + size]
 
 def pricing_standard(country: str) -> str:
@@ -139,11 +142,11 @@ Rules:
 - Do not explain, output JSON only
 """
 
-def estimate_csi(batch):
+def estimate_csi(batch, location):
     payload = {
         "standard": "CSI",
-        "location": LOCATION,
-        "currency": CURRENCY_MAP[LOCATION["country"]],
+        "location": location,
+        "currency": CURRENCY_MAP[location],
         "items": batch
     }
     return call_gpt(CSI_SYSTEM_PROMPT, payload)
@@ -177,24 +180,37 @@ def estimate_nrm2(batch):
 # MAIN
 # ==========================
 def main():
-    data = load_json(INPUT_FILE)
-    results = load_json(OUTPUT_FILE)
+    all_data = load_json(INPUT_FILE)
 
-    standard = pricing_standard(LOCATION["country"])
-    print(f"Pricing mode: {standard}")
+    for country in COUNTRIES:
+        print(f"\n--- Processing country: {country} ---")
 
-    for batch in chunks(data, BATCH_SIZE):
-        enriched = estimate_csi(batch)
-        # if standard == "CSI":
-        #     enriched = estimate_csi(batch)
-        # else:
-        #     enriched = estimate_nrm2(batch)
+        location = {"country": country}
+        currency = CURRENCY_MAP[country]
 
-        results.extend(enriched)
-        save_json(OUTPUT_FILE, results)
-        time.sleep(SLEEP_SECONDS)
+        # Load previous results or start empty
+        output_file = f"resources_priced_{currency.lower()}.json"
+        try:
+            results = load_json(output_file)
+        except FileNotFoundError:
+            results = []
 
-    print(f"Completed pricing → {OUTPUT_FILE}")
+        standard = pricing_standard(country)
+        print(f"Pricing mode: {standard}, currency: {currency}")
+
+        # Process in batches
+        for batch in chunks(all_data, BATCH_SIZE):
+            enriched = estimate_csi(batch, country)
+            # if standard == "CSI":
+            #     enriched = estimate_csi(batch)
+            # else:
+            #     enriched = estimate_nrm2(batch)
+
+            results.extend(enriched)
+            save_json(output_file, results)
+            time.sleep(SLEEP_SECONDS)
+
+        print(f"Completed pricing → {output_file}")
 
 if __name__ == "__main__":
     main()

@@ -1248,7 +1248,8 @@ def generate_outputs(
             it["T.Labor"] = currency+"$"+str(format(it.get("T.Labor", 0), ",.2f"))
             it["E.Rate"] = currency+"$"+str(format(it.get("E.Rate", 0), ",.2f"))
             it["T.Equip"] = currency+"$"+str(format(it.get("T.Equip", 0), ",.2f"))
-            detail_table_data.append([it.get(h, "") for h in headers])
+            wrapped_row = []
+            detail_table_data.append([wrapped_row.append(Paragraph(it.get(h, ""), styles["Normal"])) for h in headers])
             ws.append([it.get(h, "") for h in headers])
             row += 1
 

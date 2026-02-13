@@ -8,15 +8,19 @@ from dotenv import load_dotenv
 # ==========================
 # CONFIG
 # ==========================
-INPUT_FILE = "resources_enriched.json"
+INPUT_FILE = "resources_csi.json"
 
 BATCH_SIZE = 50
 MODEL = "gpt-5.2"
 
+# COUNTRIES = [
+#     "US", "Barbados", "Belize",
+#     "Dominica", "Cayman Islands", "Jamaica",
+#     "Trinidad and Tobago"
+# ]
+
 COUNTRIES = [
-    "US", "Barbados", "Belize",
-    "Dominica", "Cayman Islands", "Jamaica",
-    "Trinidad and Tobago"
+    "Jamaica"
 ]
 
 
@@ -97,6 +101,12 @@ def call_gpt(system_prompt: str, payload: dict) -> list:
                                 "equipment_rate": {
                                     "type": "number"
                                 },
+                                "qty": {
+                                    "type": "number"
+                                },
+                                "unit": {
+                                    "type": "string"
+                                },
                                 "DIV": {
                                     "type": "string"
                                 },
@@ -107,7 +117,7 @@ def call_gpt(system_prompt: str, payload: dict) -> list:
                                     "type": "string"
                                 }
                             },
-                            "required": ["item", "DIV", "CSI", "Category", "material_unit_cost", "labor_rate", "equipment_rate"],
+                            "required": ["item", "DIV", "CSI", "Category","qty","unit", "material_unit_cost", "labor_rate", "equipment_rate"],
                             "additionalProperties": False
                         }
                     }
@@ -140,13 +150,23 @@ Rules:
 - Apply city location factor
 - Output normalized pricing schema
 - Do not explain, output JSON only
+
+COST NORMALIZATION RULE (MANDATORY):
+- material_unit_cost MUST be the cost per ONE unit as defined by `unit`
+- NEVER output extended, lot, reel, coil, or total material cost
+- If an item is commonly sold in rolls, reels, or lots (e.g., 500 ft):
+    - Divide total package price by total length
+    - Output cost per 1 LF (or per 1 EA if unit = EA)
+- Total material cost must ALWAYS equal:
+    material_unit_cost × qty
+- If unsure, normalize to the smallest practical install unit (LF, SF, EA)
 """
 
 def estimate_csi(batch, location):
     payload = {
         "standard": "CSI",
         "location": location,
-        "currency": CURRENCY_MAP[location],
+        "currency": CURRENCY_MAP[location["country"]],
         "items": batch
     }
     return call_gpt(CSI_SYSTEM_PROMPT, payload)
@@ -155,23 +175,33 @@ def estimate_csi(batch, location):
 # NRM2 MODE
 # ==========================
 NRM2_SYSTEM_PROMPT = """
-You are a UK/EU quantity surveyor following RICS NRM2.
+You are a construction cost estimator.
 
 Rules:
-- NRM2 does not provide unit rates
-- Build costs from elemental components
-- Separate material, labor, plant
-- Assemble into total cost
-- Apply regional location factor
+- Follow CSI MasterFormat
+- Assume NRM2/RICS-style unit pricing
+- Provide conceptual market estimates (not licensed data)
+- Labor and equipment are installation costs
+- Apply reginal location factor
 - Output normalized pricing schema
 - Do not explain, output JSON only
+
+COST NORMALIZATION RULE (MANDATORY):
+- material_unit_cost MUST be the cost per ONE unit as defined by `unit`
+- NEVER output extended, lot, reel, coil, or total material cost
+- If an item is commonly sold in rolls, reels, or lots (e.g., 500 ft):
+    - Divide total package price by total length
+    - Output cost per 1 LF (or per 1 EA if unit = EA)
+- Total material cost must ALWAYS equal:
+    material_unit_cost × qty
+- If unsure, normalize to the smallest practical install unit (m,m2,na)
 """
 
-def estimate_nrm2(batch):
+def estimate_nrm2(batch, location):
     payload = {
         "standard": "NRM2",
-        "location": LOCATION,
-        "currency": CURRENCY_MAP[LOCATION["country"]],
+        "location": location,
+        "currency": CURRENCY_MAP[location["country"]],
         "items": batch
     }
     return call_gpt(NRM2_SYSTEM_PROMPT, payload)
@@ -200,11 +230,11 @@ def main():
 
         # Process in batches
         for batch in chunks(all_data, BATCH_SIZE):
-            enriched = estimate_csi(batch, country)
-            # if standard == "CSI":
-            #     enriched = estimate_csi(batch)
-            # else:
-            #     enriched = estimate_nrm2(batch)
+            # enriched = estimate_csi(batch, country)
+            if standard == "CSI":
+                enriched = estimate_csi(batch, location)
+            else:
+                enriched = estimate_nrm2(batch, location)
 
             results.extend(enriched)
             save_json(output_file, results)

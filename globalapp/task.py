@@ -113,6 +113,10 @@ SYSTEM_ONTOLOGY = {
         "supervision", "project management", "permits"
     ],
 
+    "Existing Conditions": [
+        "existing"
+    ],
+
     "Excavation & Earthwork System": [
         "earthwork", "excavation", "grading", "trenching",
         "backfill", "compaction", "cut and fill", "dewatering"
@@ -193,7 +197,9 @@ SYSTEM_ONTOLOGY = {
         "fire protection", "sprinkler", "standpipe",
         "fire pump", "fire riser"
     ],
-
+    "Electronic Safety & Security": [
+        "camera", "cctv"
+    ],
     "Low Voltage / Communications System": [
         "low voltage", "communications", "data", "telecom",
         "cabling", "fire alarm", "security", "cctv", "access control"
@@ -790,6 +796,7 @@ Rules:
 - Include "General Requirements" only if scope/admin requirements are explicit.
 - M.H is manhole and manhole MUST belongs to Manhole and Structure system, not to Sanitary Sewer System. Means M.H is not related to Sanitary Sewer System.
 - Electronic Safety & Security system includes fire alarm, cctv, access control, and security systems, etc. Do not classify these items under Electrical System.
+- General Conditions system includes existing and general requirements.
 
 For each system include:
   - system_name (brief)
@@ -913,6 +920,7 @@ Extract estimatable line items from system text, aligned to MasterFormat/CSI and
 Output JSON only. Use the allowed categories exactly.
 Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, etc should be counted as individual units.
 If quantity is missing, choose a reasonable default dimension/quantity assumption.
+Category: General Requirements MUST be in System: General Conditions.
 Do not invent scope not supported by the text; but you may infer standard components when notes imply them.
 Ensure CSI division and section are plausible.
 
@@ -947,7 +955,7 @@ Region:
 Estimator instruction (Just filter):
 {user_prompt_extra}
 
-Now extract line items from the referenced text below.
+Now extract line items from the referenced text below. Convert measurement units in item description to preferred units.
 
 INVALID RULES:
 - M.H is not "main panel". M.H is manhole and manhole MUST belongs to Manhole and Structure system, not to Sanitary Sewer System.
@@ -1030,24 +1038,28 @@ def estimate_costs_for_items(
                 #     best = llm_best
                 #     score = llm_score
                 #     source = "llm"
-                continue
+                material_unit_cost = 0
+                labor_rate = 0
+                equipment_rate = 0
+            else:
 
-            best_item = next(
-                (obj for obj in price_candidates[currency] if obj.get("item") == best["item"]),
-                None
-            )
+                best_item = next(
+                    (obj for obj in price_candidates[currency] if obj.get("item") == best["item"]),
+                    None
+                )
 
-            rate = best_item.get("material_unit_cost", 0) if best_item else 0
-            item["M.Cost"] = rate
-            item["T.Mat"] = rate * qty
+                material_unit_cost = best_item.get("material_unit_cost", 0) if best_item else 0
+                labor_rate = best_item.get("labor_rate", 0) if best_item else 0
+                equipment_rate = best_item.get("equipment_rate", 0) if best_item else 0
+            
+            item["M.Cost"] = material_unit_cost
+            item["T.Mat"] = material_unit_cost * qty
 
-            rate = best_item.get("labor_rate", 0) if best_item else 0
-            item["L.Rate"] = rate
-            item["T.Labor"] = rate * item["L.Hrs"]
+            item["L.Rate"] = labor_rate
+            item["T.Labor"] = labor_rate * item["L.Hrs"]
 
-            rate = best_item.get("equipment_rate", 0) if best_item else 0
-            item["E.Rate"] = rate
-            item["T.Equip"] = rate * item["E.Hrs"]
+            item["E.Rate"] = equipment_rate
+            item["T.Equip"] = equipment_rate * item["E.Hrs"]
 
             item["matched_item"] = best
             item["similarity"] = round(score, 3)
@@ -1237,6 +1249,8 @@ def generate_outputs(
         c.fill = system_fill
         c.font = system_font
         c.alignment = Alignment(horizontal="left", vertical="center")
+
+        detail_table_data.append(["","","",system_name,"","","","","","","","","","",""])
         row += 1
 
         # items
@@ -1260,6 +1274,17 @@ def generate_outputs(
             detail_table_data.append([it.get(h, "") for h in headers])
             ws.append([it.get(h, "") for h in headers])
             row += 1
+    detail_table_data.append(["","","","Total Project Cost","","","","","","","","","","",currency+"$"+str(format(summary_data["grand_total"], ",.2f"))])
+    ws.append(["","","","","","","","","","","","","","",""])
+    ws.append(["","","","Total Project Cost","","","","","","","","","","",currency+"$"+str(format(summary_data["grand_total"], ",.2f"))])
+    
+    # Apply style across entire row
+    last_row = ws.max_row
+    for col in range(1, ws.max_column + 1):
+        cell = ws.cell(row=last_row, column=col)
+        cell.fill = system_fill
+        cell.font = Font(bold=True)
+        cell.alignment = Alignment(vertical="center")
 
     # column widths
     widths = {

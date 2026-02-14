@@ -28,7 +28,7 @@ from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
 from openpyxl.utils import get_column_letter
 
 from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter, landscape, A3
+from reportlab.lib.pagesizes import letter, landscape, A1
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageTemplate, Frame, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_LEFT
@@ -467,8 +467,8 @@ def header_footer(canvas, doc, project_title, pdf_total_pages):
     Custom function to add header and footer on each page.
     """
     global  drawing_date
-    page_width, page_height = landscape(A3)
-    table_width = page_width * 0.90  # 90% of A3 width
+    page_width, page_height = landscape(A1)
+    table_width = page_width * 0.90  # 90% of A1 width
     styles = getSampleStyleSheet()
     try:
         current_page = canvas.getPageNumber()  # Get current page number
@@ -497,7 +497,7 @@ def header_footer(canvas, doc, project_title, pdf_total_pages):
         # Header: Project Title (Left) and Date (Right)
 
         # Draw the header
-        width, height = landscape(A3)
+        width, height = landscape(A1)
         title_date_table.wrapOn(canvas, width, height)
         if current_page == pdf_total_pages:
             title_date_table.drawOn(canvas, width * 0.05, height - 80)  # Positioning at the top (5% margin)
@@ -918,10 +918,10 @@ Select only the systems that should be processed based on the filter sentence.
 ITEM_EXTRACTOR_SYS = """You are a construction cost estimator.
 Extract estimatable line items from system text, aligned to MasterFormat/CSI and estimate labor productivity in labor-hours per unit and equipment productivity in hours per unit.
 Output JSON only. Use the allowed categories exactly.
-Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, etc should be counted as individual units.
+Produce quantities that are consistent with construction drawings, industry norms, and code-based density rules. 
+Never default to "1 EA" for system components that are typically repeated across a space.
 If quantity is missing, choose a reasonable default dimension/quantity assumption.
 Category: General Requirements MUST be in System: General Conditions.
-MUST produce accurate quantity from drawings provided based on OCR electricity installation symbols to identify power outlets/ receptacles, light switches, light fixtures and other building electrical devices and equipment.
 Do not invent scope not supported by the text; but you may infer standard components when notes imply them.
 Ensure CSI division and section are plausible.
 
@@ -957,6 +957,7 @@ Estimator instruction (Just filter):
 {user_prompt_extra}
 
 Now extract line items from the referenced text below. Convert measurement units in item description to preferred units.
+Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, etc should be counted as individual units.
 
 INVALID RULES:
 - M.H is not "main panel". M.H is manhole and manhole MUST belongs to Manhole and Structure system, not to Sanitary Sewer System.
@@ -1252,7 +1253,7 @@ def generate_outputs(
         c.font = system_font
         c.alignment = Alignment(horizontal="left", vertical="center")
 
-        detail_table_data.append(["","","",system_name,"","","","","","","","","","",""])
+        detail_table_data.append([system_name])
         system_rows.append(row)
         row += 1
 
@@ -1315,7 +1316,7 @@ def generate_outputs(
 
 
     # --- Generate PDF ---
-    page_width, page_height = landscape(A3)
+    page_width, page_height = landscape(A1)
     table_width = page_width * 0.90
 
     frame = Frame(page_width * 0.05,  # Left margin
@@ -1381,12 +1382,12 @@ def generate_outputs(
     dummy_elements.append(summary_table)
     dummy_elements.append(PageBreak())
     dummy_elements.append(table)
-    dummy_doc = SimpleDocTemplate("dummy.pdf", pagesize=landscape(A3))
+    dummy_doc = SimpleDocTemplate("dummy.pdf", pagesize=landscape(A1))
     dummy_doc.addPageTemplates([template])
     dummy_doc.build(dummy_elements, onLaterPages=lambda canvas, doc: count_pages(canvas, doc), onFirstPage=lambda canvas, doc: count_pages(canvas, doc))
     print("pdf total pages=======>", pdf_total_pages)
     
-    doc = SimpleDocTemplate(output_pdf, pagesize=landscape(A3))
+    doc = SimpleDocTemplate(output_pdf, pagesize=landscape(A1))
     doc.addPageTemplates([template])
     doc.build(table_elements, onFirstPage=lambda canvas, doc: header_footer(canvas, doc, project_title, pdf_total_pages), onLaterPages=lambda canvas, doc: header_footer(canvas, doc, project_title, pdf_total_pages))
 

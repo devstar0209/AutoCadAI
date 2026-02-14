@@ -28,7 +28,7 @@ from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
 from openpyxl.utils import get_column_letter
 
 from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter, landscape, A3, A2
+from reportlab.lib.pagesizes import letter, landscape, A3
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageTemplate, Frame, PageBreak
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_LEFT
@@ -467,7 +467,7 @@ def header_footer(canvas, doc, project_title, pdf_total_pages):
     Custom function to add header and footer on each page.
     """
     global  drawing_date
-    page_width, page_height = landscape(A2)
+    page_width, page_height = landscape(A3)
     table_width = page_width * 0.90  # 90% of A3 width
     styles = getSampleStyleSheet()
     try:
@@ -497,7 +497,7 @@ def header_footer(canvas, doc, project_title, pdf_total_pages):
         # Header: Project Title (Left) and Date (Right)
 
         # Draw the header
-        width, height = landscape(A2)
+        width, height = landscape(A3)
         title_date_table.wrapOn(canvas, width, height)
         if current_page == pdf_total_pages:
             title_date_table.drawOn(canvas, width * 0.05, height - 80)  # Positioning at the top (5% margin)
@@ -921,6 +921,7 @@ Output JSON only. Use the allowed categories exactly.
 Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, etc should be counted as individual units.
 If quantity is missing, choose a reasonable default dimension/quantity assumption.
 Category: General Requirements MUST be in System: General Conditions.
+MUST produce accurate quantity from drawings provided based on OCR electricity installation symbols to identify power outlets/ receptacles, light switches, light fixtures and other building electrical devices and equipment.
 Do not invent scope not supported by the text; but you may infer standard components when notes imply them.
 Ensure CSI division and section are plausible.
 
@@ -1233,10 +1234,11 @@ def generate_outputs(
         cell.fill = header_fill
         cell.alignment = Alignment(horizontal="center", vertical="center")
 
-    row = 2
+    row = 1
     system_fill = PatternFill("solid", fgColor="D9E1F2")
     system_font = Font(bold=True)
     styles = getSampleStyleSheet()
+    system_rows = []
 
     for system_name in sorted(system_to_items.keys(), key=lambda x: x.lower()):
         items = system_to_items[system_name]
@@ -1251,6 +1253,7 @@ def generate_outputs(
         c.alignment = Alignment(horizontal="left", vertical="center")
 
         detail_table_data.append(["","","",system_name,"","","","","","","","","","",""])
+        system_rows.append(row)
         row += 1
 
         # items
@@ -1312,7 +1315,7 @@ def generate_outputs(
 
 
     # --- Generate PDF ---
-    page_width, page_height = landscape(A2)
+    page_width, page_height = landscape(A3)
     table_width = page_width * 0.90
 
     frame = Frame(page_width * 0.05,  # Left margin
@@ -1323,21 +1326,36 @@ def generate_outputs(
     template = PageTemplate(id='custom', frames=[frame], onPage=lambda canvas, doc: header_footer(canvas, doc, project_title, pdf_total_pages))
     
     table = Table(detail_table_data, repeatRows=1)
+
+    style_commands = [
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (3, -1), 'LEFT'),
+        ('ALIGN', (4, 0), (-1, -1), 'RIGHT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 12),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+
+        # total row (last row)
+        ('BACKGROUND', (0, -1), (-1, -1), colors.lightgrey),
+        ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),
+        ('TEXTCOLOR', (0, -1), (-1, -1), colors.black),
+    ]
+
+    for r in system_rows:
+        style_commands.extend([
+            ('BACKGROUND', (0, r), (-1, r), colors.whitesmoke),
+            ('FONTNAME', (0, r), (-1, r), 'Helvetica-Bold'),
+            ('TEXTCOLOR', (0, r), (-1, r), colors.black),
+            ('SPAN', (0, r), (-1, r)),       # merge across columns
+            ('ALIGN', (0, r), (-1, r), 'LEFT'),
+            ('LEFTPADDING', (0, r), (-1, r), 6),
+            ('TOPPADDING', (0, r), (-1, r), 6),
+            ('BOTTOMPADDING', (0, r), (-1, r), 6),
+        ])
     
-    style = TableStyle([
-                    ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                    ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                    ('ALIGN', (0, 0), (3, -1), 'LEFT'),
-                    ('ALIGN', (4, 0), (-1, -1), 'RIGHT'),
-                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                    ('FONTSIZE', (0, 0), (-1, 0), 12),
-                    ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
-                    ('GRID', (0, 0), (-1, -1), 1, colors.black),
-                    ('BACKGROUND', (0, -1), (-1, -1), colors.lightgrey),  # Light grey background
-                    ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),  # Bold text
-                    ('TEXTCOLOR', (0, -1), (-1, -1), colors.black),  # Black text
-                ])
-    table.setStyle(style)
+    table.setStyle(TableStyle(style_commands))
     
     summary_table = Table(summary_table_data, repeatRows=1)
     summary_style = TableStyle([
@@ -1363,12 +1381,12 @@ def generate_outputs(
     dummy_elements.append(summary_table)
     dummy_elements.append(PageBreak())
     dummy_elements.append(table)
-    dummy_doc = SimpleDocTemplate("dummy.pdf", pagesize=landscape(A2))
+    dummy_doc = SimpleDocTemplate("dummy.pdf", pagesize=landscape(A3))
     dummy_doc.addPageTemplates([template])
     dummy_doc.build(dummy_elements, onLaterPages=lambda canvas, doc: count_pages(canvas, doc), onFirstPage=lambda canvas, doc: count_pages(canvas, doc))
     print("pdf total pages=======>", pdf_total_pages)
     
-    doc = SimpleDocTemplate(output_pdf, pagesize=landscape(A2))
+    doc = SimpleDocTemplate(output_pdf, pagesize=landscape(A3))
     doc.addPageTemplates([template])
     doc.build(table_elements, onFirstPage=lambda canvas, doc: header_footer(canvas, doc, project_title, pdf_total_pages), onLaterPages=lambda canvas, doc: header_footer(canvas, doc, project_title, pdf_total_pages))
 

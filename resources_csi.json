@@ -95110,5 +95110,25 @@
   {
     "item": "Sheet metal valley flashing",
     "CSI": "07 62 00"
+  },
+  {
+    "item": "Steel float finish to inside slab areas",
+    "CSI": "03 35 00"
+  },
+  {
+    "item": "Ceramic tile flooring (thin-set)",
+    "CSI": "09 30 00"
+  },
+  {
+    "item": "Ceramic tile base (4 in. high)",
+    "CSI": "09 30 00"
+  },
+  {
+    "item": "Cementitious grout for ceramic tile (floor areas)",
+    "CSI": "09 30 00"
+  },
+  {
+    "item": "Tile setting underlayment / patching and surface prep for tile areas",
+    "CSI": "09 30 00"
   }
 ]

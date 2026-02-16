@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 # ==========================
 # CONFIG
 # ==========================
-INPUT_FILE = "resources_csi.json"
+INPUT_FILE = "resources_csi_1.json"
 
 BATCH_SIZE = 50
 MODEL = "gpt-5.2"
@@ -194,7 +194,7 @@ COST NORMALIZATION RULE (MANDATORY):
     - Output cost per 1 LF (or per 1 EA if unit = EA)
 - Total material cost must ALWAYS equal:
     material_unit_cost × qty
-- If unsure, normalize to the smallest practical install unit (m,m2,na)
+- If unsure, normalize to the smallest practical install unit (LF, SF, EA)
 """
 
 def estimate_nrm2(batch, location):

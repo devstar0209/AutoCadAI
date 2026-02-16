@@ -16,6 +16,7 @@ import faiss
 from datetime import datetime
 
 # OCR / PDF
+import cv2
 from pdf2image import convert_from_path
 from PyPDF2 import PdfReader
 import pytesseract
@@ -335,41 +336,48 @@ def faiss_match(
     csi_to_index: Dict
 ) -> Tuple[Any, float, List[Any]]:
 
-    bucket = csi_to_index.get(csi, {})
-    if not bucket:
+    # bucket = csi_to_index.get(csi, {})
+    # Normalize and extract first 5 chars of CSI (e.g. "09 30")
+    csi_prefix = csi.strip()[:5]
+
+    matching_buckets = [
+        bucket
+        for key, bucket in csi_to_index.items()
+        if key.startswith(csi_prefix)
+    ]
+
+    if not matching_buckets:
         return None, 0.0, []
 
     q_emb = MATCH_MODEL.encode([query]).astype("float32")
     faiss.normalize_L2(q_emb)
 
-    scores, idxs = bucket["index"].search(q_emb, TOP_K)
-    scores = scores[0]
-    idxs = idxs[0]
-
     candidates = []
     final_scores = []
 
-    # print("\n" + "=" * 80)
-    # print(f"🔎 FAISS MATCH")
-    # print(f"CSI      : {csi}")
-    # print(f"Resource : {resource}")
-    # print(f"Query    : {query}")
-    # print("-" * 80)
+    for bucket in matching_buckets:
+        scores, idxs = bucket["index"].search(q_emb, TOP_K)
+        scores = scores[0]
+        idxs = idxs[0]
 
-    for rank, idx in enumerate(idxs):
-        item = bucket["items"][idx]
-        kw = keyword_similarity(query, item["item"])
-        score = 0.8 * scores[rank] + 0.2 * kw
-        candidates.append(item)
-        final_scores.append(score)
+        for rank, idx in enumerate(idxs):
+            item = bucket["items"][idx]
+            kw = keyword_similarity(query, item["item"])
+            score = 0.8 * scores[rank] + 0.2 * kw
 
-        # print(
-        #     f"[{rank}] "
-        #     f"SEM={scores[rank]:.3f} "
-        #     f"KW={kw:.3f} "
-        #     f"SCORE={score:.3f} | "
-        #     f"{item['item']}"
-        # )
+            candidates.append(item)
+            final_scores.append(score)
+
+            # print(
+            #     f"[{rank}] "
+            #     f"SEM={scores[rank]:.3f} "
+            #     f"KW={kw:.3f} "
+            #     f"SCORE={score:.3f} | "
+            #     f"{item['item']}"
+            # )
+
+    if not final_scores:
+        return None, 0.0, []
 
     best_idx = int(np.argmax(final_scores))
     best_score = float(final_scores[best_idx])
@@ -534,7 +542,8 @@ def print_step(title: str):
 def normalize_whitespace(s: str) -> str:
     s = s.replace("\x0c", " ")
     s = re.sub(r"[ \t]+", " ", s)
-    s = re.sub(r"\n{3,}", "\n\n", s)
+    s = re.sub(r"\n{3,}", "", s)
+    s = s.replace("\n\n", "")
     return s.strip()
 
 def extract_json_from_response(response_text: str):
@@ -609,6 +618,71 @@ def clamp_allowed_category(category: str) -> str:
 # -----------------------------
 # OCR: PDF -> text per page
 # -----------------------------
+def extract_text_from_image(image_path: str) -> str:
+    # print(f"Entered OCR function: {image_path}")
+    min_confidence = 40
+    line_gap = 15
+    try:
+        if not os.path.exists(image_path):
+            return ""
+
+        img = cv2.imread(image_path)
+        if img is None:
+            print(f"[WARN] Failed to load image: {image_path}")
+            return ""
+
+        # === Preprocess image ===
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        gray = cv2.bilateralFilter(gray, 9, 75, 75)  # edge-preserving denoise
+        enhanced = cv2.convertScaleAbs(gray, alpha=1.5, beta=30)
+        thresh = cv2.adaptiveThreshold(enhanced, 255,
+                                    cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                    cv2.THRESH_BINARY, 11, 2)
+
+        # === OCR with position data ===
+        data = pytesseract.image_to_data(thresh, output_type=pytesseract.Output.DICT)
+
+        lines = []
+        current_line = []
+        last_y = None
+
+        for i, word in enumerate(data["text"]):
+            word = word.strip()
+            if not word:
+                continue
+            conf = int(data["conf"][i])
+            if conf < min_confidence:
+                continue
+
+            y = data["top"][i]
+            if last_y is None or abs(y - last_y) < line_gap:
+                current_line.append(word)
+            else:
+                # new line detected
+                lines.append(" ".join(current_line))
+                current_line = [word]
+            last_y = y
+
+        if current_line:
+            lines.append(" ".join(current_line))
+
+        # === Post-cleaning ===
+        cleaned_lines = []
+        for line in lines:
+            # print(f"line:: {line}")
+            # remove single-character noise
+            if len(line.strip()) < 2:
+                continue
+            # collapse extra spaces
+            line = " ".join(line.split())
+            cleaned_lines.append(line)
+
+        structured_text = " ".join(cleaned_lines)
+        return structured_text.strip()
+
+    except Exception as e:
+        print(f"OCR error for {image_path}: {e}")
+        return ""
 
 def ocr_pdf(
     pdf_path: str,
@@ -624,15 +698,42 @@ def ocr_pdf(
 
     images = convert_from_path(pdf_path, dpi=dpi, poppler_path=poppler_path)
     pages: List[OCRPage] = []
+    directory = os.path.dirname(pdf_path)
 
     for i, img in enumerate(images, start=1):
         notify_frontend(total_pages, i, "PDF Processing is in progress...", "", "", session_id)
         text = pytesseract.image_to_string(img, lang=lang)
+
+        # image_path = os.path.join(directory, f"page_{i}.png")
+        # img.save(image_path, "PNG")
+        # text = extract_text_from_image(image_path)
+
         text = normalize_whitespace(text)
         pages.append(OCRPage(page_num=i, text=text))
         print(f"OCR page {i}/{len(images)}: {len(text)} chars")
 
     return pages
+
+def save_ocr_pages_json(
+    ocr_pages: List[OCRPage],
+    pdf_path: str,
+    output_name: str = "ocr_pages.json"
+):
+    output_dir = os.path.dirname(pdf_path)
+    output_path = os.path.join(output_dir, output_name)
+
+    data = [
+        {
+            "page_num": page.page_num,
+            "text": page.text
+        }
+        for page in ocr_pages
+    ]
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+    return output_path
 
 
 # -----------------------------
@@ -921,14 +1022,16 @@ Output JSON only. Use the allowed categories exactly.
 Produce quantities that are consistent with construction drawings, industry norms, and code-based density rules. 
 Never default to "1 EA" for system components that are typically repeated across a space.
 If quantity is missing, choose a reasonable default dimension/quantity assumption.
+Quantities for Reinforcing steel Job Activities must be in LBS, not TON.
 Category: General Requirements MUST be in System: General Conditions.
+MUST produce a more detailed cost estimate for painting scope of work  to identify individual job activity such as "painting" to floors, walls, columns, ceilings, roof eaves, rafters, beams, doors, windows, and metal surfaces, etc.
 Do not invent scope not supported by the text; but you may infer standard components when notes imply them.
 Ensure CSI division and section are plausible.
 
 Schema:
 {
   "items":[
-    {"DIV":"##","CSI":"## ## ##","Category":"...allowed...","Item":"...","quantity":number,"unit":"...","labor_hours_per_unit":number,"equipment_hours_per_unit":number}
+    {"DIV":"##","CSI":"## ## ##.##","Category":"...allowed...","Item":"...","quantity":number,"unit":"...","labor_hours_per_unit":number,"equipment_hours_per_unit":number}
   ]
 }
 """
@@ -1235,7 +1338,7 @@ def generate_outputs(
         cell.fill = header_fill
         cell.alignment = Alignment(horizontal="center", vertical="center")
 
-    row = 1
+    row = 2
     system_fill = PatternFill("solid", fgColor="D9E1F2")
     system_font = Font(bold=True)
     styles = getSampleStyleSheet()
@@ -1254,7 +1357,7 @@ def generate_outputs(
         c.alignment = Alignment(horizontal="left", vertical="center")
 
         detail_table_data.append([system_name])
-        system_rows.append(row)
+        system_rows.append(row-1)
         row += 1
 
         # items
@@ -1420,6 +1523,7 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
         total_pages=total_pages,
         session_id=session_id
     )
+    save_ocr_pages_json(ocr_pages, pdf_path)
     print(f"Total pages OCR'd: {len(ocr_pages)}")
 
     print_step("2) Hybrid chunking (page + token)")

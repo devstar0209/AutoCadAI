@@ -157,7 +157,6 @@ SYSTEM_ONTOLOGY = {
         "interior finishes", "drywall", "gypsum board",
         "partition", "ceiling", "flooring", "paint"
     ],
-
     "Doors and Windows System": [
         "door", "window", "frame", "hardware",
         "storefront", "glazing", "louvers", "skylight"
@@ -542,8 +541,10 @@ def print_step(title: str):
 def normalize_whitespace(s: str) -> str:
     s = s.replace("\x0c", " ")
     s = re.sub(r"[ \t]+", " ", s)
-    s = re.sub(r"\n{3,}", "", s)
+    s = re.sub(r"\n{3,}", " ", s)
+    s = re.sub(r"—{2,}", "", s)
     s = s.replace("\n\n", "")
+    s = s.replace("  ", "")
     return s.strip()
 
 def extract_json_from_response(response_text: str):
@@ -869,13 +870,14 @@ def build_region_instruction(region: str, unit: str) -> str:
 # SYSTEM CLASSIFICATION + MERGE
 # -----------------------------
 
-SYSTEM_CLASSIFIER_SYS = f"""You are a construction estimator assistant.
+def classify_systems_in_chunk(chunk: Chunk, system_names: List[str]) -> List[Dict[str, str]]:
+    SYSTEM_CLASSIFIER_SYS = f"""You are a construction estimator assistant.
 Task: From OCR text, identify building systems mentioned (assemblies).
 
 SYSTEM RESTRICTION (MANDATORY)
 You may ONLY output systems that exactly match one of the following
 canonical system names:
-{list(SYSTEM_ONTOLOGY.keys())}
+{system_names}
 
 CRITICAL OWNERSHIP RULE:
 - Each OCR sentence or paragraph may belong to ONE system only.
@@ -884,8 +886,6 @@ CRITICAL OWNERSHIP RULE:
 
 Return JSON only.
 """
-
-def classify_systems_in_chunk(chunk: Chunk) -> List[Dict[str, str]]:
     user = f"""
 Extract top-level systems from the following OCR chunk.
 
@@ -898,6 +898,7 @@ Rules:
 - M.H is manhole and manhole MUST belongs to Manhole and Structure system, not to Sanitary Sewer System. Means M.H is not related to Sanitary Sewer System.
 - Electronic Safety & Security system includes fire alarm, cctv, access control, and security systems, etc. Do not classify these items under Electrical System.
 - General Conditions system includes existing and general requirements.
+- Painting / Finish Work includes all surface preparation, priming, and application of finish coats to interior and exterior substrates. Scope covers painting and coating of walls, ceilings, columns, beams, concrete surfaces, wood and metal components, including doors, frames, windows, trim, baseboards, railings, handrails, fascia, eaves, and other exposed architectural or structural elements, complete in place.
 
 For each system include:
   - system_name (brief)
@@ -1024,7 +1025,6 @@ Never default to "1 EA" for system components that are typically repeated across
 If quantity is missing, choose a reasonable default dimension/quantity assumption.
 Quantities for Reinforcing steel Job Activities must be in LBS, not TON.
 Category: General Requirements MUST be in System: General Conditions.
-MUST produce a more detailed cost estimate for painting scope of work  to identify individual job activity such as "painting" to floors, walls, columns, ceilings, roof eaves, rafters, beams, doors, windows, and metal surfaces, etc.
 Do not invent scope not supported by the text; but you may infer standard components when notes imply them.
 Ensure CSI division and section are plausible.
 
@@ -1059,12 +1059,14 @@ Region:
 Estimator instruction (Just filter):
 {user_prompt_extra}
 
-Now extract line items from the referenced text below. Convert measurement units in item description to preferred units.
+Now extract line items from the referenced text below.
+Convert measurement units in item description to preferred measurement units.
 Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, etc should be counted as individual units.
 
 INVALID RULES:
 - M.H is not "main panel". M.H is manhole and manhole MUST belongs to Manhole and Structure system, not to Sanitary Sewer System.
 - INVALID if Manhole is in Sanitary Sewer System.
+- INVALID if quanitites is 0.
 - HVAC MUST not be in Electrical System. HVAC items should be classified under HVAC system.
 - DIV MUST match the CSI.
 
@@ -1534,36 +1536,37 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
     if len(chunks) > 5:
         print("...")
 
-    print_step("3) Classify systems per chunk (GPT)")
+    system_names = list(SYSTEM_ONTOLOGY.keys())
+
+    print_step("3) Optional user filter (only if valid)")
+    if is_valid_filter_prompt(user_filter_sentence):
+        print(f"Filter sentence is valid. Applying: {user_filter_sentence}")
+        selected = filter_systems_with_gpt(user_filter_sentence, list(SYSTEM_ONTOLOGY.keys()))
+        system_names = set(selected)
+        # system_chunks = [sc for sc in system_chunks if sc.system_name in selected_set]
+        print(f"Systems selected: {len(system_names)}")
+        for s in selected:
+            print(f" - {s}")
+    else:
+        print("No valid filter sentence provided; processing all systems.")
+
+    print_step("4) Classify systems per chunk (GPT)")
     notify_frontend(total_pages, total_pages, "Classify systems processing is in progress...", "", "", session_id)
     per_chunk_systems: Dict[str, List[Dict[str, str]]] = {}
     for i, ch in enumerate(chunks, start=1):
         print(f"Classifying chunk {i}/{len(chunks)}: {ch.chunk_id}")
-        systems = classify_systems_in_chunk(ch)
+        systems = classify_systems_in_chunk(ch, system_names)
         per_chunk_systems[ch.chunk_id] = systems
         print(f"  Systems found: {len(systems)}")
         for s in systems[:6]:
             print(f"   - {s['system_name']}: {s['referenced_text'][:90]}")
 
-    print_step("4) Merge similar systems across chunks")
+    print_step("5) Merge similar systems across chunks")
     merged_system_refs = merge_systems_across_chunks(per_chunk_systems)
     system_chunks = build_system_chunks(merged_system_refs)
     print(f"Merged systems: {len(system_chunks)}")
     for sc in system_chunks:
         print(f" - {sc.system_name} (refs: {len(merged_system_refs.get(sc.system_name, []))})")
-
-    print_step("5) Optional user filter (only if valid)")
-    system_names = [sc.system_name for sc in system_chunks]
-    if is_valid_filter_prompt(user_filter_sentence):
-        print(f"Filter sentence is valid. Applying: {user_filter_sentence}")
-        selected = filter_systems_with_gpt(user_filter_sentence, system_names)
-        selected_set = set(selected)
-        system_chunks = [sc for sc in system_chunks if sc.system_name in selected_set]
-        print(f"Systems selected: {len(system_chunks)}")
-        for s in selected:
-            print(f" - {s}")
-    else:
-        print("No valid filter sentence provided; processing all systems.")
 
     print_step("6) Extract line items per system (GPT) + MasterFormat/CSI + allowed categories")
     system_to_items: Dict[str, List[Dict[str, Any]]] = {}

@@ -895,10 +895,11 @@ Rules:
 - An item belongs to the system that consumes it.
 - Ignore any notes, instructions, disclaimers or code references
 - Include "General Requirements" only if scope/admin requirements are explicit.
-- M.H is manhole and manhole MUST belongs to Manhole and Structure system, not to Sanitary Sewer System. Means M.H is not related to Sanitary Sewer System.
+- M.H / M.H. is manhole and manhole MUST belongs to Manhole and Structure system, not to Sanitary Sewer System. Means M.H is not related to Sanitary Sewer System.
 - Electronic Safety & Security system includes fire alarm, cctv, access control, and security systems, etc. Do not classify these items under Electrical System.
 - General Conditions system includes existing and general requirements.
-- Painting / Finish Work includes all surface preparation, priming, and application of finish coats to interior and exterior substrates. Scope covers painting and coating of walls, ceilings, columns, beams, concrete surfaces, wood and metal components, including doors, frames, windows, trim, baseboards, railings, handrails, fascia, eaves, and other exposed architectural or structural elements, complete in place.
+- Concrete Structure system MUST no include Earthwork/Excavation scope. If both are present, classify Earthwork/Excavation scope under Excavation & Earthwork System, and classify only the structural concrete scope under Concrete Structure System.
+- Painting Finish is belongs to Interior Finishes System and Assign them to referenced_text when the OCR CHUNK refers to: room, window, floor, walls, bedroom, gypsum board, drywall, plaster, columns, beams, ceilings, slabs, curbs, door, roof, baseboards, trim, moldings, rafters, roof eaves, boxed eaves, fascia boards, blocking boards, metal handrails, wooden handrails, railings, exposed steel, exposed metal, exposed wood.
 
 For each system include:
   - system_name (brief)
@@ -908,7 +909,6 @@ For each system include:
     - Combine related sentences into coherent blocks when they belong together.
     - EXCLUDE unrelated notes, boilerplate, legends, code citations, or instructions for other systems.
     - Do NOT summarize or paraphrase.
-    - Do NOT include the same OCR text under multiple systems unless it clearly applies to more than one system.
 
 OCR CHUNK {chunk.chunk_id}:
 {chunk.text}
@@ -1060,11 +1060,12 @@ Estimator instruction (Just filter):
 {user_prompt_extra}
 
 Now extract line items from the referenced text below.
-Convert measurement units in item description to preferred measurement units.
-Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, etc should be counted as individual units.
+- Produce a more detailed cost estimate for painting scope of work  to identify individual job activity such as painting to floors, walls, columns, ceilings, roof eaves, rafters, beams, doors, windows, and metal surfaces, etc. Where every there is and opening to a room there must be a door. You must assume there are doors in opening to rooms.
+- Convert measurement values in units to preferred units in Item description. Item description MUST display converted measurement values by preferred units and no need to put explaination of conversion.
+- Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, room, etc should be counted as individual units.
 
 INVALID RULES:
-- M.H is not "main panel". M.H is manhole and manhole MUST belongs to Manhole and Structure system, not to Sanitary Sewer System.
+- INVALID if treat M.H. as Main Panel.
 - INVALID if Manhole is in Sanitary Sewer System.
 - INVALID if quanitites is 0.
 - HVAC MUST not be in Electrical System. HVAC items should be classified under HVAC system.

@@ -95130,5 +95130,17 @@
   {
     "item": "Tile setting underlayment / patching and surface prep for tile areas",
     "CSI": "09 30 00"
+  },
+  {
+    "item": "Paint to steel-float cement render finish (interior) - 1 coat sealer/primer + 2 finish coats",
+    "CSI": "09 90 00"
+  },
+  {
+    "item": "Paint to smooth rendered masonry (interior) - 1 coat primer + 2 finish coats acrylic emulsion",
+    "CSI": "09 90 00"
+  },
+  {
+    "item": "Paint existing interior surfaces (incl. around/adjacent to fluorescent light and smoke detector locations) - allow 2 coats acrylic emulsion to walls/ceilings",
+    "CSI": "09 90 00"
   }
 ]

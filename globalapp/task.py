@@ -542,7 +542,7 @@ def normalize_whitespace(s: str) -> str:
     s = s.replace("\x0c", " ")
     s = re.sub(r"[ \t]+", " ", s)
     s = re.sub(r"\n{3,}", " ", s)
-    s = re.sub(r"—{2,}", "", s)
+    s = re.sub(r"-{2,}", "", s)
     s = s.replace("\n\n", "")
     s = s.replace("  ", "")
     return s.strip()
@@ -898,7 +898,6 @@ Rules:
 - M.H / M.H. is manhole and manhole MUST belongs to Manhole and Structure system, not to Sanitary Sewer System. Means M.H is not related to Sanitary Sewer System.
 - Electronic Safety & Security system includes fire alarm, cctv, access control, and security systems, etc. Do not classify these items under Electrical System.
 - General Conditions system includes existing and general requirements.
-- Concrete Structure system MUST no include Earthwork/Excavation scope. If both are present, classify Earthwork/Excavation scope under Excavation & Earthwork System, and classify only the structural concrete scope under Concrete Structure System.
 - Painting Finish is belongs to Interior Finishes System and Assign them to referenced_text when the OCR CHUNK refers to: room, window, floor, walls, bedroom, gypsum board, drywall, plaster, columns, beams, ceilings, slabs, curbs, door, roof, baseboards, trim, moldings, rafters, roof eaves, boxed eaves, fascia boards, blocking boards, metal handrails, wooden handrails, railings, exposed steel, exposed metal, exposed wood.
 
 For each system include:
@@ -1069,6 +1068,7 @@ INVALID RULES:
 - INVALID if Manhole is in Sanitary Sewer System.
 - INVALID if quanitites is 0.
 - HVAC MUST not be in Electrical System. HVAC items should be classified under HVAC system.
+- INVALID if Earthwork is in Concrete Structure System. Earthwork items should be classified under Excavation & Earthwork System.
 - DIV MUST match the CSI.
 
 Referenced Text:

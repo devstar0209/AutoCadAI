@@ -84452,18 +84452,6 @@
     "CSI": "01 20 00"
   },
   {
-    "item": "Acid wash - muriatic acid (1 Gallon)",
-    "CSI": "09 01 00"
-  },
-  {
-    "item": "Acrylic Paint (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Acrylic Primer Paint (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
     "item": "ADA Compliant 1-1/4\" Grab Bar with Corner Shelf",
     "CSI": "10 28 13"
   },
@@ -84786,14 +84774,6 @@
   {
     "item": "Bills of Quantities",
     "CSI": "01 20 00"
-  },
-  {
-    "item": "Bituminous Black paint (1 Gallon)",
-    "CSI": "09 97 13"
-  },
-  {
-    "item": "Bituminous Black paint (5 Gallon)",
-    "CSI": "09 97 13"
   },
   {
     "item": "Bituminous Mixing Plant Operator",
@@ -85416,14 +85396,6 @@
     "CSI": "07 31 13"
   },
   {
-    "item": "Clear Waterproof Paint  ( 1 Gallon)",
-    "CSI": "09 96 00"
-  },
-  {
-    "item": "Clear Waterproof Paint  Primer( 1 Gallon)",
-    "CSI": "09 91 00"
-  },
-  {
     "item": "Clerk of Works",
     "CSI": "01 31 00"
   },
@@ -85498,14 +85470,6 @@
   {
     "item": "Concrete Bull Float Machine",
     "CSI": "03 30 00"
-  },
-  {
-    "item": "Concrete Floor Sealer  (1 Gallon)",
-    "CSI": "09 97 00"
-  },
-  {
-    "item": "Concrete Floor Stain   (1 Gallon)",
-    "CSI": "09 93 00"
   },
   {
     "item": "Concrete Kerb CMU Block (6\"x12\"x 18\")",
@@ -85748,10 +85712,6 @@
     "CSI": "01 00 00"
   },
   {
-    "item": "Diamond Brite 80lb Bag",
-    "CSI": "09 96 00"
-  },
-  {
     "item": "Diesel Hammer Equipment",
     "CSI": "31 62 00"
   },
@@ -85896,10 +85856,6 @@
     "CSI": "09 29 00"
   },
   {
-    "item": "Dry Wall Texture  Compound (1 Gallon)",
-    "CSI": "09 29 00"
-  },
-  {
     "item": "Dual Technology Ceiling Mount Sensor",
     "CSI": "26 09 23"
   },
@@ -85970,14 +85926,6 @@
   {
     "item": "E309L-16 - Stainless Steel Welding Electrode - 12\" x 3/32\" (4.4 LB)",
     "CSI": "05 05 23"
-  },
-  {
-    "item": "Eggshell Paint (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Eggshell Primer Paint (1 Gallon)",
-    "CSI": "09 91 23"
   },
   {
     "item": "Elapsed Time Control - Clock System",
@@ -86164,40 +86112,12 @@
     "CSI": "27 41 00"
   },
   {
-    "item": "Emulsion Primer Paint (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Enamel, Wood Oil-base Paint  (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Enamel, Wood Water-base Paint  (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
     "item": "Enclosure of Site and Protection",
     "CSI": "01 50 00"
   },
   {
     "item": "Engineers Fees",
     "CSI": "01 10 00"
-  },
-  {
-    "item": "Epoxy Floor Paint (1 Gallon)",
-    "CSI": "09 96 00"
-  },
-  {
-    "item": "Epoxy Floor Paint (5 Gallon)",
-    "CSI": "09 96 00"
-  },
-  {
-    "item": "Epoxy Locker Thinner",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Epoxy Locker Thinner (Quart)",
-    "CSI": "09 96 00"
   },
   {
     "item": "Equipment Molibilization",
@@ -86576,16 +86496,8 @@
     "CSI": "01 25 00"
   },
   {
-    "item": "Fire Intumescent Paint (1 Gallon)",
-    "CSI": "09 96 00"
-  },
-  {
     "item": "Fire Remote Alarm Accessory: Steel, Wall, 1 1/2 in Dp (In.), 4 1/2 in Lg (In.)",
     "CSI": "28 31 00"
-  },
-  {
-    "item": "Fire Retardant Paint (1 Gallon)",
-    "CSI": "09 96 00"
   },
   {
     "item": "Fire Smoke Alarm, 12/24 VDC, 4-Wire, Therm Sen",
@@ -86670,14 +86582,6 @@
   {
     "item": "Floor Sanding Machine - Self-propelled",
     "CSI": "09 90 00"
-  },
-  {
-    "item": "Floor Wiping  Stain Oil-base  Exterior Wood Varnish (1 Gallon)",
-    "CSI": "09 93 00"
-  },
-  {
-    "item": "Floor Wiping  Stain Oil-base  Interior Wood Varnish (1 Gallon)",
-    "CSI": "09 93 00"
   },
   {
     "item": "Fluorescent Ballast Disconnect",
@@ -86980,10 +86884,6 @@
     "CSI": "22 42 16"
   },
   {
-    "item": "Gloss Latex Paint (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
     "item": "GPS Master Clock 1 3/4\" Rack Mount Antenna",
     "CSI": "27 52 23"
   },
@@ -87140,10 +87040,6 @@
     "CSI": "01 50 00"
   },
   {
-    "item": "Heavy Duty Paint Remover (1 Gallon)",
-    "CSI": "09 90 00"
-  },
-  {
     "item": "Heavy Duty Wall Mount Camera Metal  Bracket",
     "CSI": "28 23 00"
   },
@@ -87158,10 +87054,6 @@
   {
     "item": "HID Sockets Porcelain Light Socket",
     "CSI": "26 27 26"
-  },
-  {
-    "item": "High Gloss Latex Paint (1 Gallon)",
-    "CSI": "09 91 23"
   },
   {
     "item": "High Retention HDMI Assemblies Up to 1080P -Video Cable",
@@ -87214,14 +87106,6 @@
   {
     "item": "HP8x36lbx50Ft \"H\" Section",
     "CSI": "31 62 00"
-  },
-  {
-    "item": "HVAC Air Duct Mastic",
-    "CSI": "23 07 00"
-  },
-  {
-    "item": "HVAC Air Duct Seal Compound Filler",
-    "CSI": "23 07 00"
   },
   {
     "item": "HVAC Temperature Sensor  w/  6-pin Model Jack, Size 3-1/4\" x 3-1/4 \"x 1-7/16\"",
@@ -87306,38 +87190,6 @@
   {
     "item": "Intercom - Remote Station- Access Control",
     "CSI": "28 13 00"
-  },
-  {
-    "item": "Interior Flat Wood Varnish (Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Interior Gloss Wood Varnish (Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Interior Oil PenetratingStain (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Interior Penetrating Stain  (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Interior Wood Floor Penetrating Interior Stain Wax & Wipe (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Interior Wood Floor Wax Polish (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Interior Wood Sealer  (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Interior Wood Stain (Gallon)",
-    "CSI": "09 91 23"
   },
   {
     "item": "Internet Connected irrigation Water Meter",
@@ -87600,18 +87452,6 @@
     "CSI": "01 50 00"
   },
   {
-    "item": "Lacquer (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Lacquer Base Stain  (1 Gallon)",
-    "CSI": "09 93 00"
-  },
-  {
-    "item": "Lacquer Sanding Sealer (Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
     "item": "Lafayette 0.125/0.5/1.0gpf Urinal Washout Top Spud 13-3/8'' Width White - High Quality",
     "CSI": "22 41 13"
   },
@@ -87634,18 +87474,6 @@
   {
     "item": "Larthine",
     "CSI": "09 96 00"
-  },
-  {
-    "item": "Latex Paint (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Latex Primer Paint (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Latex Stipple Finish Texture Paint (1 Gallon)",
-    "CSI": "09 91 23"
   },
   {
     "item": "LC - 900\u00b5m, Fibre Optic MultiMode Beige Connector, 62.5um-Fibre Optic",
@@ -89676,10 +89504,6 @@
     "CSI": "26 05 33"
   },
   {
-    "item": "Light Duty Paint Remover (1 Gallon)",
-    "CSI": "09 90 00"
-  },
-  {
     "item": "Light Maintenance Warning light (Toosh Lights)",
     "CSI": "26 51 00"
   },
@@ -89742,10 +89566,6 @@
   {
     "item": "Lighting Timer Clock Controller",
     "CSI": "26 09 23"
-  },
-  {
-    "item": "Lime Wash (5 Gallon)",
-    "CSI": "09 90 00"
   },
   {
     "item": "Liquid Nail 9FL Oz",
@@ -90038,14 +89858,6 @@
   {
     "item": "Manual Commercial Sloan Flush valve 1.28gpg",
     "CSI": "22 40 00"
-  },
-  {
-    "item": "Marine spar oil-base varnish (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Marine spar water-base varnish (1 Gallon)",
-    "CSI": "09 91 23"
   },
   {
     "item": "Masking Tape 180 LF",
@@ -90740,14 +90552,6 @@
     "CSI": "26 09 23"
   },
   {
-    "item": "Oil-base Penetrating Sealer Wood Wax (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Oil-based Sealer Paint (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
     "item": "Olney Vitreous China Wall Mounted Bathroom Sink with 3 Faucet Holes at 8\" Centers and Overflow, Size  40\" (L) x 20\" (W) x(4.5\"(D) - High End",
     "CSI": "22 41 16"
   },
@@ -90796,24 +90600,8 @@
     "CSI": "27 51 00"
   },
   {
-    "item": "Oxide Metal Paint Primer (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Oxide Metal Paint Primer (Quart)",
-    "CSI": "09 91 23"
-  },
-  {
     "item": "Paint Sprayer Gun With Bottle",
     "CSI": "09 90 00"
-  },
-  {
-    "item": "Paint Thinner (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Paint Thinner (Quart)",
-    "CSI": "09 91 23"
   },
   {
     "item": "Painted Metal Floor Mount Irrigation StrongBox  Metered Enclosure Front Entry Single Door  , Size 52 in (H) x  18 in (W) X 12 in (D)",
@@ -91116,10 +90904,6 @@
     "CSI": "01 50 00"
   },
   {
-    "item": "Pickled Paint (1 Gallon)",
-    "CSI": "09 90 00"
-  },
-  {
     "item": "Pile Lead (90ft)",
     "CSI": "31 62 00"
   },
@@ -91402,14 +91186,6 @@
   {
     "item": "Poly Pull Station Cover w/Horn, Wall, 3-3/16inD",
     "CSI": "28 31 00"
-  },
-  {
-    "item": "Polyurethane Sealant",
-    "CSI": "07 92 00"
-  },
-  {
-    "item": "Polyurethane Sealant ( 5 Gallon)",
-    "CSI": "07 92 00"
   },
   {
     "item": "Pool Automatic Timer Switch",
@@ -91792,10 +91568,6 @@
     "CSI": "01 74 19"
   },
   {
-    "item": "Remover Paint Thinner (1 Gallon)",
-    "CSI": "09 90 00"
-  },
-  {
     "item": "Replacement insert for irrigation  tee sensors",
     "CSI": "32 84 23"
   },
@@ -91941,22 +91713,6 @@
   },
   {
     "item": "Roof  Sealant  Coating",
-    "CSI": "07 92 00"
-  },
-  {
-    "item": "Roof Cover Stain Oil Base Primer  Paint (1 Gallon)",
-    "CSI": "07 92 00"
-  },
-  {
-    "item": "Roof Sealant Coating (5 Gallon)",
-    "CSI": "07 92 00"
-  },
-  {
-    "item": "Roof Sealer Paint (1 Gallon)",
-    "CSI": "07 92 00"
-  },
-  {
-    "item": "Roof Stain Paint (1 Gallon)",
     "CSI": "07 92 00"
   },
   {
@@ -92154,14 +91910,6 @@
   {
     "item": "Sheeter- Workman",
     "CSI": "01 50 00"
-  },
-  {
-    "item": "Shingle Roof Oil Base Paint (1 Gallon)",
-    "CSI": "07 31 13"
-  },
-  {
-    "item": "Shingle Roof Primer Paint (1 Gallon)",
-    "CSI": "07 31 13"
   },
   {
     "item": "Shop Hand Sanding Machine",
@@ -92964,10 +92712,6 @@
     "CSI": "31 31 16"
   },
   {
-    "item": "Textured Oil Paint (Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
     "item": "Thatch roof Straw Pad 48\"x96\"",
     "CSI": "07 31 00"
   },
@@ -93204,15 +92948,7 @@
     "CSI": "01 25 00"
   },
   {
-    "item": "Thompson Wood Sealer",
-    "CSI": "09 06 00"
-  },
-  {
     "item": "Thoroseal  Waterproof Coating",
-    "CSI": "07 16 00"
-  },
-  {
-    "item": "Thoroseal  Waterproof Coating (5 Gallon)",
     "CSI": "07 16 00"
   },
   {
@@ -93324,10 +93060,6 @@
     "CSI": "27 51 23"
   },
   {
-    "item": "Torch down asphalt primer",
-    "CSI": "07 52 16"
-  },
-  {
     "item": "Touchpad- Access Control",
     "CSI": "28 13 00"
   },
@@ -93386,14 +93118,6 @@
   {
     "item": "Trolley Without Busway End Cap",
     "CSI": "26 05 33"
-  },
-  {
-    "item": "Trowel-on Paint Finish ( 5 Gallon)",
-    "CSI": "09 90 00"
-  },
-  {
-    "item": "Trowel-on Paint Finish (1 Gallon)",
-    "CSI": "09 90 00"
   },
   {
     "item": "Truck / Flatbed Driver - Operating Engineer",
@@ -94628,10 +94352,6 @@
     "CSI": "01 50 00"
   },
   {
-    "item": "Water Base Enamel Paint (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
     "item": "Water Closet(WC) Automatic Flush Meter- High Quality",
     "CSI": "22 40 00"
   },
@@ -94652,28 +94372,12 @@
     "CSI": "31 23 16"
   },
   {
-    "item": "Water-Base Enamel Primer Paint (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Water-based Sealer Paint (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
     "item": "Waterproof  Wall Joint Tape 250 LF",
     "CSI": "09 29 00"
   },
   {
     "item": "Waterproof Black Box - Fire Alarm- Signaling",
     "CSI": "28 31 00"
-  },
-  {
-    "item": "Waterproof Cement Paint ( 1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Waterproof Cement Paint Bonding Primer ( 1 Gallon)",
-    "CSI": "09 91 23"
   },
   {
     "item": "Waterproof Silicone Corking Compound 10.8 FL.Oz",
@@ -94772,14 +94476,6 @@
     "CSI": "22 40 00"
   },
   {
-    "item": "White Epoxy Paint (1 Gallon)",
-    "CSI": "09 96 00"
-  },
-  {
-    "item": "White Epoxy Primer Paint (1 Gallon)",
-    "CSI": "09 96 00"
-  },
-  {
     "item": "White PVC Alcove Bath tub 32\"W x 60\"L  Right Apron, High Quality",
     "CSI": "22 40 00"
   },
@@ -94818,10 +94514,6 @@
   {
     "item": "Wind speed Irrigation Sensor",
     "CSI": "32 84 23"
-  },
-  {
-    "item": "Wiping Stain (1 Gallon)",
-    "CSI": "09 93 00"
   },
   {
     "item": "Wire brush",
@@ -94880,58 +94572,6 @@
     "CSI": "28 13 00"
   },
   {
-    "item": "Wood Flat/Matt Polyurethane Varnish (1 Gallon)",
-    "CSI": "09 93 00"
-  },
-  {
-    "item": "Wood Floor Clear Shellac (1 Gallon)",
-    "CSI": "09 93 00"
-  },
-  {
-    "item": "Wood Floor Enamel, Oil-base Paint  (1 Gallon)",
-    "CSI": "09 96 00"
-  },
-  {
-    "item": "Wood Floor Enamel, Water-base Paint  (1 Gallon)",
-    "CSI": "09 96 00"
-  },
-  {
-    "item": "Wood Floor Epoxy, Oil-base Paint  (1 Gallon)",
-    "CSI": "09 96 00"
-  },
-  {
-    "item": "Wood Floor Epoxy, Water-base Paint  (1 Gallon)",
-    "CSI": "09 96 00"
-  },
-  {
-    "item": "Wood Floor Flat/Matt Polyurethane Varnish (1 Gallon)",
-    "CSI": "09 93 00"
-  },
-  {
-    "item": "Wood Floor Gloss Polyurethane Varnish (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Wood Floor Undercoat Oil-base Paint  (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Wood Floor Undercoat Water-base Paint  (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Wood Floor Varnish Oil-base Sanding Sealer (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Wood Floor Varnish Water-base Sanding Sealer (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Wood Gloss Polyurethane Varnish (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
     "item": "Wood Glue",
     "CSI": "06 05 23"
   },
@@ -94944,20 +94584,8 @@
     "CSI": "11 05 00"
   },
   {
-    "item": "Wood Putty (1 Gallon)",
-    "CSI": "09 91 23"
-  },
-  {
-    "item": "Wood Putty (Quart)",
-    "CSI": "09 91 23"
-  },
-  {
     "item": "Wood Saw Machine - Handheld  Portable",
     "CSI": "11 05 00"
-  },
-  {
-    "item": "Wood Wax Polish (1 Gallon)",
-    "CSI": "09 91 23"
   },
   {
     "item": "Work Programmes",
@@ -95142,5 +94770,294 @@
   {
     "item": "Undercoat Water-base Paint",
     "CSI": "09 91 13"
+  },
+  {
+    "item": "Acrylic Paint",
+    "CSI": "09 91 23"
+  },
+  {
+    "item": "Acrylic Primer Paint",
+    "CSI": "09 91 23"
+  },{
+    "item": "Chalkboard Paint",
+    "CSI": "09 91 23"
+  },{
+    "item": "Eggshell Paint",
+    "CSI": "09 91 23"
+  },{
+    "item": "Eggshell Primer Paint",
+    "CSI": "09 91 23"
+  },{
+    "item": "Emulsion Primer Paint",
+    "CSI": "09 91 23"
+  },{
+    "item": "Enamel, Wood Oil-base Paint",
+    "CSI": "09 91 23"
+  },
+  {
+    "item": "Enamel, Wood Water-base Paint ",
+    "CSI": "09 91 23"
+  },{
+    "item": "Epoxy Locker Thinner",
+    "CSI": "09 91 23"
+  },{
+    "item": "Gloss Latex Paint",
+    "CSI": "09 91 23"
+  },{
+    "item": "High Gloss Latex Paint",
+    "CSI": "09 91 23"
+  },{
+    "item": "Interior Flat Wood Varnish",
+    "CSI": "09 91 23"
+  },{
+    "item": "Interior Gloss Wood Varnish",
+    "CSI": "09 91 23"
+  },
+  {
+    "item": "Interior Oil PenetratingStain ",
+    "CSI": "09 91 23"
+  },{
+    "item": "Interior Penetrating Stain ",
+    "CSI": "09 91 23"
+  },{
+    "item": "Interior Wood Floor Penetrating Interior Stain Wax & Wipe",
+    "CSI": "09 91 23"
+  },{
+    "item": "Interior Wood Floor Wax Polish",
+    "CSI": "09 91 23"
+  },{
+    "item": "Interior Wood Sealer",
+    "CSI": "09 91 23"
+  },{
+    "item": "Interior Wood Stain",
+    "CSI": "09 91 23"
+  },
+  {
+    "item": "Lacquer",
+    "CSI": "09 91 23"
+  },{
+    "item": "Lacquer Sanding Sealer",
+    "CSI": "09 91 23"
+  },{
+    "item": "Latex Paint",
+    "CSI": "09 91 23"
+  },{
+    "item": "Latex Primer Paint",
+    "CSI": "09 91 23"
+  },{
+    "item": "Latex Stipple Finish Texture Paint",
+    "CSI": "09 91 23"
+  },{
+    "item": "Marine spar oil-base varnish ",
+    "CSI": "09 91 23"
+  },
+  {
+    "item": "Marine spar water-base varnish",
+    "CSI": "09 91 23"
+  },{
+    "item": "Masking Tape",
+    "CSI": "09 91 23"
+  },{
+    "item": "Oil-base Penetrating Sealer Wood Wax",
+    "CSI": "09 91 23"
+  },{
+    "item": "Oil-based Sealer Paint",
+    "CSI": "09 91 23"
+  },{
+    "item": "Oxide Metal Paint Primer",
+    "CSI": "09 91 23"
+  },{
+    "item": "Paint Thinner",
+    "CSI": "09 91 23"
+  },
+  {
+    "item": "Textured Oil Paint",
+    "CSI": "09 91 23"
+  },{
+    "item": "Wall Paint Putty Interior/Exterior, White",
+    "CSI": "09 91 23"
+  },{
+    "item": "Water Base Enamel Paint",
+    "CSI": "09 91 23"
+  },{
+    "item": "Water-Base Enamel Primer Paint",
+    "CSI": "09 91 23"
+  },{
+    "item": "Water-based Sealer Paint",
+    "CSI": "09 91 23"
+  },{
+    "item": "Waterproof Cement Paint",
+    "CSI": "09 91 23"
+  },
+  {
+    "item": "Waterproof Cement Paint Bonding Primer",
+    "CSI": "09 91 23"
+  },{
+    "item": "Wood Floor Gloss Polyurethane Varnish",
+    "CSI": "09 91 23"
+  },{
+    "item": "Wood Floor Undercoat Oil-base Paint",
+    "CSI": "09 91 23"
+  },{
+    "item": "Wood Floor Undercoat Water-base Paint",
+    "CSI": "09 91 23"
+  },{
+    "item": "Wood Floor Varnish Oil-base Sanding Sealer",
+    "CSI": "09 91 23"
+  },{
+    "item": "Wood Floor Varnish Water-base Sanding Sealer",
+    "CSI": "09 91 23"
+  },
+  {
+    "item": "Wood Gloss Polyurethane Varnish",
+    "CSI": "09 91 23"
+  },{
+    "item": "Wood Putty",
+    "CSI": "09 91 23"
+  },{
+    "item": "Wood Wax Polish",
+    "CSI": "09 91 23"
+  },{
+    "item": "Clear Waterproof Paint",
+    "DIV": "09"
+  },{
+    "item": "Clear Waterproof Paint  Primer",
+    "DIV": "09"
+  },{
+    "item": "Epoxy Floor Paint",
+    "CSI": "09 96 00"
+  },{
+    "item": "Epoxy Locker Thinner",
+    "CSI": "09 96 00"
+  },{
+    "item": "Fire Intumescent Paint",
+    "CSI": "09 96 00"
+  },{
+    "item": "Fire Retardant Paint",
+    "CSI": "09 96 00"
+  },{
+    "item": "Larthine",
+    "CSI": "09 96 00"
+  },{
+    "item": "Metal Clear Epoxy Coating Paint",
+    "CSI": "09 96 00"
+  },{
+    "item": "Metal Epoxy Coating Paint",
+    "CSI": "09 96 00"
+  },{
+    "item": "Metal Fire Retardant Paint",
+    "CSI": "09 96 00"
+  },{
+    "item": "White Epoxy Paint",
+    "CSI": "09 96 00"
+  },{
+    "item": "White Epoxy Primer Paint",
+    "CSI": "09 96 00"
+  },{
+    "item": "Wood Floor Enamel, Oil-base Paint",
+    "CSI": "09 96 00"
+  },{
+    "item": "Wood Floor Enamel, Water-base Paint",
+    "CSI": "09 96 00"
+  },{
+    "item": "Wood Floor Epoxy, Oil-base Paint",
+    "CSI": "09 96 00"
+  },{
+    "item": "Wood Floor Epoxy, Water-base Paint",
+    "CSI": "09 96 00"
+  },{
+    "item": "Diamond Brite 80lb Bag",
+    "CSI": "09 96 00"
+  },{
+    "item": "Lacquer Base Stain",
+    "CSI": "09 90 00"
+  },{
+    "item": "Pickled Paint",
+    "CSI": "09 90 00"
+  },{
+    "item": "Wiping Stain",
+    "CSI": "09 90 00"
+  },{
+    "item": "Wood Flat/Matt Polyurethane Varnish",
+    "CSI": "09 90 00"
+  },{
+    "item": "Wood Floor Clear Shellac",
+    "CSI": "09 90 00"
+  },{
+    "item": "Wood Floor Flat/Matt Polyurethane Varnish",
+    "CSI": "09 90 00"
+  },{
+    "item": "Concrete Floor Stain",
+    "CSI": "09 96 00"
+  },{
+    "item": "Shingle Roof Oil Base Paint",
+    "CSI": "09 90 00"
+  },{
+    "item": "Shingle Roof Primer Paint",
+    "CSI": "07 01 90"
+  },{
+    "item": "Thompson Wood Sealer",
+    "CSI": "09 90 00"
+  },{
+    "item": "Trowel-on Paint Finish",
+    "CSI": "09 96 00"
+  },{
+    "item": "Bituminous Black paint",
+    "CSI": "09 96 00"
+  },{
+    "item": "Floor Wiping  Stain Oil-base  Exterior Wood Varnish",
+    "CSI": "09 90 00"
+  },{
+    "item": "Floor Wiping  Stain Oil-base  Interior Wood Varnish",
+    "CSI": "09 90 00"
+  },{
+    "item": "Heavy Duty Paint Remover",
+    "CSI": "09 01 80"
+  },{
+    "item": "Light Duty Paint Remover",
+    "CSI": "09 01 80"
+  },{
+    "item": "Remover Paint Thinner",
+    "CSI": "09 01 80"
+  },{
+    "item": "Roof Cover Stain Oil Base Primer  Paint",
+    "CSI": "07 01 90"
+  },{
+    "item": "Roof Sealer Paint",
+    "CSI": "07 01 90"
+  },{
+    "item": "Roof Stain Paint",
+    "CSI": "07 01 90"
+  },{
+    "item": "Acid wash - muriatic acid",
+    "CSI": "09 01 80"
+  },{
+    "item": "Concrete Floor Sealer",
+    "CSI": "09 96 00"
+  },{
+    "item": "Dry Wall Texture  Compound",
+    "CSI": "09 91 23"
+  },{
+    "item": "Lime Wash",
+    "CSI": "09 90 00"
+  },{
+    "item": "Polyurethane Sealant",
+    "CSI": "07 92 00"
+  }
+  ,{
+    "item": "Roof Sealant Coating",
+    "CSI": "07 01 90"
+  },
+  {
+    "item": "HVAC Air Duct Mastic",
+    "CSI": "23 31 00"
+  },
+  {
+    "item": "HVAC Air Duct Seal Compound Filler",
+    "CSI": "23 31 00"
+  },
+  {
+    "item": "Torch down asphalt primer",
+    "CSI": "07 52 00"
   }
 ]

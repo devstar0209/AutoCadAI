@@ -20,7 +20,7 @@ MODEL = "gpt-5.2"
 # ]
 
 COUNTRIES = [
-    "Jamaica"
+    "US", "Jamaica"
 ]
 
 
@@ -153,6 +153,7 @@ Rules:
 
 COST NORMALIZATION RULE (MANDATORY):
 - material_unit_cost MUST be the cost per ONE unit as defined by `unit`
+- Painting finish scope of works should be priced per SF of surface area.
 - NEVER output extended, lot, reel, coil, or total material cost
 - If an item is commonly sold in rolls, reels, or lots (e.g., 500 ft):
     - Divide total package price by total length
@@ -188,6 +189,7 @@ Rules:
 
 COST NORMALIZATION RULE (MANDATORY):
 - material_unit_cost MUST be the cost per ONE unit as defined by `unit`
+- Painting finish scope of works should be priced per SF of surface area.
 - NEVER output extended, lot, reel, coil, or total material cost
 - If an item is commonly sold in rolls, reels, or lots (e.g., 500 ft):
     - Divide total package price by total length

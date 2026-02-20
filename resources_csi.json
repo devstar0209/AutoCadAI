@@ -86360,30 +86360,6 @@
     "CSI": "01 26 00"
   },
   {
-    "item": "Exterior Acrylic Latex Paint (1 Gallon)",
-    "CSI": "09 91 13"
-  },
-  {
-    "item": "Exterior Deck Wood Sealer (1 Gallon)",
-    "CSI": "09 91 13"
-  },
-  {
-    "item": "Exterior Oil-base Wood Stain (Gallon)",
-    "CSI": "09 91 13"
-  },
-  {
-    "item": "Exterior Penetrating Stain  (1 Gallon)",
-    "CSI": "09 91 13"
-  },
-  {
-    "item": "Exterior Water-base Wood Stain (Gallon)",
-    "CSI": "09 91 13"
-  },
-  {
-    "item": "Exterior Wood Varnish (Gallon)",
-    "CSI": "09 91 13"
-  },
-  {
     "item": "EZ Twist 1 5/8\" OD x 9 Gauge Preformed Galvanized Steel Tie Wire - Fence Ties - 100 Pack (Galvanized Steel)",
     "CSI": "32 31 13"
   },
@@ -86654,14 +86630,6 @@
   {
     "item": "Flasher - Clock System",
     "CSI": "26 27 26"
-  },
-  {
-    "item": "Flat  Emulsion Paint (1 Gallon)",
-    "CSI": "09 91 13"
-  },
-  {
-    "item": "Flat  Emulsion Primer Paint (1 Gallon)",
-    "CSI": "09 91 13"
   },
   {
     "item": "Flat Clay Roof Tile, Slate 15.9 in. x 10.4 in. (124 Pcs / SQ)",
@@ -87318,10 +87286,6 @@
   {
     "item": "Indoor/Outdoor OFNP  2 Fiber - 4 ST Connectors",
     "CSI": "27 15 13"
-  },
-  {
-    "item": "Industrial Enamel, Oil-base Paint  (1 Gallon)",
-    "CSI": "09 91 13"
   },
   {
     "item": "Infrared Ceiling Mount Sensor",
@@ -90776,22 +90740,6 @@
     "CSI": "26 09 23"
   },
   {
-    "item": "Off-White Gloss Synthetic Enamel (1 Gallon)",
-    "CSI": "09 91 13"
-  },
-  {
-    "item": "Oil Base Enamel Paint (1 Gallon)",
-    "CSI": "09 91 13"
-  },
-  {
-    "item": "Oil Base Enamel Primer Paint (1 Gallon)",
-    "CSI": "09 91 13"
-  },
-  {
-    "item": "Oil Base Primer Paint (1 Gallon)",
-    "CSI": "09 91 13"
-  },
-  {
     "item": "Oil-base Penetrating Sealer Wood Wax (1 Gallon)",
     "CSI": "09 91 23"
   },
@@ -92068,24 +92016,12 @@
     "CSI": "09 90 00"
   },
   {
-    "item": "Sanding Sealer  (1 Gallon)",
-    "CSI": "09 91 13"
-  },
-  {
     "item": "Sanitary Facilities",
     "CSI": "01 52 00"
   },
   {
     "item": "Satellite  Unit- Intercom",
     "CSI": "27 51 00"
-  },
-  {
-    "item": "Satin Paint (1 Gallon)",
-    "CSI": "09 91 13"
-  },
-  {
-    "item": "Satin Primer Paint (1 Gallon)",
-    "CSI": "09 91 13"
   },
   {
     "item": "SC - 900\u00b5m, MultiMode Aqua Connector, 50um OM3-Fibre Optic",
@@ -92182,18 +92118,6 @@
   {
     "item": "Semi-Flush Control Relay - Fire Alarm- Signaling",
     "CSI": "28 31 00"
-  },
-  {
-    "item": "Semi-Gloss Latex Paint (1 Gallon)",
-    "CSI": "09 91 13"
-  },
-  {
-    "item": "Semi-transparent stain, oil base Paint (1 Gallon)",
-    "CSI": "09 91 13"
-  },
-  {
-    "item": "Semi-transparent stain, water base Paint (1 Gallon)",
-    "CSI": "09 91 13"
   },
   {
     "item": "Sensor Stainless Steel Spring Kitchen Faucet- High Quality",
@@ -93520,20 +93444,8 @@
     "CSI": "28 15 00"
   },
   {
-    "item": "Ultra Pure Semi-Gloss Low Order Interior Enamel (1 Gallon)",
-    "CSI": "09 91 13"
-  },
-  {
     "item": "Ultrasonic Celling Mount Sensor",
     "CSI": "26 09 23"
-  },
-  {
-    "item": "Undercoat Oil-base Paint  (1 Gallon)",
-    "CSI": "09 91 13"
-  },
-  {
-    "item": "Undercoat Water-base Paint  (1 Gallon)",
-    "CSI": "09 91 13"
   },
   {
     "item": "Underfloor Duct  Blank Header (10ft)",
@@ -95142,5 +95054,93 @@
   {
     "item": "Paint existing interior surfaces (incl. around/adjacent to fluorescent light and smoke detector locations) - allow 2 coats acrylic emulsion to walls/ceilings",
     "CSI": "09 90 00"
+  },
+  {
+    "item": "Exterior Acrylic Latex Paint",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Exterior Deck Wood Sealer",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Exterior Oil-base Wood Stain",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Exterior Penetrating Stain",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Exterior Water-base Wood Stain",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Exterior Wood Varnish",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Flat  Emulsion Paint",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Flat  Emulsion Primer Paint",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Industrial Enamel, Oil-base Paint",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Off-White Gloss Synthetic Enamel",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Oil Base Enamel Paint",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Oil Base Enamel Primer Paint",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Oil Base Primer Paint",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Sanding Sealer",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Satin Paint",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Satin Primer Paint",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Semi-Gloss Latex Paint",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Semi-transparent stain, oil base Paint",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Semi-transparent stain, water base Paint",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Ultra Pure Semi-Gloss Low Order Interior Enamel",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Undercoat Oil-base Paint",
+    "CSI": "09 91 13"
+  },
+  {
+    "item": "Undercoat Water-base Paint",
+    "CSI": "09 91 13"
   }
 ]

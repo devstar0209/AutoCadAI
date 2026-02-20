@@ -1164,10 +1164,10 @@ def estimate_costs_for_items(
             item["T.Mat"] = material_unit_cost * qty
 
             item["L.Rate"] = labor_rate
-            item["T.Labor"] = labor_rate * item["L.Hrs"]
+            item["T.Labor"] = labor_rate * qty
 
             item["E.Rate"] = equipment_rate
-            item["T.Equip"] = equipment_rate * item["E.Hrs"]
+            item["T.Equip"] = equipment_rate * qty
 
             item["matched_item"] = best
             item["similarity"] = round(score, 3)

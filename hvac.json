@@ -1,0 +1,1712 @@
+[
+  {
+    "item": "6 gallon Electric domestic hot water heater (residential) 1.5 KW/110V",
+    "hours": 0.5,
+    "unit": "Ea",
+    "material_cost": 480.0,
+    "labor_cost": 19.5,
+    "equipment_cost": 0.0,
+    "total_cost": 499.5
+  },
+  {
+    "item": "10 gallon Electric domestic hot water heater (residential) 1.5 KW/110V",
+    "hours": 0.5,
+    "unit": "Ea",
+    "material_cost": 538.0,
+    "labor_cost": 19.5,
+    "equipment_cost": 0.0,
+    "total_cost": 557.5
+  },
+  {
+    "item": "15 gallon Electric domestic hot water heater (residential) 1.5 KW/110V",
+    "hours": 0.75,
+    "unit": "Ea",
+    "material_cost": 565.0,
+    "labor_cost": 29.3,
+    "equipment_cost": 0.0,
+    "total_cost": 594.3
+  },
+  {
+    "item": "20 gallon Electric domestic hot water heater (residential) 1.5 KW/110V",
+    "hours": 0.75,
+    "unit": "Ea",
+    "material_cost": 531.0,
+    "labor_cost": 29.3,
+    "equipment_cost": 0.0,
+    "total_cost": 560.3
+  },
+  {
+    "item": "30 gallon Electric domestic hot water heater (residential) 1.5 KW/110V",
+    "hours": 1.0,
+    "unit": "Ea",
+    "material_cost": 545.0,
+    "labor_cost": 39.0,
+    "equipment_cost": 0.0,
+    "total_cost": 584.0
+  },
+  {
+    "item": "40 gallon Electric domestic hot water heater (residential) 1.5 KW/110V",
+    "hours": 1.2,
+    "unit": "Ea",
+    "material_cost": 570.0,
+    "labor_cost": 46.8,
+    "equipment_cost": 0.0,
+    "total_cost": 616.8
+  },
+  {
+    "item": "50 gallon Electric domestic hot water heater (residential) 3 KW/110V",
+    "hours": 1.3,
+    "unit": "Ea",
+    "material_cost": 615.0,
+    "labor_cost": 50.7,
+    "equipment_cost": 0.0,
+    "total_cost": 665.7
+  },
+  {
+    "item": "12 gallon Electric domestic hot water heater (residential) 3 KW/220V",
+    "hours": 0.5,
+    "unit": "Ea",
+    "material_cost": 473.0,
+    "labor_cost": 19.5,
+    "equipment_cost": 0.0,
+    "total_cost": 492.5
+  },
+  {
+    "item": "20 gallon Electric domestic hot water heater (residential) 3 KW/220V",
+    "hours": 0.75,
+    "unit": "Ea",
+    "material_cost": 518.0,
+    "labor_cost": 29.3,
+    "equipment_cost": 0.0,
+    "total_cost": 547.3
+  },
+  {
+    "item": "30 gallon Electric domestic hot water heater (residential) 3 KW/220V",
+    "hours": 1.0,
+    "unit": "Ea",
+    "material_cost": 592.0,
+    "labor_cost": 39.0,
+    "equipment_cost": 0.0,
+    "total_cost": 631.0
+  },
+  {
+    "item": "40 gallon Electric domestic hot water heater (residential) 3 KW/220V",
+    "hours": 1.2,
+    "unit": "Ea",
+    "material_cost": 644.0,
+    "labor_cost": 46.8,
+    "equipment_cost": 0.0,
+    "total_cost": 690.8
+  },
+  {
+    "item": "50 gallon Electric domestic hot water heater (residential) 3 KW/220V",
+    "hours": 1.3,
+    "unit": "Ea",
+    "material_cost": 690.0,
+    "labor_cost": 50.7,
+    "equipment_cost": 0.0,
+    "total_cost": 740.7
+  },
+  {
+    "item": "96 gallon Electric domestic hot water heater (commercial), 208/240 volt 12 KW",
+    "hours": 1.5,
+    "unit": "Ea",
+    "material_cost": 2720.0,
+    "labor_cost": 58.5,
+    "equipment_cost": 0.0,
+    "total_cost": 2778.5
+  },
+  {
+    "item": "96 gallon Electric domestic hot water heater (commercial), 208/240 volt 18 KW",
+    "hours": 1.5,
+    "unit": "Ea",
+    "material_cost": 3690.0,
+    "labor_cost": 58.5,
+    "equipment_cost": 0.0,
+    "total_cost": 3748.5
+  },
+  {
+    "item": "96 gallon Electric domestic hot water heater (commercial), 208/240 volt 36 KW",
+    "hours": 1.5,
+    "unit": "Ea",
+    "material_cost": 3830.0,
+    "labor_cost": 58.5,
+    "equipment_cost": 0.0,
+    "total_cost": 3888.5
+  },
+  {
+    "item": "120 gallon Electric domestic hot water heater (commercial), 208/240 volt 18 KW",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 3920.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 3998.1
+  },
+  {
+    "item": "120 gallon Electric domestic hot water heater (commercial), 208/240 volt 36 KW",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 4040.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 4118.1
+  },
+  {
+    "item": "120 gallon Electric domestic hot water heater (commercial), 208/240 volt 54 KW",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 4780.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 4858.1
+  },
+  {
+    "item": "120 gallon Electric domestic hot water heater (commercial), 208/240 volt 63 KW",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 5160.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 5238.1
+  },
+  {
+    "item": "30 gallon Gas-fired domestic hot water heater (residential)",
+    "hours": 1.0,
+    "unit": "Ea",
+    "material_cost": 559.0,
+    "labor_cost": 39.0,
+    "equipment_cost": 0.0,
+    "total_cost": 598.0
+  },
+  {
+    "item": "40 gallon Gas-fired domestic hot water heater (residential)",
+    "hours": 1.0,
+    "unit": "Ea",
+    "material_cost": 904.0,
+    "labor_cost": 39.0,
+    "equipment_cost": 0.0,
+    "total_cost": 943.0
+  },
+  {
+    "item": "50 gallon Gas-fired domestic hot water heater (residential)",
+    "hours": 1.5,
+    "unit": "Ea",
+    "material_cost": 1030.0,
+    "labor_cost": 58.5,
+    "equipment_cost": 0.0,
+    "total_cost": 1088.5
+  },
+  {
+    "item": "50 gal./ 95 gph Gas-fired domestic hot water heater (commercial), standard efficiency",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 2710.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 2788.1
+  },
+  {
+    "item": "67 gal./106 gph Gas-fired domestic hot water heater (commercial), standard efficiency",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 3210.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 3288.1
+  },
+  {
+    "item": "76 gal./175 gph Gas-fired domestic hot water heater (commercial), standard efficiency",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 4290.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 4368.1
+  },
+  {
+    "item": "91 gal./291 gph Gas-fired domestic hot water heater (commercial), standard efficiency",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 5190.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 5268.1
+  },
+  {
+    "item": "50 gal./ 95 gph Gas-fired domestic hot water heater (commercial), energy miser",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 6690.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 6768.1
+  },
+  {
+    "item": "67 gal./106 gph Gas-fired domestic hot water heater (commercial), energy miser",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 6990.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 7068.1
+  },
+  {
+    "item": "76 gal./175 gph Gas-fired domestic hot water heater (commercial), energy miser",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 8660.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 8738.1
+  },
+  {
+    "item": "91 gal./291 gph Gas-fired domestic hot water heater (commercial), energy miser",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 10300.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 10378.1
+  },
+  {
+    "item": ".75-5.8 Gpm Tankless natural gas water heaters",
+    "hours": 16.0,
+    "unit": "Ea",
+    "material_cost": 1950.0,
+    "labor_cost": 624.0,
+    "equipment_cost": 0.0,
+    "total_cost": 2574.0
+  },
+  {
+    "item": ".5-7 Gpm Tankless natural gas water heaters",
+    "hours": 20.0,
+    "unit": "Ea",
+    "material_cost": 2310.0,
+    "labor_cost": 781.0,
+    "equipment_cost": 0.0,
+    "total_cost": 3091.0
+  },
+  {
+    "item": ".75-9.6 Gpm Tankless natural gas water heaters",
+    "hours": 20.0,
+    "unit": "Ea",
+    "material_cost": 3000.0,
+    "labor_cost": 781.0,
+    "equipment_cost": 0.0,
+    "total_cost": 3781.0
+  },
+  {
+    "item": ".75-2 Gpm 5.5 Kw/40 Amp,",
+    "hours": 4.0,
+    "unit": "Ea",
+    "material_cost": 492.0,
+    "labor_cost": 156.0,
+    "equipment_cost": 0.0,
+    "total_cost": 648.0
+  },
+  {
+    "item": ".75-2.5 Gpm 9.5 Kw/50 Amp,",
+    "hours": 4.25,
+    "unit": "Ea",
+    "material_cost": 582.0,
+    "labor_cost": 166.0,
+    "equipment_cost": 0.0,
+    "total_cost": 748.0
+  },
+  {
+    "item": "1-3.5 Gpm 19 Kw/100 Amp,",
+    "hours": 4.5,
+    "unit": "Ea",
+    "material_cost": 969.0,
+    "labor_cost": 176.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1145.0
+  },
+  {
+    "item": "1.5-5 Gpm 28 Kw/120 Amp,",
+    "hours": 4.75,
+    "unit": "Ea",
+    "material_cost": 1770.0,
+    "labor_cost": 185.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1955.0
+  },
+  {
+    "item": "3/4\" residential Domestic hot water heater connection assembly",
+    "hours": 1.75,
+    "unit": "Ea",
+    "material_cost": 305.0,
+    "labor_cost": 68.3,
+    "equipment_cost": 0.0,
+    "total_cost": 373.3
+  },
+  {
+    "item": "3/4\" commercial Domestic hot water heater connection assembly",
+    "hours": 2.25,
+    "unit": "Ea",
+    "material_cost": 409.0,
+    "labor_cost": 87.8,
+    "equipment_cost": 0.0,
+    "total_cost": 496.8
+  },
+  {
+    "item": "1\" commercial Domestic hot water heater connection assembly",
+    "hours": 2.75,
+    "unit": "Ea",
+    "material_cost": 716.0,
+    "labor_cost": 107.0,
+    "equipment_cost": 0.0,
+    "total_cost": 823.0
+  },
+  {
+    "item": "1 1/4\" commercial Domestic hot water heater connection assembly",
+    "hours": 3.5,
+    "unit": "Ea",
+    "material_cost": 877.0,
+    "labor_cost": 137.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1014.0
+  },
+  {
+    "item": "1 1/2\" commercial Domestic hot water heater connection assembly",
+    "hours": 3.75,
+    "unit": "Ea",
+    "material_cost": 913.0,
+    "labor_cost": 146.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1059.0
+  },
+  {
+    "item": "2\" commercial Domestic hot water heater connection assembly",
+    "hours": 4.5,
+    "unit": "Ea",
+    "material_cost": 973.0,
+    "labor_cost": 176.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1149.0
+  },
+  {
+    "item": "2 1/2\" commercial Domestic hot water heater connection assembly",
+    "hours": 5.75,
+    "unit": "Ea",
+    "material_cost": 2020.0,
+    "labor_cost": 224.0,
+    "equipment_cost": 0.0,
+    "total_cost": 2244.0
+  },
+  {
+    "item": "3\" commercial Domestic hot water heater connection assembly",
+    "hours": 6.5,
+    "unit": "Ea",
+    "material_cost": 3100.0,
+    "labor_cost": 254.0,
+    "equipment_cost": 0.0,
+    "total_cost": 3354.0
+  },
+  {
+    "item": "Tankless heater vent kit Domestic water heater combustion vent connection",
+    "hours": 2.5,
+    "unit": "Ea",
+    "material_cost": 626.0,
+    "labor_cost": 97.6,
+    "equipment_cost": 0.0,
+    "total_cost": 723.6
+  },
+  {
+    "item": "Power vent kit Domestic water heater combustion vent connection",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 1540.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 1618.1
+  },
+  {
+    "item": "2\" B-vent Domestic water heater combustion vent connection",
+    "hours": 0.09,
+    "unit": "LF",
+    "material_cost": 6.61,
+    "labor_cost": 3.51,
+    "equipment_cost": 0.0,
+    "total_cost": 10.12
+  },
+  {
+    "item": "3\" B-vent Domestic water heater combustion vent connection",
+    "hours": 0.1,
+    "unit": "LF",
+    "material_cost": 8.17,
+    "labor_cost": 3.9,
+    "equipment_cost": 0.0,
+    "total_cost": 12.07
+  },
+  {
+    "item": "4\" B-vent Domestic water heater combustion vent connection",
+    "hours": 0.11,
+    "unit": "LF",
+    "material_cost": 10.8,
+    "labor_cost": 4.29,
+    "equipment_cost": 0.0,
+    "total_cost": 15.09
+  },
+  {
+    "item": "6\" B-vent Domestic water heater combustion vent connection",
+    "hours": 0.13,
+    "unit": "LF",
+    "material_cost": 13.3,
+    "labor_cost": 5.07,
+    "equipment_cost": 0.0,
+    "total_cost": 18.37
+  },
+  {
+    "item": "20,000 grain water softener, TCC Water softener, time clock controller",
+    "hours": 4.5,
+    "unit": "Ea",
+    "material_cost": 607.0,
+    "labor_cost": 176.0,
+    "equipment_cost": 0.0,
+    "total_cost": 783.0
+  },
+  {
+    "item": "30,000 grain water softener, TCC Water softener, time clock controller",
+    "hours": 4.5,
+    "unit": "Ea",
+    "material_cost": 647.0,
+    "labor_cost": 176.0,
+    "equipment_cost": 0.0,
+    "total_cost": 823.0
+  },
+  {
+    "item": "45,000 grain water softener, TCC Water softener, time clock controller",
+    "hours": 4.5,
+    "unit": "Ea",
+    "material_cost": 719.0,
+    "labor_cost": 176.0,
+    "equipment_cost": 0.0,
+    "total_cost": 895.0
+  },
+  {
+    "item": "50,000 grain water softener, TCC Water softener, time clock controller",
+    "hours": 4.75,
+    "unit": "Ea",
+    "material_cost": 811.0,
+    "labor_cost": 185.0,
+    "equipment_cost": 0.0,
+    "total_cost": 996.0
+  },
+  {
+    "item": "60,000 grain water softener, TCC Water softener, time clock controller",
+    "hours": 4.75,
+    "unit": "Ea",
+    "material_cost": 959.0,
+    "labor_cost": 185.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1144.0
+  },
+  {
+    "item": "75,000 grain water softener, TCC Water softener, time clock controller",
+    "hours": 5.0,
+    "unit": "Ea",
+    "material_cost": 1030.0,
+    "labor_cost": 195.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1225.0
+  },
+  {
+    "item": "90,000 grain water softener, TCC Water softener, time clock controller",
+    "hours": 5.5,
+    "unit": "Ea",
+    "material_cost": 1400.0,
+    "labor_cost": 215.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1615.0
+  },
+  {
+    "item": "120,000 grain water softener, TCC Water softener, time clock controller",
+    "hours": 5.75,
+    "unit": "Ea",
+    "material_cost": 1500.0,
+    "labor_cost": 224.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1724.0
+  },
+  {
+    "item": "20,000 grain water softener, MMC Water softener, mechanically-metered controller",
+    "hours": 4.5,
+    "unit": "Ea",
+    "material_cost": 788.0,
+    "labor_cost": 176.0,
+    "equipment_cost": 0.0,
+    "total_cost": 964.0
+  },
+  {
+    "item": "30,000 grain water softener, MMC Water softener, mechanically-metered controller",
+    "hours": 4.5,
+    "unit": "Ea",
+    "material_cost": 823.0,
+    "labor_cost": 176.0,
+    "equipment_cost": 0.0,
+    "total_cost": 999.0
+  },
+  {
+    "item": "45,000 grain water softener, MMC Water softener, mechanically-metered controller",
+    "hours": 4.5,
+    "unit": "Ea",
+    "material_cost": 896.0,
+    "labor_cost": 176.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1072.0
+  },
+  {
+    "item": "50,000 grain water softener, MMC Water softener, mechanically-metered controller",
+    "hours": 4.75,
+    "unit": "Ea",
+    "material_cost": 986.0,
+    "labor_cost": 185.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1171.0
+  },
+  {
+    "item": "60,000 grain water softener, MMC Water softener, mechanically-metered controller",
+    "hours": 4.75,
+    "unit": "Ea",
+    "material_cost": 1150.0,
+    "labor_cost": 185.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1335.0
+  },
+  {
+    "item": "75,000 grain water softener, MMC Water softener, mechanically-metered controller",
+    "hours": 5.0,
+    "unit": "Ea",
+    "material_cost": 1230.0,
+    "labor_cost": 195.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1425.0
+  },
+  {
+    "item": "90,000 grain water softener, MMC Water softener, mechanically-metered controller",
+    "hours": 5.5,
+    "unit": "Ea",
+    "material_cost": 1580.0,
+    "labor_cost": 215.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1795.0
+  },
+  {
+    "item": "120,000 grain water softener, MMC Water softener, mechanically-metered controller",
+    "hours": 5.75,
+    "unit": "Ea",
+    "material_cost": 1680.0,
+    "labor_cost": 224.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1904.0
+  },
+  {
+    "item": "20,000 grain water softener, EMC Water softener, electronically-metered controller",
+    "hours": 4.5,
+    "unit": "Ea",
+    "material_cost": 836.0,
+    "labor_cost": 176.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1012.0
+  },
+  {
+    "item": "30,000 grain water softener, EMC Water softener, electronically-metered controller",
+    "hours": 4.5,
+    "unit": "Ea",
+    "material_cost": 861.0,
+    "labor_cost": 176.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1037.0
+  },
+  {
+    "item": "45,000 grain water softener, EMC Water softener, electronically-metered controller",
+    "hours": 4.5,
+    "unit": "Ea",
+    "material_cost": 945.0,
+    "labor_cost": 176.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1121.0
+  },
+  {
+    "item": "50,000 grain water softener, EMC Water softener, electronically-metered controller",
+    "hours": 4.75,
+    "unit": "Ea",
+    "material_cost": 1030.0,
+    "labor_cost": 185.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1215.0
+  },
+  {
+    "item": "60,000 grain water softener, EMC Water softener, electronically-metered controller",
+    "hours": 4.75,
+    "unit": "Ea",
+    "material_cost": 1210.0,
+    "labor_cost": 185.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1395.0
+  },
+  {
+    "item": "75,000 grain water softener, EMC Water softener, electronically-metered controller",
+    "hours": 5.0,
+    "unit": "Ea",
+    "material_cost": 1280.0,
+    "labor_cost": 195.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1475.0
+  },
+  {
+    "item": "90,000 grain water softener, EMC Water softener, electronically-metered controller",
+    "hours": 5.5,
+    "unit": "Ea",
+    "material_cost": 1620.0,
+    "labor_cost": 215.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1835.0
+  },
+  {
+    "item": "120,000 grain water softener, EMC Water softener, electronically-metered controller",
+    "hours": 5.75,
+    "unit": "Ea",
+    "material_cost": 1730.0,
+    "labor_cost": 224.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1954.0
+  },
+  {
+    "item": "Water softener accessories: By-pass valve",
+    "hours": 0.4,
+    "unit": "Ea",
+    "material_cost": 79.5,
+    "labor_cost": 15.6,
+    "equipment_cost": 0.0,
+    "total_cost": 95.1
+  },
+  {
+    "item": "Water softener accessories: Manifold adapter kit",
+    "hours": 0.2,
+    "unit": "Ea",
+    "material_cost": 21.4,
+    "labor_cost": 7.81,
+    "equipment_cost": 0.0,
+    "total_cost": 29.21
+  },
+  {
+    "item": "Water softener accessories: Turbulator",
+    "hours": 0.4,
+    "unit": "Ea",
+    "material_cost": 39.2,
+    "labor_cost": 15.6,
+    "equipment_cost": 0.0,
+    "total_cost": 54.8
+  },
+  {
+    "item": "42,000 iron filter (1.5 cf media), 5 gpm Iron filter, electronically-metered controller",
+    "hours": 4.0,
+    "unit": "Ea",
+    "material_cost": 791.0,
+    "labor_cost": 156.0,
+    "equipment_cost": 0.0,
+    "total_cost": 947.0
+  },
+  {
+    "item": "65,000 iron filter (2.0 cf media), 6 gpm Iron filter, electronically-metered controller",
+    "hours": 4.5,
+    "unit": "Ea",
+    "material_cost": 935.0,
+    "labor_cost": 176.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1111.0
+  },
+  {
+    "item": "84,000 iron filter (2.5 cf media), 8 gpm Iron filter, electronically-metered controller",
+    "hours": 4.75,
+    "unit": "Ea",
+    "material_cost": 999.0,
+    "labor_cost": 185.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1184.0
+  },
+  {
+    "item": "Replacement green sand media Iron filter, electronically-metered controller",
+    "hours": 1.2,
+    "unit": "CF",
+    "material_cost": 45.8,
+    "labor_cost": 46.8,
+    "equipment_cost": 0.0,
+    "total_cost": 92.6
+  },
+  {
+    "item": "Iron filter accessories: By-pass valve",
+    "hours": 0.4,
+    "unit": "Ea",
+    "material_cost": 80.5,
+    "labor_cost": 15.6,
+    "equipment_cost": 0.0,
+    "total_cost": 96.1
+  },
+  {
+    "item": "Iron filter accessories: Air vent",
+    "hours": 0.2,
+    "unit": "Ea",
+    "material_cost": 63.9,
+    "labor_cost": 7.81,
+    "equipment_cost": 0.0,
+    "total_cost": 71.71
+  },
+  {
+    "item": "Iron filter accessories: Air controller",
+    "hours": 0.4,
+    "unit": "Ea",
+    "material_cost": 72.1,
+    "labor_cost": 15.6,
+    "equipment_cost": 0.0,
+    "total_cost": 87.7
+  },
+  {
+    "item": "40,000 iron filter, 1.3 cf media Combination iron filter/water softener",
+    "hours": 4.0,
+    "unit": "Ea",
+    "material_cost": 1530.0,
+    "labor_cost": 156.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1686.0
+  },
+  {
+    "item": "60,000 iron filter, 1.7 cf media Combination iron filter/water softener",
+    "hours": 4.5,
+    "unit": "Ea",
+    "material_cost": 1650.0,
+    "labor_cost": 176.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1826.0
+  },
+  {
+    "item": "80,000 iron filter, 2.5 cf media Combination iron filter/water softener",
+    "hours": 4.75,
+    "unit": "Ea",
+    "material_cost": 2400.0,
+    "labor_cost": 185.0,
+    "equipment_cost": 0.0,
+    "total_cost": 2585.0
+  },
+  {
+    "item": "20,000 grain hot water softener Hot water softener, time clock controller",
+    "hours": 4.5,
+    "unit": "Ea",
+    "material_cost": 1920.0,
+    "labor_cost": 176.0,
+    "equipment_cost": 0.0,
+    "total_cost": 2096.0
+  },
+  {
+    "item": "30,000 grain hot water softener Hot water softener, time clock controller",
+    "hours": 4.5,
+    "unit": "Ea",
+    "material_cost": 2040.0,
+    "labor_cost": 176.0,
+    "equipment_cost": 0.0,
+    "total_cost": 2216.0
+  },
+  {
+    "item": "40,000 grain hot water softener Hot water softener, time clock controller",
+    "hours": 4.5,
+    "unit": "Ea",
+    "material_cost": 2130.0,
+    "labor_cost": 176.0,
+    "equipment_cost": 0.0,
+    "total_cost": 2306.0
+  },
+  {
+    "item": "60,000 grain hot water softener Hot water softener, time clock controller",
+    "hours": 4.75,
+    "unit": "Ea",
+    "material_cost": 2520.0,
+    "labor_cost": 185.0,
+    "equipment_cost": 0.0,
+    "total_cost": 2705.0
+  },
+  {
+    "item": "Fiberglass pressure tank, 20 gallon",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 258.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 336.1
+  },
+  {
+    "item": "Fiberglass pressure tank, 30 gallon",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 291.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 369.1
+  },
+  {
+    "item": "Fiberglass pressure tank, 80 gallon",
+    "hours": 2.75,
+    "unit": "Ea",
+    "material_cost": 471.0,
+    "labor_cost": 107.0,
+    "equipment_cost": 0.0,
+    "total_cost": 578.0
+  },
+  {
+    "item": "Fiberglass pressure tank, 120 gallon",
+    "hours": 3.5,
+    "unit": "Ea",
+    "material_cost": 621.0,
+    "labor_cost": 137.0,
+    "equipment_cost": 0.0,
+    "total_cost": 758.0
+  },
+  {
+    "item": "Brass tank tee assembly, 3/4\"",
+    "hours": 3.5,
+    "unit": "Ea",
+    "material_cost": 41.6,
+    "labor_cost": 137.0,
+    "equipment_cost": 0.0,
+    "total_cost": 178.6
+  },
+  {
+    "item": "Brass tank tee assembly, 1\"",
+    "hours": 3.5,
+    "unit": "Ea",
+    "material_cost": 77.5,
+    "labor_cost": 137.0,
+    "equipment_cost": 0.0,
+    "total_cost": 214.5
+  },
+  {
+    "item": "Brass tank tee assembly, 1 1/4\"",
+    "hours": 3.5,
+    "unit": "Ea",
+    "material_cost": 132.0,
+    "labor_cost": 137.0,
+    "equipment_cost": 0.0,
+    "total_cost": 269.0
+  },
+  {
+    "item": "Ultra-violet water disinfection unit UV system, 1 gpm ¼\" in/out",
+    "hours": 3.0,
+    "unit": "Ea",
+    "material_cost": 268.0,
+    "labor_cost": 117.0,
+    "equipment_cost": 0.0,
+    "total_cost": 385.0
+  },
+  {
+    "item": "Ultra-violet water disinfection unit UV system, 6 gpm ½\" in/out",
+    "hours": 3.0,
+    "unit": "Ea",
+    "material_cost": 521.0,
+    "labor_cost": 117.0,
+    "equipment_cost": 0.0,
+    "total_cost": 638.0
+  },
+  {
+    "item": "Ultra-violet water disinfection unit UV system, 8 gpm ¾\" in/out",
+    "hours": 4.0,
+    "unit": "Ea",
+    "material_cost": 603.0,
+    "labor_cost": 156.0,
+    "equipment_cost": 0.0,
+    "total_cost": 759.0
+  },
+  {
+    "item": "Ultra-violet water disinfection unit UV system, 12 gpm ¾\" in/out",
+    "hours": 4.0,
+    "unit": "Ea",
+    "material_cost": 773.0,
+    "labor_cost": 156.0,
+    "equipment_cost": 0.0,
+    "total_cost": 929.0
+  },
+  {
+    "item": "Ultra-violet water disinfection unit UV replacement lamp, 20W 1 gpm",
+    "hours": 0.75,
+    "unit": "Ea",
+    "material_cost": 60.0,
+    "labor_cost": 29.3,
+    "equipment_cost": 0.0,
+    "total_cost": 89.3
+  },
+  {
+    "item": "Ultra-violet water disinfection unit UV replacement lamp, 32W 6 gpm",
+    "hours": 0.75,
+    "unit": "Ea",
+    "material_cost": 68.0,
+    "labor_cost": 29.3,
+    "equipment_cost": 0.0,
+    "total_cost": 97.3
+  },
+  {
+    "item": "Ultra-violet water disinfection unit UV replacement lamp, 39W 8-12 gpm",
+    "hours": 0.75,
+    "unit": "Ea",
+    "material_cost": 87.0,
+    "labor_cost": 29.3,
+    "equipment_cost": 0.0,
+    "total_cost": 116.3
+  },
+  {
+    "item": "Ultra-violet water disinfection unit UV replacement ballast 420 Mv/110V",
+    "hours": 1.0,
+    "unit": "Ea",
+    "material_cost": 263.0,
+    "labor_cost": 39.0,
+    "equipment_cost": 0.0,
+    "total_cost": 302.0
+  },
+  {
+    "item": "Kitchen equipment booster heater 1,000 watt",
+    "hours": 4.0,
+    "unit": "Ea",
+    "material_cost": 851.0,
+    "labor_cost": 156.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1007.0
+  },
+  {
+    "item": "Dishwasher Built-in",
+    "hours": 5.0,
+    "unit": "Ea",
+    "material_cost": 939.0,
+    "labor_cost": 195.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1134.0
+  },
+  {
+    "item": "Garbage disposal ½ HP",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 186.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 264.1
+  },
+  {
+    "item": "Garbage disposal ¾ HP",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 310.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 388.1
+  },
+  {
+    "item": "Grease and oil interceptor 4 GPM",
+    "hours": 4.0,
+    "unit": "Ea",
+    "material_cost": 379.0,
+    "labor_cost": 156.0,
+    "equipment_cost": 0.0,
+    "total_cost": 535.0
+  },
+  {
+    "item": "Grease and oil interceptor 10 GPM",
+    "hours": 5.0,
+    "unit": "Ea",
+    "material_cost": 618.0,
+    "labor_cost": 195.0,
+    "equipment_cost": 0.0,
+    "total_cost": 813.0
+  },
+  {
+    "item": "Grease and oil interceptor 15 GPM",
+    "hours": 7.0,
+    "unit": "Ea",
+    "material_cost": 922.0,
+    "labor_cost": 273.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1195.0
+  },
+  {
+    "item": "Grease and oil interceptor 20 GPM",
+    "hours": 8.0,
+    "unit": "Ea",
+    "material_cost": 1110.0,
+    "labor_cost": 312.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1422.0
+  },
+  {
+    "item": "Hair and lint interceptor 1½\"",
+    "hours": 0.65,
+    "unit": "Ea",
+    "material_cost": 216.0,
+    "labor_cost": 25.4,
+    "equipment_cost": 0.0,
+    "total_cost": 241.4
+  },
+  {
+    "item": "Hair and lint interceptor 2\"",
+    "hours": 0.75,
+    "unit": "Ea",
+    "material_cost": 308.0,
+    "labor_cost": 29.3,
+    "equipment_cost": 0.0,
+    "total_cost": 337.3
+  },
+  {
+    "item": "All bronze ¾\" to 1½\" in-line NPT pump 1/12 HP",
+    "hours": 1.5,
+    "unit": "Ea",
+    "material_cost": 629.0,
+    "labor_cost": 58.5,
+    "equipment_cost": 0.0,
+    "total_cost": 687.5
+  },
+  {
+    "item": "All bronze ¾\" to 1½\" in-line NPT pump 1/6 HP",
+    "hours": 1.5,
+    "unit": "Ea",
+    "material_cost": 939.0,
+    "labor_cost": 58.5,
+    "equipment_cost": 0.0,
+    "total_cost": 997.5
+  },
+  {
+    "item": "All bronze ¾\" to 1½\" in-line NPT pump 1/4 HP",
+    "hours": 1.5,
+    "unit": "Ea",
+    "material_cost": 1100.0,
+    "labor_cost": 58.5,
+    "equipment_cost": 0.0,
+    "total_cost": 1158.5
+  },
+  {
+    "item": "Kitchen appliance gas trim ½\"",
+    "hours": 1.15,
+    "unit": "Ea",
+    "material_cost": 46.2,
+    "labor_cost": 44.9,
+    "equipment_cost": 0.0,
+    "total_cost": 91.1
+  },
+  {
+    "item": "Kitchen appliance gas trim ¾\"",
+    "hours": 1.3,
+    "unit": "Ea",
+    "material_cost": 84.5,
+    "labor_cost": 50.7,
+    "equipment_cost": 0.0,
+    "total_cost": 135.2
+  },
+  {
+    "item": "Kitchen appliance gas trim 1\"",
+    "hours": 1.6,
+    "unit": "Ea",
+    "material_cost": 98.0,
+    "labor_cost": 62.4,
+    "equipment_cost": 0.0,
+    "total_cost": 160.4
+  },
+  {
+    "item": "Kitchen appliance gas trim 1¼\"",
+    "hours": 2.1,
+    "unit": "Ea",
+    "material_cost": 162.0,
+    "labor_cost": 82.0,
+    "equipment_cost": 0.0,
+    "total_cost": 244.0
+  },
+  {
+    "item": "Kitchen appliance gas trim 1½\"",
+    "hours": 2.5,
+    "unit": "Ea",
+    "material_cost": 205.0,
+    "labor_cost": 97.6,
+    "equipment_cost": 0.0,
+    "total_cost": 302.6
+  },
+  {
+    "item": "Kitchen appliance gas trim 2\"",
+    "hours": 3.0,
+    "unit": "Ea",
+    "material_cost": 273.0,
+    "labor_cost": 117.0,
+    "equipment_cost": 0.0,
+    "total_cost": 390.0
+  },
+  {
+    "item": "Kitchen Equipment Connections: Hot and cold water supply ½\"",
+    "hours": 1.1,
+    "unit": "Ea",
+    "material_cost": 50.5,
+    "labor_cost": 42.9,
+    "equipment_cost": 0.0,
+    "total_cost": 93.4
+  },
+  {
+    "item": "Kitchen Equipment Connections: Hot and cold water supply ¾\"",
+    "hours": 1.55,
+    "unit": "Ea",
+    "material_cost": 71.6,
+    "labor_cost": 60.5,
+    "equipment_cost": 0.0,
+    "total_cost": 132.1
+  },
+  {
+    "item": "Kitchen Equipment Connections: Hot and cold water supply 1\"",
+    "hours": 1.9,
+    "unit": "Ea",
+    "material_cost": 97.5,
+    "labor_cost": 74.2,
+    "equipment_cost": 0.0,
+    "total_cost": 171.7
+  },
+  {
+    "item": "Kitchen Equipment Connections: Hot and cold water supply 1¼\"",
+    "hours": 2.5,
+    "unit": "Ea",
+    "material_cost": 137.0,
+    "labor_cost": 97.6,
+    "equipment_cost": 0.0,
+    "total_cost": 234.6
+  },
+  {
+    "item": "Kitchen Equipment Connections: Hot and cold water supply 1½\"",
+    "hours": 3.0,
+    "unit": "Ea",
+    "material_cost": 171.0,
+    "labor_cost": 117.0,
+    "equipment_cost": 0.0,
+    "total_cost": 288.0
+  },
+  {
+    "item": "Kitchen Equipment Connections: Continuous waste 2-part",
+    "hours": 0.25,
+    "unit": "Ea",
+    "material_cost": 64.3,
+    "labor_cost": 9.76,
+    "equipment_cost": 0.0,
+    "total_cost": 74.06
+  },
+  {
+    "item": "Kitchen Equipment Connections: Continuous waste 3-part",
+    "hours": 0.35,
+    "unit": "Ea",
+    "material_cost": 109.0,
+    "labor_cost": 13.7,
+    "equipment_cost": 0.0,
+    "total_cost": 122.7
+  },
+  {
+    "item": "Kitchen Equipment Connections: Continuous waste 4-part",
+    "hours": 0.45,
+    "unit": "Ea",
+    "material_cost": 140.0,
+    "labor_cost": 17.6,
+    "equipment_cost": 0.0,
+    "total_cost": 157.6
+  },
+  {
+    "item": "Kitchen Equipment Connections: Indirect waste ½\"",
+    "hours": 1.05,
+    "unit": "Ea",
+    "material_cost": 16.8,
+    "labor_cost": 41.0,
+    "equipment_cost": 0.0,
+    "total_cost": 57.8
+  },
+  {
+    "item": "Kitchen Equipment Connections: Indirect waste ¾\"",
+    "hours": 1.5,
+    "unit": "Ea",
+    "material_cost": 28.5,
+    "labor_cost": 58.5,
+    "equipment_cost": 0.0,
+    "total_cost": 87.0
+  },
+  {
+    "item": "Kitchen Equipment Connections: Indirect waste 1\"",
+    "hours": 1.9,
+    "unit": "Ea",
+    "material_cost": 45.7,
+    "labor_cost": 74.2,
+    "equipment_cost": 0.0,
+    "total_cost": 119.9
+  },
+  {
+    "item": "Kitchen Equipment Connections: Indirect waste 1¼\"",
+    "hours": 2.15,
+    "unit": "Ea",
+    "material_cost": 67.4,
+    "labor_cost": 83.9,
+    "equipment_cost": 0.0,
+    "total_cost": 151.3
+  },
+  {
+    "item": "Kitchen Equipment Connections: Indirect waste 1½\"",
+    "hours": 2.6,
+    "unit": "Ea",
+    "material_cost": 88.8,
+    "labor_cost": 101.0,
+    "equipment_cost": 0.0,
+    "total_cost": 189.8
+  },
+  {
+    "item": "Kitchen Equipment Connections: Indirect waste 2\"",
+    "hours": 3.0,
+    "unit": "Ea",
+    "material_cost": 135.0,
+    "labor_cost": 117.0,
+    "equipment_cost": 0.0,
+    "total_cost": 252.0
+  },
+  {
+    "item": "Kitchen fixture waste tailpiece 1½\"",
+    "hours": 0.1,
+    "unit": "Ea",
+    "material_cost": 16.1,
+    "labor_cost": 3.9,
+    "equipment_cost": 0.0,
+    "total_cost": 20.0
+  },
+  {
+    "item": "Kitchen fixture trap with solder bushing 1½\"",
+    "hours": 0.25,
+    "unit": "Ea",
+    "material_cost": 54.2,
+    "labor_cost": 9.76,
+    "equipment_cost": 0.0,
+    "total_cost": 63.96
+  },
+  {
+    "item": "Kitchen fixture trap with solder bushing 2\"",
+    "hours": 0.3,
+    "unit": "Ea",
+    "material_cost": 75.1,
+    "labor_cost": 11.7,
+    "equipment_cost": 0.0,
+    "total_cost": 86.8
+  },
+  {
+    "item": "Water closet, floor-mounted, flush tank, white vitreous china, lined tank Round bowl",
+    "hours": 2.1,
+    "unit": "Ea",
+    "material_cost": 288.0,
+    "labor_cost": 82.0,
+    "equipment_cost": 0.0,
+    "total_cost": 370.0
+  },
+  {
+    "item": "Water closet, floor-mounted, flush tank, white vitreous china, lined tank Elongated bowl",
+    "hours": 2.1,
+    "unit": "Ea",
+    "material_cost": 348.0,
+    "labor_cost": 82.0,
+    "equipment_cost": 0.0,
+    "total_cost": 430.0
+  },
+  {
+    "item": "Water closet, floor-mounted, flush tank, white vitreous china, lined tank ADA, 18\" high",
+    "hours": 2.1,
+    "unit": "Ea",
+    "material_cost": 474.0,
+    "labor_cost": 82.0,
+    "equipment_cost": 0.0,
+    "total_cost": 556.0
+  },
+  {
+    "item": "Water closet, floor-mounted, flush valve, white vitreous china Elongated bowl",
+    "hours": 2.6,
+    "unit": "Ea",
+    "material_cost": 451.0,
+    "labor_cost": 101.0,
+    "equipment_cost": 0.0,
+    "total_cost": 552.0
+  },
+  {
+    "item": "Water closet, floor-mounted, flush valve, white vitreous china Elongated bowl ADA 18\" high",
+    "hours": 2.6,
+    "unit": "Ea",
+    "material_cost": 537.0,
+    "labor_cost": 101.0,
+    "equipment_cost": 0.0,
+    "total_cost": 638.0
+  },
+  {
+    "item": "Water closet, floor-mounted, flush valve, white vitreous china Elongated bowl with a bedpan cleanser",
+    "hours": 4.1,
+    "unit": "Ea",
+    "material_cost": 779.0,
+    "labor_cost": 160.0,
+    "equipment_cost": 0.0,
+    "total_cost": 939.0
+  },
+  {
+    "item": "Water closet, floor-mounted, flush valve, white vitreous china Elongated bowl, ADA 18\" high with a bedpan cleanser",
+    "hours": 4.1,
+    "unit": "Ea",
+    "material_cost": 843.0,
+    "labor_cost": 160.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1003.0
+  },
+  {
+    "item": "Water closet, wall-hung, flush valve, white vitreous china Elongated bowl",
+    "hours": 3.55,
+    "unit": "Ea",
+    "material_cost": 714.0,
+    "labor_cost": 139.0,
+    "equipment_cost": 0.0,
+    "total_cost": 853.0
+  },
+  {
+    "item": "Water closet, wall-hung, flush valve, white vitreous china Elongated bowl with electronic flush valve",
+    "hours": 3.8,
+    "unit": "Ea",
+    "material_cost": 1280.0,
+    "labor_cost": 148.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1428.0
+  },
+  {
+    "item": "Water closet, wall-hung, flush valve, white vitreous china Elongated bowl with bedpan cleanser",
+    "hours": 5.05,
+    "unit": "Ea",
+    "material_cost": 1040.0,
+    "labor_cost": 197.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1237.0
+  },
+  {
+    "item": "Water closet, wall-hung, flush valve, white vitreous china Electronic flush valve add",
+    "hours": 0.6,
+    "unit": "Ea",
+    "material_cost": 565.0,
+    "labor_cost": 23.4,
+    "equipment_cost": 0.0,
+    "total_cost": 588.4
+  },
+  {
+    "item": "Urinal, wall-hung, flush valve, white vitreous china Siphon-jet type",
+    "hours": 3.15,
+    "unit": "Ea",
+    "material_cost": 714.0,
+    "labor_cost": 123.0,
+    "equipment_cost": 0.0,
+    "total_cost": 837.0
+  },
+  {
+    "item": "Urinal, wall-hung, flush valve, white vitreous china Wash-out type",
+    "hours": 3.1,
+    "unit": "Ea",
+    "material_cost": 583.0,
+    "labor_cost": 121.0,
+    "equipment_cost": 0.0,
+    "total_cost": 704.0
+  },
+  {
+    "item": "Urinal, wall-hung, flush valve, white vitreous china Wash-down type",
+    "hours": 3.0,
+    "unit": "Ea",
+    "material_cost": 412.0,
+    "labor_cost": 117.0,
+    "equipment_cost": 0.0,
+    "total_cost": 529.0
+  },
+  {
+    "item": "Urinal, wall-hung, flush valve, white vitreous china Urinal carrier add",
+    "hours": 0.6,
+    "unit": "Ea",
+    "material_cost": 128.0,
+    "labor_cost": 23.4,
+    "equipment_cost": 0.0,
+    "total_cost": 151.4
+  },
+  {
+    "item": "Urinal, wall-hung, flush valve, white vitreous china Electronic flush valve add",
+    "hours": 0.6,
+    "unit": "Ea",
+    "material_cost": 457.0,
+    "labor_cost": 23.4,
+    "equipment_cost": 0.0,
+    "total_cost": 480.4
+  },
+  {
+    "item": "Urinal, stall-type, flush valve, white vitreous china Stall urinal",
+    "hours": 5.0,
+    "unit": "Ea",
+    "material_cost": 1360.0,
+    "labor_cost": 195.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1555.0
+  },
+  {
+    "item": "Lavatory, wall-hung, white vitreous china Wall-hung lav",
+    "hours": 2.7,
+    "unit": "Ea",
+    "material_cost": 587.0,
+    "labor_cost": 105.0,
+    "equipment_cost": 0.0,
+    "total_cost": 692.0
+  },
+  {
+    "item": "Lavatory, wall-hung, white vitreous china Wall-hung, ADA",
+    "hours": 2.7,
+    "unit": "Ea",
+    "material_cost": 854.0,
+    "labor_cost": 105.0,
+    "equipment_cost": 0.0,
+    "total_cost": 959.0
+  },
+  {
+    "item": "Lavatory, wall-hung, white vitreous china Fixture carrier",
+    "hours": 0.5,
+    "unit": "Ea",
+    "material_cost": 121.0,
+    "labor_cost": 19.5,
+    "equipment_cost": 0.0,
+    "total_cost": 140.5
+  },
+  {
+    "item": "Countertop lavatory, white Vitreous china",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 426.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 504.1
+  },
+  {
+    "item": "Countertop lavatory, white Enameled steel",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 360.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 438.1
+  },
+  {
+    "item": "Countertop lavatory, white Acrylic",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 262.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 340.1
+  },
+  {
+    "item": "Bathtub, white, 60\" x 32\" Enameled steel",
+    "hours": 2.5,
+    "unit": "Ea",
+    "material_cost": 611.0,
+    "labor_cost": 97.6,
+    "equipment_cost": 0.0,
+    "total_cost": 708.6
+  },
+  {
+    "item": "Bathtub, white, 60\" x 32\" Cast iron",
+    "hours": 3.5,
+    "unit": "Ea",
+    "material_cost": 882.0,
+    "labor_cost": 137.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1019.0
+  },
+  {
+    "item": "Bathtub, white, 60\" x 32\" Fiberglass",
+    "hours": 2.5,
+    "unit": "Ea",
+    "material_cost": 564.0,
+    "labor_cost": 97.6,
+    "equipment_cost": 0.0,
+    "total_cost": 661.6
+  },
+  {
+    "item": "Bathtub, white, 60\" x 32\" Acrylic",
+    "hours": 2.5,
+    "unit": "Ea",
+    "material_cost": 603.0,
+    "labor_cost": 97.6,
+    "equipment_cost": 0.0,
+    "total_cost": 700.6
+  },
+  {
+    "item": "Tub and shower combination, fiberglass, white One-piece",
+    "hours": 4.5,
+    "unit": "Ea",
+    "material_cost": 1270.0,
+    "labor_cost": 176.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1446.0
+  },
+  {
+    "item": "Tub and shower combination, fiberglass, white Two-piece (reno)",
+    "hours": 5.5,
+    "unit": "Ea",
+    "material_cost": 1630.0,
+    "labor_cost": 215.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1845.0
+  },
+  {
+    "item": "Tub and shower combination, fiberglass, white Four-piece (reno)",
+    "hours": 6.25,
+    "unit": "Ea",
+    "material_cost": 1720.0,
+    "labor_cost": 244.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1964.0
+  },
+  {
+    "item": "Shower stall, white, 36\" x 36\" Fiberglass one-piece",
+    "hours": 3.5,
+    "unit": "Ea",
+    "material_cost": 803.0,
+    "labor_cost": 137.0,
+    "equipment_cost": 0.0,
+    "total_cost": 940.0
+  },
+  {
+    "item": "Shower stall, white, 36\" x 36\" Fiberglass three-piece",
+    "hours": 4.25,
+    "unit": "Ea",
+    "material_cost": 1040.0,
+    "labor_cost": 166.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1206.0
+  },
+  {
+    "item": "Shower stall, white, 36\" x 36\" Acrylic one-piece",
+    "hours": 3.5,
+    "unit": "Ea",
+    "material_cost": 1210.0,
+    "labor_cost": 137.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1347.0
+  },
+  {
+    "item": "Shower stall, white, 36\" x 36\" Acrylic three-piece",
+    "hours": 4.25,
+    "unit": "Ea",
+    "material_cost": 1590.0,
+    "labor_cost": 166.0,
+    "equipment_cost": 0.0,
+    "total_cost": 1756.0
+  },
+  {
+    "item": "Shower basin, 36\" x 36\" Fiberglass",
+    "hours": 2.5,
+    "unit": "Ea",
+    "material_cost": 543.0,
+    "labor_cost": 97.6,
+    "equipment_cost": 0.0,
+    "total_cost": 640.6
+  },
+  {
+    "item": "Shower basin, 36\" x 36\" Acrylic",
+    "hours": 2.5,
+    "unit": "Ea",
+    "material_cost": 583.0,
+    "labor_cost": 97.6,
+    "equipment_cost": 0.0,
+    "total_cost": 680.6
+  },
+  {
+    "item": "Shower basin, 36\" x 36\" Molded stone",
+    "hours": 2.65,
+    "unit": "Ea",
+    "material_cost": 565.0,
+    "labor_cost": 103.0,
+    "equipment_cost": 0.0,
+    "total_cost": 668.0
+  },
+  {
+    "item": "Kitchen sink, double compartment Stainless steel",
+    "hours": 2.15,
+    "unit": "Ea",
+    "material_cost": 448.0,
+    "labor_cost": 83.9,
+    "equipment_cost": 0.0,
+    "total_cost": 531.9
+  },
+  {
+    "item": "Kitchen sink, double compartment Cast iron",
+    "hours": 2.5,
+    "unit": "Ea",
+    "material_cost": 584.0,
+    "labor_cost": 97.6,
+    "equipment_cost": 0.0,
+    "total_cost": 681.6
+  },
+  {
+    "item": "Kitchen sink, double compartment Acrylic",
+    "hours": 2.15,
+    "unit": "Ea",
+    "material_cost": 530.0,
+    "labor_cost": 83.9,
+    "equipment_cost": 0.0,
+    "total_cost": 613.9
+  },
+  {
+    "item": "Kitchen sink, single compartment Stainless steel",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 378.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 456.1
+  },
+  {
+    "item": "Kitchen sink, single compartment Cast iron",
+    "hours": 2.1,
+    "unit": "Ea",
+    "material_cost": 437.0,
+    "labor_cost": 82.0,
+    "equipment_cost": 0.0,
+    "total_cost": 519.0
+  },
+  {
+    "item": "Kitchen sink, single compartment Acrylic",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 394.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 472.1
+  },
+  {
+    "item": "Bar sink Stainless steel",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 321.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 399.1
+  },
+  {
+    "item": "Bar sink Acrylic",
+    "hours": 2.0,
+    "unit": "Ea",
+    "material_cost": 216.0,
+    "labor_cost": 78.1,
+    "equipment_cost": 0.0,
+    "total_cost": 294.1
+  },
+  {
+    "item": "Exam room sink Stainless steel",
+    "hours": 2.1,
+    "unit": "Ea",
+    "material_cost": 467.0,
+    "labor_cost": 82.0,
+    "equipment_cost": 0.0,
+    "total_cost": 549.0
+  },
+  {
+    "item": "Exam room sink Acrylic",
+    "hours": 2.1,
+    "unit": "Ea",
+    "material_cost": 399.0,
+    "labor_cost": 82.0,
+    "equipment_cost": 0.0,
+    "total_cost": 481.0
+  }
+]

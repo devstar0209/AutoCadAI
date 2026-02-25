@@ -29444,5 +29444,5275 @@
     "labor_cost": 189.0,
     "equipment_cost": 3.32,
     "total_cost": 7262.32
+  },
+  {
+    "item": "½\" Class 125 bronze body globe valve, brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.24,
+    "equipment_hours": null,
+    "material_cost": 36.4,
+    "labor_cost": 9.37,
+    "equipment_cost": null,
+    "total_cost": 45.77
+  },
+  {
+    "item": "¾\" Class 125 bronze body globe valve, brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 48.5,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 60.2
+  },
+  {
+    "item": "1\" Class 125 bronze body globe valve, brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.36,
+    "equipment_hours": null,
+    "material_cost": 69.5,
+    "labor_cost": 14.1,
+    "equipment_cost": null,
+    "total_cost": 83.6
+  },
+  {
+    "item": "1¼\" Class 125 bronze body globe valve, brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.48,
+    "equipment_hours": null,
+    "material_cost": 97.8,
+    "labor_cost": 18.7,
+    "equipment_cost": null,
+    "total_cost": 116.5
+  },
+  {
+    "item": "1½\" Class 125 bronze body globe valve, brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.54,
+    "equipment_hours": null,
+    "material_cost": 131.0,
+    "labor_cost": 21.1,
+    "equipment_cost": null,
+    "total_cost": 152.1
+  },
+  {
+    "item": "2\" Class 125 bronze body globe valve, brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 213.0,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 236.4
+  },
+  {
+    "item": "½\" Class 125 bronze body globe valve, soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 36.4,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 44.21
+  },
+  {
+    "item": "¾\" Class 125 bronze body globe valve, soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.249,
+    "equipment_hours": null,
+    "material_cost": 48.5,
+    "labor_cost": 9.72,
+    "equipment_cost": null,
+    "total_cost": 58.22
+  },
+  {
+    "item": "1\" Class 125 bronze body globe valve, soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.299,
+    "equipment_hours": null,
+    "material_cost": 69.5,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 81.2
+  },
+  {
+    "item": "1¼\" Class 125 bronze body globe valve, soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.398,
+    "equipment_hours": null,
+    "material_cost": 97.8,
+    "labor_cost": 15.5,
+    "equipment_cost": null,
+    "total_cost": 113.3
+  },
+  {
+    "item": "1½\" Class 125 bronze body globe valve, soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.448,
+    "equipment_hours": null,
+    "material_cost": 131.0,
+    "labor_cost": 17.5,
+    "equipment_cost": null,
+    "total_cost": 148.5
+  },
+  {
+    "item": "2\" Class 125 bronze body globe valve, soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.498,
+    "equipment_hours": null,
+    "material_cost": 213.0,
+    "labor_cost": 19.4,
+    "equipment_cost": null,
+    "total_cost": 232.4
+  },
+  {
+    "item": "½\" Class 125 bronze body globe valve, threaded ends (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.21,
+    "equipment_hours": null,
+    "material_cost": 36.4,
+    "labor_cost": 8.2,
+    "equipment_cost": null,
+    "total_cost": 44.6
+  },
+  {
+    "item": "¾\" Class 125 bronze body globe valve, threaded ends (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 48.5,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 58.26
+  },
+  {
+    "item": "1\" Class 125 bronze body globe valve, threaded ends (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 69.5,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 81.2
+  },
+  {
+    "item": "1¼\" Class 125 bronze body globe valve, threaded ends (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 97.8,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 113.4
+  },
+  {
+    "item": "1½\" Class 125 bronze body globe valve, threaded ends (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 131.0,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 148.6
+  },
+  {
+    "item": "2\" Class 125 bronze body globe valve, threaded ends (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 213.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 232.5
+  },
+  {
+    "item": "½\" Class 300 bronze body globe valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.21,
+    "equipment_hours": null,
+    "material_cost": 68.3,
+    "labor_cost": 8.2,
+    "equipment_cost": null,
+    "total_cost": 76.5
+  },
+  {
+    "item": "¾\" Class 300 bronze body globe valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 86.8,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 96.56
+  },
+  {
+    "item": "1\" Class 300 bronze body globe valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 122.0,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 133.7
+  },
+  {
+    "item": "1¼\" Class 300 bronze body globe valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 179.0,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 194.6
+  },
+  {
+    "item": "1½\" Class 300 bronze body globe valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 240.0,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 257.6
+  },
+  {
+    "item": "2\" Class 300 bronze body globe valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 329.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 348.5
+  },
+  {
+    "item": "2\" Class 125 iron body globe valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 251.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 270.5
+  },
+  {
+    "item": "2½\" Class 125 iron body globe valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 387.0,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 410.4
+  },
+  {
+    "item": "3\" Class 125 iron body globe valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 466.0,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 495.3
+  },
+  {
+    "item": "4\" Class 125 iron body globe valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.35,
+    "equipment_hours": null,
+    "material_cost": 626.0,
+    "labor_cost": 52.7,
+    "equipment_cost": null,
+    "total_cost": 678.7
+  },
+  {
+    "item": "6\" Class 125 iron body globe valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.5,
+    "material_cost": 1100.0,
+    "labor_cost": 105.0,
+    "equipment_cost": 1.85,
+    "total_cost": 1206.85
+  },
+  {
+    "item": "8\" Class 125 iron body globe valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 3.0,
+    "material_cost": 1680.0,
+    "labor_cost": 126.0,
+    "equipment_cost": 2.22,
+    "total_cost": 1808.22
+  },
+  {
+    "item": "10\" Class 125 iron body globe valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 4.0,
+    "material_cost": 2570.0,
+    "labor_cost": 168.0,
+    "equipment_cost": 2.95,
+    "total_cost": 2740.95
+  },
+  {
+    "item": "½\" Class 125 bronze body strainer, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.23,
+    "equipment_hours": null,
+    "material_cost": 32.6,
+    "labor_cost": 8.98,
+    "equipment_cost": null,
+    "total_cost": 41.58
+  },
+  {
+    "item": "¾\" Class 125 bronze body strainer, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.26,
+    "equipment_hours": null,
+    "material_cost": 42.8,
+    "labor_cost": 10.1,
+    "equipment_cost": null,
+    "total_cost": 52.9
+  },
+  {
+    "item": "1\" Class 125 bronze body strainer, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.33,
+    "equipment_hours": null,
+    "material_cost": 52.5,
+    "labor_cost": 12.9,
+    "equipment_cost": null,
+    "total_cost": 65.4
+  },
+  {
+    "item": "1¼\" Class 125 bronze body strainer, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.44,
+    "equipment_hours": null,
+    "material_cost": 73.4,
+    "labor_cost": 17.2,
+    "equipment_cost": null,
+    "total_cost": 90.6
+  },
+  {
+    "item": "1½\" Class 125 bronze body strainer, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.495,
+    "equipment_hours": null,
+    "material_cost": 110.0,
+    "labor_cost": 19.3,
+    "equipment_cost": null,
+    "total_cost": 129.3
+  },
+  {
+    "item": "2\" Class 125 bronze body strainer, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.55,
+    "equipment_hours": null,
+    "material_cost": 192.0,
+    "labor_cost": 21.5,
+    "equipment_cost": null,
+    "total_cost": 213.5
+  },
+  {
+    "item": "2\" Class 125 iron body strainer, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 135.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 154.5
+  },
+  {
+    "item": "2½\" Class 125 iron body strainer, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 150.0,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 173.4
+  },
+  {
+    "item": "3\" Class 125 iron body strainer, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 172.0,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 201.3
+  },
+  {
+    "item": "4\" Class 125 iron body strainer, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.35,
+    "equipment_hours": null,
+    "material_cost": 296.0,
+    "labor_cost": 52.7,
+    "equipment_cost": null,
+    "total_cost": 348.7
+  },
+  {
+    "item": "6\" Class 125 iron body strainer, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.5,
+    "material_cost": 599.0,
+    "labor_cost": 105.0,
+    "equipment_cost": 1.85,
+    "total_cost": 705.85
+  },
+  {
+    "item": "8\" Class 125 iron body strainer, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 3.0,
+    "material_cost": 1010.0,
+    "labor_cost": 126.0,
+    "equipment_cost": 2.22,
+    "total_cost": 1138.22
+  },
+  {
+    "item": "2\" Class 250 iron body strainer, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 228.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 247.5
+  },
+  {
+    "item": "2½\" Class 250 iron body strainer, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 250.0,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 273.4
+  },
+  {
+    "item": "3\" Class 250 iron body strainer, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 294.0,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 323.3
+  },
+  {
+    "item": "4\" Class 250 iron body strainer, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.35,
+    "equipment_hours": null,
+    "material_cost": 519.0,
+    "labor_cost": 52.7,
+    "equipment_cost": null,
+    "total_cost": 571.7
+  },
+  {
+    "item": "6\" Class 250 iron body strainer, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.5,
+    "material_cost": 831.0,
+    "labor_cost": 105.0,
+    "equipment_cost": 1.85,
+    "total_cost": 937.85
+  },
+  {
+    "item": "8\" Class 250 iron body strainer, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 3.0,
+    "material_cost": 1520.0,
+    "labor_cost": 126.0,
+    "equipment_cost": 2.22,
+    "total_cost": 1648.22
+  },
+  {
+    "item": "½\" Installation of 2-way control valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.21,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 8.2,
+    "equipment_cost": null,
+    "total_cost": 8.2
+  },
+  {
+    "item": "¾\" Installation of 2-way control valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 9.76
+  },
+  {
+    "item": "1\" Installation of 2-way control valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 11.7
+  },
+  {
+    "item": "1¼\" Installation of 2-way control valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 15.6
+  },
+  {
+    "item": "1½\" Installation of 2-way control valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 17.6
+  },
+  {
+    "item": "2\" Installation of 2-way control valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 19.5
+  },
+  {
+    "item": "2½\" Installation of 2-way control valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.83,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 32.4,
+    "equipment_cost": null,
+    "total_cost": 32.4
+  },
+  {
+    "item": "3\" Installation of 2-way control valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.99,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 38.6,
+    "equipment_cost": null,
+    "total_cost": 38.6
+  },
+  {
+    "item": "2\" Installation of 2-way control valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 19.5
+  },
+  {
+    "item": "2½\" Installation of 2-way control valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 23.4
+  },
+  {
+    "item": "3\" Installation of 2-way control valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 29.3
+  },
+  {
+    "item": "4\" Installation of 2-way control valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 1.35,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 52.7,
+    "equipment_cost": null,
+    "total_cost": 52.7
+  },
+  {
+    "item": "6\" Installation of 2-way control valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 2.5,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 97.6,
+    "equipment_cost": 6.46,
+    "total_cost": 104.06
+  },
+  {
+    "item": "8\" Installation of 2-way control valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 3.0,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 117.0,
+    "equipment_cost": 7.76,
+    "total_cost": 124.76
+  },
+  {
+    "item": "10\" Installation of 2-way control valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 4.0,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 156.0,
+    "equipment_cost": 10.3,
+    "total_cost": 166.3
+  },
+  {
+    "item": "12\" Installation of 2-way control valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 4.5,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 176.0,
+    "equipment_cost": 11.6,
+    "total_cost": 187.6
+  },
+  {
+    "item": "½\" Installation of 3-way control valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.26,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 10.1,
+    "equipment_cost": null,
+    "total_cost": 10.1
+  },
+  {
+    "item": "¾\" Installation of 3-way control valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.365,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 14.2,
+    "equipment_cost": null,
+    "total_cost": 14.2
+  },
+  {
+    "item": "1\" Installation of 3-way control valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.475,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 18.5,
+    "equipment_cost": null,
+    "total_cost": 18.5
+  },
+  {
+    "item": "1¼\" Installation of 3-way control valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.575,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 22.4,
+    "equipment_cost": null,
+    "total_cost": 22.4
+  },
+  {
+    "item": "1½\" Installation of 3-way control valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.68,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 26.5,
+    "equipment_cost": null,
+    "total_cost": 26.5
+  },
+  {
+    "item": "2\" Installation of 3-way control valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.91,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 35.5,
+    "equipment_cost": null,
+    "total_cost": 35.5
+  },
+  {
+    "item": "2½\" Installation of 3-way control valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 1.12,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 43.7,
+    "equipment_cost": null,
+    "total_cost": 43.7
+  },
+  {
+    "item": "3\" Installation of 3-way control valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 1.33,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 51.9,
+    "equipment_cost": null,
+    "total_cost": 51.9
+  },
+  {
+    "item": "2\" Installation of 3-way control valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 0.91,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 35.5,
+    "equipment_cost": null,
+    "total_cost": 35.5
+  },
+  {
+    "item": "2½\" Installation of 3-way control valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 1.12,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 43.7,
+    "equipment_cost": null,
+    "total_cost": 43.7
+  },
+  {
+    "item": "3\" Installation of 3-way control valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 1.33,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 51.9,
+    "equipment_cost": null,
+    "total_cost": 51.9
+  },
+  {
+    "item": "4\" Installation of 3-way control valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 2.0,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 78.1,
+    "equipment_cost": null,
+    "total_cost": 78.1
+  },
+  {
+    "item": "6\" Installation of 3-way control valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 3.7,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 144.0,
+    "equipment_cost": 9.57,
+    "total_cost": 153.57
+  },
+  {
+    "item": "8\" Installation of 3-way control valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 4.4,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 172.0,
+    "equipment_cost": 11.4,
+    "total_cost": 183.4
+  },
+  {
+    "item": "10\" Installation of 3-way control valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 5.9,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 230.0,
+    "equipment_cost": 15.3,
+    "total_cost": 245.3
+  },
+  {
+    "item": "12\" Installation of 3-way control valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 6.5,
+    "equipment_hours": null,
+    "material_cost": null,
+    "labor_cost": 254.0,
+    "equipment_cost": 16.8,
+    "total_cost": 270.8
+  },
+  {
+    "item": "½\" Lever-handled gas valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.21,
+    "equipment_hours": null,
+    "material_cost": 32.2,
+    "labor_cost": 8.2,
+    "equipment_cost": null,
+    "total_cost": 40.4
+  },
+  {
+    "item": "¾\" Lever-handled gas valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 35.7,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 45.46
+  },
+  {
+    "item": "1\" Lever-handled gas valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 44.3,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 56.0
+  },
+  {
+    "item": "1¼\" Lever-handled gas valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 59.4,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 75.0
+  },
+  {
+    "item": "1½\" Lever-handled gas valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 80.0,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 97.6
+  },
+  {
+    "item": "2\" Lever-handled gas valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 116.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 135.5
+  },
+  {
+    "item": "2\" Plug-type gas valve, flanged joints, lubricated",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 242.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 261.5
+  },
+  {
+    "item": "2½\" Plug-type gas valve, flanged joints, lubricated",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 392.0,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 415.4
+  },
+  {
+    "item": "3\" Plug-type gas valve, flanged joints, lubricated",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 551.0,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 580.3
+  },
+  {
+    "item": "4\" Plug-type gas valve, flanged joints, lubricated",
+    "unit": "Ea",
+    "labor_hours": 1.35,
+    "equipment_hours": null,
+    "material_cost": 754.0,
+    "labor_cost": 52.7,
+    "equipment_cost": null,
+    "total_cost": 806.7
+  },
+  {
+    "item": "6\" Plug-type gas valve, flanged joints, lubricated",
+    "unit": "Ea",
+    "labor_hours": 2.5,
+    "equipment_hours": null,
+    "material_cost": 1350.0,
+    "labor_cost": 97.6,
+    "equipment_cost": null,
+    "total_cost": 1447.6
+  },
+  {
+    "item": "Low quality ¾\" hose bibb",
+    "unit": "Ea",
+    "labor_hours": 0.35,
+    "equipment_hours": null,
+    "material_cost": 12.4,
+    "labor_cost": 13.7,
+    "equipment_cost": null,
+    "total_cost": 26.1
+  },
+  {
+    "item": "Med. quality ¾\" hose bibb",
+    "unit": "Ea",
+    "labor_hours": 0.35,
+    "equipment_hours": null,
+    "material_cost": 17.9,
+    "labor_cost": 13.7,
+    "equipment_cost": null,
+    "total_cost": 31.6
+  },
+  {
+    "item": "High quality ¾\" hose bibb",
+    "unit": "Ea",
+    "labor_hours": 0.35,
+    "equipment_hours": null,
+    "material_cost": 23.6,
+    "labor_cost": 13.7,
+    "equipment_cost": null,
+    "total_cost": 37.3
+  },
+  {
+    "item": "½\" Water pressure reducing valve, threaded joints, 25-75 PSI",
+    "unit": "Ea",
+    "labor_hours": 0.21,
+    "equipment_hours": null,
+    "material_cost": 116.0,
+    "labor_cost": 8.2,
+    "equipment_cost": null,
+    "total_cost": 124.2
+  },
+  {
+    "item": "¾\" Water pressure reducing valve, threaded joints, 25-75 PSI",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 149.0,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 158.76
+  },
+  {
+    "item": "1\" Water pressure reducing valve, threaded joints, 25-75 PSI",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 243.0,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 254.7
+  },
+  {
+    "item": "1¼\" Water pressure reducing valve, threaded joints, 25-75 PSI",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 296.0,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 311.6
+  },
+  {
+    "item": "1½\" Water pressure reducing valve, threaded joints, 25-75 PSI",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 422.0,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 439.6
+  },
+  {
+    "item": "2\" Water pressure reducing valve, threaded joints, 25-75 PSI",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 668.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 687.5
+  },
+  {
+    "item": "½\" Water hammer arrester, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.16,
+    "equipment_hours": null,
+    "material_cost": 51.5,
+    "labor_cost": 6.24,
+    "equipment_cost": null,
+    "total_cost": 57.74
+  },
+  {
+    "item": "¾\" Water hammer arrester, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.19,
+    "equipment_hours": null,
+    "material_cost": 59.7,
+    "labor_cost": 7.42,
+    "equipment_cost": null,
+    "total_cost": 67.12
+  },
+  {
+    "item": "1\" Water hammer arrester, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.23,
+    "equipment_hours": null,
+    "material_cost": 151.0,
+    "labor_cost": 8.98,
+    "equipment_cost": null,
+    "total_cost": 159.98
+  },
+  {
+    "item": "1¼\" Water hammer arrester, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 176.0,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 187.7
+  },
+  {
+    "item": "1½\" Water hammer arrester, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.34,
+    "equipment_hours": null,
+    "material_cost": 253.0,
+    "labor_cost": 13.3,
+    "equipment_cost": null,
+    "total_cost": 266.3
+  },
+  {
+    "item": "2\" Water hammer arrester, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.38,
+    "equipment_hours": null,
+    "material_cost": 385.0,
+    "labor_cost": 14.8,
+    "equipment_cost": null,
+    "total_cost": 399.8
+  },
+  {
+    "item": "½\" Carbon steel weldolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 0.33,
+    "equipment_hours": null,
+    "material_cost": 16.4,
+    "labor_cost": 12.9,
+    "equipment_cost": 1.4,
+    "total_cost": 30.7
+  },
+  {
+    "item": "¾\" Carbon steel weldolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 17.0,
+    "labor_cost": 19.5,
+    "equipment_cost": 2.12,
+    "total_cost": 38.62
+  },
+  {
+    "item": "1\" Carbon steel weldolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 0.67,
+    "equipment_hours": null,
+    "material_cost": 17.8,
+    "labor_cost": 26.2,
+    "equipment_cost": 2.84,
+    "total_cost": 46.84
+  },
+  {
+    "item": "1¼\" Carbon steel weldolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 0.83,
+    "equipment_hours": null,
+    "material_cost": 21.4,
+    "labor_cost": 32.4,
+    "equipment_cost": 3.52,
+    "total_cost": 57.32
+  },
+  {
+    "item": "1½\" Carbon steel weldolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 1.0,
+    "equipment_hours": null,
+    "material_cost": 21.4,
+    "labor_cost": 39.0,
+    "equipment_cost": 4.24,
+    "total_cost": 64.64
+  },
+  {
+    "item": "2\" Carbon steel weldolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 1.33,
+    "equipment_hours": null,
+    "material_cost": 23.7,
+    "labor_cost": 51.9,
+    "equipment_cost": 5.64,
+    "total_cost": 81.24
+  },
+  {
+    "item": "2½\" Carbon steel weldolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 1.67,
+    "equipment_hours": null,
+    "material_cost": 52.1,
+    "labor_cost": 65.2,
+    "equipment_cost": 7.08,
+    "total_cost": 124.38
+  },
+  {
+    "item": "3\" Carbon steel weldolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 2.0,
+    "equipment_hours": null,
+    "material_cost": 59.2,
+    "labor_cost": 78.1,
+    "equipment_cost": 8.47,
+    "total_cost": 145.77
+  },
+  {
+    "item": "4\" Carbon steel weldolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 2.67,
+    "equipment_hours": null,
+    "material_cost": 76.4,
+    "labor_cost": 104.0,
+    "equipment_cost": 11.3,
+    "total_cost": 191.7
+  },
+  {
+    "item": "6\" Carbon steel weldolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 4.0,
+    "equipment_hours": null,
+    "material_cost": 315.0,
+    "labor_cost": 156.0,
+    "equipment_cost": 16.9,
+    "total_cost": 487.9
+  },
+  {
+    "item": "8\" Carbon steel weldolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 4.8,
+    "equipment_hours": null,
+    "material_cost": 463.0,
+    "labor_cost": 187.0,
+    "equipment_cost": 20.3,
+    "total_cost": 670.3
+  },
+  {
+    "item": "10\" Carbon steel weldolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 6.0,
+    "equipment_hours": null,
+    "material_cost": 641.0,
+    "labor_cost": 234.0,
+    "equipment_cost": 25.4,
+    "total_cost": 900.4
+  },
+  {
+    "item": "12\" Carbon steel weldolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 7.2,
+    "equipment_hours": null,
+    "material_cost": 788.0,
+    "labor_cost": 281.0,
+    "equipment_cost": 30.5,
+    "total_cost": 1099.5
+  },
+  {
+    "item": "½\" Carbon steel weldolet, Schedule 80",
+    "unit": "Ea",
+    "labor_hours": 0.44,
+    "equipment_hours": null,
+    "material_cost": 18.2,
+    "labor_cost": 17.2,
+    "equipment_cost": 1.86,
+    "total_cost": 37.26
+  },
+  {
+    "item": "¾\" Carbon steel weldolet, Schedule 80",
+    "unit": "Ea",
+    "labor_hours": 0.67,
+    "equipment_hours": null,
+    "material_cost": 18.6,
+    "labor_cost": 26.2,
+    "equipment_cost": 2.84,
+    "total_cost": 47.64
+  },
+  {
+    "item": "1\" Carbon steel weldolet, Schedule 80",
+    "unit": "Ea",
+    "labor_hours": 0.89,
+    "equipment_hours": null,
+    "material_cost": 20.4,
+    "labor_cost": 34.7,
+    "equipment_cost": 3.77,
+    "total_cost": 58.87
+  },
+  {
+    "item": "1¼\" Carbon steel weldolet, Schedule 80",
+    "unit": "Ea",
+    "labor_hours": 1.11,
+    "equipment_hours": null,
+    "material_cost": 25.7,
+    "labor_cost": 43.3,
+    "equipment_cost": 4.7,
+    "total_cost": 73.7
+  },
+  {
+    "item": "1½\" Carbon steel weldolet, Schedule 80",
+    "unit": "Ea",
+    "labor_hours": 1.33,
+    "equipment_hours": null,
+    "material_cost": 25.7,
+    "labor_cost": 51.9,
+    "equipment_cost": 5.64,
+    "total_cost": 83.24
+  },
+  {
+    "item": "2\" Carbon steel weldolet, Schedule 80",
+    "unit": "Ea",
+    "labor_hours": 1.77,
+    "equipment_hours": null,
+    "material_cost": 27.7,
+    "labor_cost": 69.1,
+    "equipment_cost": 7.5,
+    "total_cost": 104.3
+  },
+  {
+    "item": "2½\" Carbon steel weldolet, Schedule 80",
+    "unit": "Ea",
+    "labor_hours": 2.22,
+    "equipment_hours": null,
+    "material_cost": 61.8,
+    "labor_cost": 86.6,
+    "equipment_cost": 9.41,
+    "total_cost": 157.81
+  },
+  {
+    "item": "3\" Carbon steel weldolet, Schedule 80",
+    "unit": "Ea",
+    "labor_hours": 2.66,
+    "equipment_hours": null,
+    "material_cost": 63.6,
+    "labor_cost": 104.0,
+    "equipment_cost": 11.3,
+    "total_cost": 178.9
+  },
+  {
+    "item": "4\" Carbon steel weldolet, Schedule 80",
+    "unit": "Ea",
+    "labor_hours": 3.55,
+    "equipment_hours": null,
+    "material_cost": 141.0,
+    "labor_cost": 139.0,
+    "equipment_cost": 15.0,
+    "total_cost": 295.0
+  },
+  {
+    "item": "6\" Carbon steel weldolet, Schedule 80",
+    "unit": "Ea",
+    "labor_hours": 5.32,
+    "equipment_hours": null,
+    "material_cost": 443.0,
+    "labor_cost": 208.0,
+    "equipment_cost": 22.5,
+    "total_cost": 673.5
+  },
+  {
+    "item": "8\" Carbon steel weldolet, Schedule 80",
+    "unit": "Ea",
+    "labor_hours": 6.38,
+    "equipment_hours": null,
+    "material_cost": 592.0,
+    "labor_cost": 249.0,
+    "equipment_cost": 27.0,
+    "total_cost": 868.0
+  },
+  {
+    "item": "¾\" Carbon steel threadolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 0.33,
+    "equipment_hours": null,
+    "material_cost": 10.2,
+    "labor_cost": 12.9,
+    "equipment_cost": null,
+    "total_cost": 23.1
+  },
+  {
+    "item": "1\" Carbon steel threadolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 0.44,
+    "equipment_hours": null,
+    "material_cost": 11.3,
+    "labor_cost": 17.2,
+    "equipment_cost": null,
+    "total_cost": 28.5
+  },
+  {
+    "item": "1¼\" Carbon steel threadolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 0.56,
+    "equipment_hours": null,
+    "material_cost": 15.8,
+    "labor_cost": 21.9,
+    "equipment_cost": null,
+    "total_cost": 37.7
+  },
+  {
+    "item": "1½\" Carbon steel threadolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 0.67,
+    "equipment_hours": null,
+    "material_cost": 17.8,
+    "labor_cost": 26.2,
+    "equipment_cost": null,
+    "total_cost": 44.0
+  },
+  {
+    "item": "2\" Carbon steel threadolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 0.89,
+    "equipment_hours": null,
+    "material_cost": 20.7,
+    "labor_cost": 34.7,
+    "equipment_cost": null,
+    "total_cost": 55.4
+  },
+  {
+    "item": "2½\" Carbon steel threadolet, Schedule 40",
+    "unit": "Ea",
+    "labor_hours": 1.11,
+    "equipment_hours": null,
+    "material_cost": 63.8,
+    "labor_cost": 43.3,
+    "equipment_cost": null,
+    "total_cost": 107.1
+  },
+  {
+    "item": "½\" Carbon steel threadolet, Schedule 80",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 15.3,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 27.0
+  },
+  {
+    "item": "¾\" Carbon steel threadolet, Schedule 80",
+    "unit": "Ea",
+    "labor_hours": 0.44,
+    "equipment_hours": null,
+    "material_cost": 16.9,
+    "labor_cost": 17.2,
+    "equipment_cost": null,
+    "total_cost": 34.1
+  },
+  {
+    "item": "1\" Carbon steel threadolet, Schedule 80",
+    "unit": "Ea",
+    "labor_hours": 0.59,
+    "equipment_hours": null,
+    "material_cost": 20.8,
+    "labor_cost": 23.0,
+    "equipment_cost": null,
+    "total_cost": 43.8
+  },
+  {
+    "item": "1¼\" Carbon steel threadolet, Schedule 80",
+    "unit": "Ea",
+    "labor_hours": 0.74,
+    "equipment_hours": null,
+    "material_cost": 93.6,
+    "labor_cost": 28.9,
+    "equipment_cost": null,
+    "total_cost": 122.5
+  },
+  {
+    "item": "1½\" Carbon steel threadolet, Schedule 80",
+    "unit": "Ea",
+    "labor_hours": 0.89,
+    "equipment_hours": null,
+    "material_cost": 93.6,
+    "labor_cost": 34.7,
+    "equipment_cost": null,
+    "total_cost": 128.3
+  },
+  {
+    "item": "2\" Carbon steel threadolet, Schedule 80",
+    "unit": "Ea",
+    "labor_hours": 1.18,
+    "equipment_hours": null,
+    "material_cost": 122.0,
+    "labor_cost": 46.1,
+    "equipment_cost": null,
+    "total_cost": 168.1
+  },
+  {
+    "item": "2\" DWV cast iron no-hub (MJ) horizontal pipe assembly",
+    "unit": "LF",
+    "labor_hours": 0.13,
+    "equipment_hours": null,
+    "material_cost": 13.0,
+    "labor_cost": 5.07,
+    "equipment_cost": null,
+    "total_cost": 18.07
+  },
+  {
+    "item": "3\" DWV cast iron no-hub (MJ) horizontal pipe assembly",
+    "unit": "LF",
+    "labor_hours": 0.16,
+    "equipment_hours": null,
+    "material_cost": 14.3,
+    "labor_cost": 6.24,
+    "equipment_cost": null,
+    "total_cost": 20.54
+  },
+  {
+    "item": "4\" DWV cast iron no-hub (MJ) horizontal pipe assembly",
+    "unit": "LF",
+    "labor_hours": 0.19,
+    "equipment_hours": null,
+    "material_cost": 16.7,
+    "labor_cost": 7.42,
+    "equipment_cost": null,
+    "total_cost": 24.12
+  },
+  {
+    "item": "6\" DWV cast iron no-hub (MJ) horizontal pipe assembly",
+    "unit": "LF",
+    "labor_hours": null,
+    "equipment_hours": 0.22,
+    "material_cost": 32.5,
+    "labor_cost": 9.22,
+    "equipment_cost": 0.16,
+    "total_cost": 41.88
+  },
+  {
+    "item": "8\" DWV cast iron no-hub (MJ) horizontal pipe assembly",
+    "unit": "LF",
+    "labor_hours": null,
+    "equipment_hours": 0.26,
+    "material_cost": 62.4,
+    "labor_cost": 10.9,
+    "equipment_cost": 0.19,
+    "total_cost": 73.49
+  },
+  {
+    "item": "10\" DWV cast iron no-hub (MJ) horizontal pipe assembly",
+    "unit": "LF",
+    "labor_hours": null,
+    "equipment_hours": 0.31,
+    "material_cost": 96.6,
+    "labor_cost": 13.0,
+    "equipment_cost": 0.23,
+    "total_cost": 109.83
+  },
+  {
+    "item": "2\" DWV cast iron no-hub (MJ), pipe only",
+    "unit": "LF",
+    "labor_hours": 0.05,
+    "equipment_hours": null,
+    "material_cost": 7.44,
+    "labor_cost": 1.95,
+    "equipment_cost": null,
+    "total_cost": 9.39
+  },
+  {
+    "item": "3\" DWV cast iron no-hub (MJ), pipe only",
+    "unit": "LF",
+    "labor_hours": 0.06,
+    "equipment_hours": null,
+    "material_cost": 8.86,
+    "labor_cost": 2.34,
+    "equipment_cost": null,
+    "total_cost": 11.2
+  },
+  {
+    "item": "4\" DWV cast iron no-hub (MJ), pipe only",
+    "unit": "LF",
+    "labor_hours": 0.08,
+    "equipment_hours": null,
+    "material_cost": 11.6,
+    "labor_cost": 3.12,
+    "equipment_cost": null,
+    "total_cost": 14.72
+  },
+  {
+    "item": "6\" DWV cast iron no-hub (MJ), pipe only",
+    "unit": "LF",
+    "labor_hours": null,
+    "equipment_hours": 0.11,
+    "material_cost": 21.7,
+    "labor_cost": 4.61,
+    "equipment_cost": 0.16,
+    "total_cost": 26.47
+  },
+  {
+    "item": "8\" DWV cast iron no-hub (MJ), pipe only",
+    "unit": "LF",
+    "labor_hours": null,
+    "equipment_hours": 0.13,
+    "material_cost": 39.9,
+    "labor_cost": 5.45,
+    "equipment_cost": 0.19,
+    "total_cost": 45.54
+  },
+  {
+    "item": "10\" DWV cast iron no-hub (MJ), pipe only",
+    "unit": "LF",
+    "labor_hours": null,
+    "equipment_hours": 0.14,
+    "material_cost": 69.6,
+    "labor_cost": 5.87,
+    "equipment_cost": 0.23,
+    "total_cost": 75.7
+  },
+  {
+    "item": "2\" DWV cast iron no-hub 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 7.5,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 17.26
+  },
+  {
+    "item": "3\" DWV cast iron no-hub 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.35,
+    "equipment_hours": null,
+    "material_cost": 9.77,
+    "labor_cost": 13.7,
+    "equipment_cost": null,
+    "total_cost": 23.47
+  },
+  {
+    "item": "4\" DWV cast iron no-hub 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 12.3,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 31.8
+  },
+  {
+    "item": "6\" DWV cast iron no-hub 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.65,
+    "material_cost": 39.6,
+    "labor_cost": 27.2,
+    "equipment_cost": 0.48,
+    "total_cost": 67.28
+  },
+  {
+    "item": "8\" DWV cast iron no-hub 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.71,
+    "material_cost": 106.0,
+    "labor_cost": 29.8,
+    "equipment_cost": 0.52,
+    "total_cost": 136.32
+  },
+  {
+    "item": "10\" DWV cast iron no-hub 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.8,
+    "material_cost": 158.0,
+    "labor_cost": 33.5,
+    "equipment_cost": 0.59,
+    "total_cost": 192.09
+  },
+  {
+    "item": "2\" DWV cast iron no-hub ¼ bend",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 9.15,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 18.91
+  },
+  {
+    "item": "3\" DWV cast iron no-hub ¼ bend",
+    "unit": "Ea",
+    "labor_hours": 0.35,
+    "equipment_hours": null,
+    "material_cost": 11.3,
+    "labor_cost": 13.7,
+    "equipment_cost": null,
+    "total_cost": 25.0
+  },
+  {
+    "item": "4\" DWV cast iron no-hub ¼ bend",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 17.3,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 36.8
+  },
+  {
+    "item": "6\" DWV cast iron no-hub ¼ bend",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.65,
+    "material_cost": 42.0,
+    "labor_cost": 27.2,
+    "equipment_cost": 0.48,
+    "total_cost": 69.68
+  },
+  {
+    "item": "8\" DWV cast iron no-hub ¼ bend",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.71,
+    "material_cost": 163.0,
+    "labor_cost": 29.8,
+    "equipment_cost": 0.52,
+    "total_cost": 193.32
+  },
+  {
+    "item": "10\" DWV cast iron no-hub ¼ bend",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.71,
+    "material_cost": 178.0,
+    "labor_cost": 29.8,
+    "equipment_cost": 0.52,
+    "total_cost": 208.32
+  },
+  {
+    "item": "2\" DWV cast iron no-hub long sweep ¼ bend",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 16.0,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 25.76
+  },
+  {
+    "item": "3\" DWV cast iron no-hub long sweep ¼ bend",
+    "unit": "Ea",
+    "labor_hours": 0.35,
+    "equipment_hours": null,
+    "material_cost": 19.3,
+    "labor_cost": 13.7,
+    "equipment_cost": null,
+    "total_cost": 33.0
+  },
+  {
+    "item": "4\" DWV cast iron no-hub long sweep ¼ bend",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 30.5,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 50.0
+  },
+  {
+    "item": "5\" DWV cast iron no-hub long sweep ¼ bend",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.58,
+    "material_cost": 55.9,
+    "labor_cost": 24.3,
+    "equipment_cost": 0.43,
+    "total_cost": 80.63
+  },
+  {
+    "item": "6\" DWV cast iron no-hub long sweep ¼ bend",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.65,
+    "material_cost": 68.0,
+    "labor_cost": 27.2,
+    "equipment_cost": 0.48,
+    "total_cost": 95.68
+  },
+  {
+    "item": "3\" DWV cast iron no-hub low-heel outlet ¼ bend",
+    "unit": "Ea",
+    "labor_hours": 0.47,
+    "equipment_hours": null,
+    "material_cost": 16.2,
+    "labor_cost": 18.3,
+    "equipment_cost": null,
+    "total_cost": 34.5
+  },
+  {
+    "item": "4\" DWV cast iron no-hub low-heel outlet ¼ bend",
+    "unit": "Ea",
+    "labor_hours": 0.65,
+    "equipment_hours": null,
+    "material_cost": 19.8,
+    "labor_cost": 25.4,
+    "equipment_cost": null,
+    "total_cost": 45.2
+  },
+  {
+    "item": "3\" DWV cast iron no-hub closet bend",
+    "unit": "Ea",
+    "labor_hours": 0.35,
+    "equipment_hours": null,
+    "material_cost": 37.3,
+    "labor_cost": 13.7,
+    "equipment_cost": null,
+    "total_cost": 51.0
+  },
+  {
+    "item": "4\" DWV cast iron no-hub closet bend",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 38.3,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 57.8
+  },
+  {
+    "item": "4\" x 3\" DWV cast iron no-hub closet flange",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 54.6,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 74.1
+  },
+  {
+    "item": "2\" DWV cast iron no-hub P-trap",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 14.9,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 24.66
+  },
+  {
+    "item": "3\" DWV cast iron no-hub P-trap",
+    "unit": "Ea",
+    "labor_hours": 0.35,
+    "equipment_hours": null,
+    "material_cost": 46.0,
+    "labor_cost": 13.7,
+    "equipment_cost": null,
+    "total_cost": 59.7
+  },
+  {
+    "item": "4\" DWV cast iron no-hub P-trap",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 56.9,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 76.4
+  },
+  {
+    "item": "6\" DWV cast iron no-hub P-trap",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.65,
+    "material_cost": 202.0,
+    "labor_cost": 27.2,
+    "equipment_cost": 0.48,
+    "total_cost": 229.68
+  },
+  {
+    "item": "2\" DWV cast iron no-hub wye",
+    "unit": "Ea",
+    "labor_hours": 0.38,
+    "equipment_hours": null,
+    "material_cost": 11.7,
+    "labor_cost": 14.8,
+    "equipment_cost": null,
+    "total_cost": 26.5
+  },
+  {
+    "item": "3\" DWV cast iron no-hub wye",
+    "unit": "Ea",
+    "labor_hours": 0.52,
+    "equipment_hours": null,
+    "material_cost": 16.3,
+    "labor_cost": 20.3,
+    "equipment_cost": null,
+    "total_cost": 36.6
+  },
+  {
+    "item": "4\" DWV cast iron no-hub wye",
+    "unit": "Ea",
+    "labor_hours": 0.7,
+    "equipment_hours": null,
+    "material_cost": 25.6,
+    "labor_cost": 27.3,
+    "equipment_cost": null,
+    "total_cost": 52.9
+  },
+  {
+    "item": "6\" DWV cast iron no-hub wye",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.9,
+    "material_cost": 69.0,
+    "labor_cost": 37.7,
+    "equipment_cost": 0.66,
+    "total_cost": 107.36
+  },
+  {
+    "item": "8\" DWV cast iron no-hub wye",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.15,
+    "material_cost": 175.0,
+    "labor_cost": 48.2,
+    "equipment_cost": 0.85,
+    "total_cost": 224.05
+  },
+  {
+    "item": "10\" DWV cast iron no-hub wye",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.5,
+    "material_cost": 420.0,
+    "labor_cost": 62.9,
+    "equipment_cost": 1.11,
+    "total_cost": 484.01
+  },
+  {
+    "item": "3\" x 2\" DWV cast iron no-hub reducing wye",
+    "unit": "Ea",
+    "labor_hours": 0.47,
+    "equipment_hours": null,
+    "material_cost": 15.6,
+    "labor_cost": 18.3,
+    "equipment_cost": null,
+    "total_cost": 33.9
+  },
+  {
+    "item": "4\" x 2\" DWV cast iron no-hub reducing wye",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 20.9,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 44.3
+  },
+  {
+    "item": "4\" x 3\" DWV cast iron no-hub reducing wye",
+    "unit": "Ea",
+    "labor_hours": 0.65,
+    "equipment_hours": null,
+    "material_cost": 22.0,
+    "labor_cost": 25.4,
+    "equipment_cost": null,
+    "total_cost": 47.4
+  },
+  {
+    "item": "6\" x 2\" DWV cast iron no-hub reducing wye",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.77,
+    "material_cost": 56.0,
+    "labor_cost": 32.3,
+    "equipment_cost": 0.57,
+    "total_cost": 88.87
+  },
+  {
+    "item": "6\" x 3\" DWV cast iron no-hub reducing wye",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.77,
+    "material_cost": 60.8,
+    "labor_cost": 32.3,
+    "equipment_cost": 0.57,
+    "total_cost": 93.67
+  },
+  {
+    "item": "6\" x 4\" DWV cast iron no-hub reducing wye",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.8,
+    "material_cost": 59.7,
+    "labor_cost": 33.5,
+    "equipment_cost": 0.59,
+    "total_cost": 93.79
+  },
+  {
+    "item": "8\" x 2\" DWV cast iron no-hub reducing wye",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.0,
+    "material_cost": 143.0,
+    "labor_cost": 41.9,
+    "equipment_cost": 0.74,
+    "total_cost": 185.64
+  },
+  {
+    "item": "8\" x 3\" DWV cast iron no-hub reducing wye",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.0,
+    "material_cost": 145.0,
+    "labor_cost": 41.9,
+    "equipment_cost": 0.74,
+    "total_cost": 187.64
+  },
+  {
+    "item": "8\" x 4\" DWV cast iron no-hub reducing wye",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.0,
+    "material_cost": 147.0,
+    "labor_cost": 41.9,
+    "equipment_cost": 0.74,
+    "total_cost": 189.64
+  },
+  {
+    "item": "8\" x 6\" DWV cast iron no-hub reducing wye",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.1,
+    "material_cost": 152.0,
+    "labor_cost": 46.1,
+    "equipment_cost": 0.81,
+    "total_cost": 198.91
+  },
+  {
+    "item": "2\" DWV cast iron no-hub combination upright wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.38,
+    "equipment_hours": null,
+    "material_cost": 28.9,
+    "labor_cost": 14.8,
+    "equipment_cost": null,
+    "total_cost": 43.7
+  },
+  {
+    "item": "3\" DWV cast iron no-hub combination upright wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.52,
+    "equipment_hours": null,
+    "material_cost": 46.6,
+    "labor_cost": 20.3,
+    "equipment_cost": null,
+    "total_cost": 66.9
+  },
+  {
+    "item": "4\" DWV cast iron no-hub combination upright wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.7,
+    "equipment_hours": null,
+    "material_cost": 61.6,
+    "labor_cost": 27.3,
+    "equipment_cost": null,
+    "total_cost": 88.9
+  },
+  {
+    "item": "3\" x 2\" DWV cast iron no-hub combination upright reducing wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.47,
+    "equipment_hours": null,
+    "material_cost": 50.6,
+    "labor_cost": 18.3,
+    "equipment_cost": null,
+    "total_cost": 68.9
+  },
+  {
+    "item": "4\" x 2\" DWV cast iron no-hub combination upright reducing wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 60.3,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 83.7
+  },
+  {
+    "item": "4\" x 3\" DWV cast iron no-hub combination upright reducing wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.65,
+    "equipment_hours": null,
+    "material_cost": 63.0,
+    "labor_cost": 25.4,
+    "equipment_cost": null,
+    "total_cost": 88.4
+  },
+  {
+    "item": "2\" DWV cast iron no-hub double wye",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 36.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 55.5
+  },
+  {
+    "item": "3\" DWV cast iron no-hub double wye",
+    "unit": "Ea",
+    "labor_hours": 0.7,
+    "equipment_hours": null,
+    "material_cost": 36.4,
+    "labor_cost": 27.3,
+    "equipment_cost": null,
+    "total_cost": 63.7
+  },
+  {
+    "item": "4\" DWV cast iron no-hub double wye",
+    "unit": "Ea",
+    "labor_hours": 0.95,
+    "equipment_hours": null,
+    "material_cost": 56.5,
+    "labor_cost": 37.1,
+    "equipment_cost": null,
+    "total_cost": 93.6
+  },
+  {
+    "item": "6\" DWV cast iron no-hub double wye",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.1,
+    "material_cost": 197.0,
+    "labor_cost": 46.1,
+    "equipment_cost": 0.81,
+    "total_cost": 243.91
+  },
+  {
+    "item": "8\" DWV cast iron no-hub double wye",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.45,
+    "material_cost": 359.0,
+    "labor_cost": 60.8,
+    "equipment_cost": 1.07,
+    "total_cost": 420.87
+  },
+  {
+    "item": "3\" x 2\" DWV cast iron no-hub double reducing wye",
+    "unit": "Ea",
+    "labor_hours": 0.52,
+    "equipment_hours": null,
+    "material_cost": 36.0,
+    "labor_cost": 20.3,
+    "equipment_cost": null,
+    "total_cost": 56.3
+  },
+  {
+    "item": "4\" x 2\" DWV cast iron no-hub double reducing wye",
+    "unit": "Ea",
+    "labor_hours": 0.74,
+    "equipment_hours": null,
+    "material_cost": 50.1,
+    "labor_cost": 28.9,
+    "equipment_cost": null,
+    "total_cost": 79.0
+  },
+  {
+    "item": "4\" x 3\" DWV cast iron no-hub double reducing wye",
+    "unit": "Ea",
+    "labor_hours": 1.0,
+    "equipment_hours": null,
+    "material_cost": 51.5,
+    "labor_cost": 39.0,
+    "equipment_cost": null,
+    "total_cost": 90.5
+  },
+  {
+    "item": "6\" x 4\" DWV cast iron no-hub double reducing wye",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.75,
+    "material_cost": 194.0,
+    "labor_cost": 73.4,
+    "equipment_cost": 1.29,
+    "total_cost": 268.69
+  },
+  {
+    "item": "2\" DWV cast iron no-hub combination wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.38,
+    "equipment_hours": null,
+    "material_cost": 22.4,
+    "labor_cost": 14.8,
+    "equipment_cost": null,
+    "total_cost": 37.2
+  },
+  {
+    "item": "3\" DWV cast iron no-hub combination wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.52,
+    "equipment_hours": null,
+    "material_cost": 32.0,
+    "labor_cost": 20.3,
+    "equipment_cost": null,
+    "total_cost": 52.3
+  },
+  {
+    "item": "4\" DWV cast iron no-hub combination wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.7,
+    "equipment_hours": null,
+    "material_cost": 51.0,
+    "labor_cost": 27.3,
+    "equipment_cost": null,
+    "total_cost": 78.3
+  },
+  {
+    "item": "6\" DWV cast iron no-hub combination wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.9,
+    "material_cost": 174.0,
+    "labor_cost": 37.7,
+    "equipment_cost": 0.66,
+    "total_cost": 212.36
+  },
+  {
+    "item": "8\" DWV cast iron no-hub combination wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.15,
+    "material_cost": 350.0,
+    "labor_cost": 48.2,
+    "equipment_cost": 0.85,
+    "total_cost": 399.05
+  },
+  {
+    "item": "3\" x 2\" DWV cast iron no-hub combination reducing wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.47,
+    "equipment_hours": null,
+    "material_cost": 27.2,
+    "labor_cost": 18.3,
+    "equipment_cost": null,
+    "total_cost": 45.5
+  },
+  {
+    "item": "4\" x 2\" DWV cast iron no-hub combination reducing wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 41.4,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 64.8
+  },
+  {
+    "item": "4\" x 3\" DWV cast iron no-hub combination reducing wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.65,
+    "equipment_hours": null,
+    "material_cost": 44.3,
+    "labor_cost": 25.4,
+    "equipment_cost": null,
+    "total_cost": 69.7
+  },
+  {
+    "item": "6\" x 2\" DWV cast iron no-hub combination reducing wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.77,
+    "material_cost": 198.0,
+    "labor_cost": 32.3,
+    "equipment_cost": 0.57,
+    "total_cost": 230.87
+  },
+  {
+    "item": "6\" x 3\" DWV cast iron no-hub combination reducing wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.77,
+    "material_cost": 208.0,
+    "labor_cost": 32.3,
+    "equipment_cost": 0.57,
+    "total_cost": 240.87
+  },
+  {
+    "item": "6\" x 4\" DWV cast iron no-hub combination reducing wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.8,
+    "material_cost": 213.0,
+    "labor_cost": 33.5,
+    "equipment_cost": 0.59,
+    "total_cost": 247.09
+  },
+  {
+    "item": "8\" x 4\" DWV cast iron no-hub combination reducing wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.2,
+    "material_cost": 388.0,
+    "labor_cost": 50.3,
+    "equipment_cost": 0.89,
+    "total_cost": 439.19
+  },
+  {
+    "item": "2\" DWV cast iron no-hub double combination wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 38.9,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 58.4
+  },
+  {
+    "item": "3\" DWV cast iron no-hub double combination wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.7,
+    "equipment_hours": null,
+    "material_cost": 62.5,
+    "labor_cost": 27.3,
+    "equipment_cost": null,
+    "total_cost": 89.8
+  },
+  {
+    "item": "4\" DWV cast iron no-hub double combination wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.95,
+    "equipment_hours": null,
+    "material_cost": 76.9,
+    "labor_cost": 37.1,
+    "equipment_cost": null,
+    "total_cost": 114.0
+  },
+  {
+    "item": "3\" x 2\" DWV cast iron no-hub double combination reducing wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 44.1,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 67.5
+  },
+  {
+    "item": "4\" x 2\" DWV cast iron no-hub double combination reducing wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 1.25,
+    "equipment_hours": null,
+    "material_cost": 69.5,
+    "labor_cost": 48.8,
+    "equipment_cost": null,
+    "total_cost": 118.3
+  },
+  {
+    "item": "4\" x 3\" DWV cast iron no-hub double combination reducing wye and 1/8 bend",
+    "unit": "Ea",
+    "labor_hours": 1.35,
+    "equipment_hours": null,
+    "material_cost": 72.7,
+    "labor_cost": 52.7,
+    "equipment_cost": null,
+    "total_cost": 125.4
+  },
+  {
+    "item": "2\" DWV cast iron no-hub sanitary tee (TY)",
+    "unit": "Ea",
+    "labor_hours": 0.38,
+    "equipment_hours": null,
+    "material_cost": 13.6,
+    "labor_cost": 14.8,
+    "equipment_cost": null,
+    "total_cost": 28.4
+  },
+  {
+    "item": "3\" DWV cast iron no-hub sanitary tee (TY)",
+    "unit": "Ea",
+    "labor_hours": 0.52,
+    "equipment_hours": null,
+    "material_cost": 16.3,
+    "labor_cost": 20.3,
+    "equipment_cost": null,
+    "total_cost": 36.6
+  },
+  {
+    "item": "4\" DWV cast iron no-hub sanitary tee (TY)",
+    "unit": "Ea",
+    "labor_hours": 0.7,
+    "equipment_hours": null,
+    "material_cost": 27.0,
+    "labor_cost": 27.3,
+    "equipment_cost": null,
+    "total_cost": 54.3
+  },
+  {
+    "item": "6\" DWV cast iron no-hub sanitary tee (TY)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.9,
+    "material_cost": 81.7,
+    "labor_cost": 37.7,
+    "equipment_cost": 0.66,
+    "total_cost": 120.06
+  },
+  {
+    "item": "8\" DWV cast iron no-hub sanitary tee (TY)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.15,
+    "material_cost": 216.0,
+    "labor_cost": 48.2,
+    "equipment_cost": 0.85,
+    "total_cost": 265.05
+  },
+  {
+    "item": "3\" x 2\" DWV cast iron no-hub reducing sanitary tee (TY)",
+    "unit": "Ea",
+    "labor_hours": 0.47,
+    "equipment_hours": null,
+    "material_cost": 15.4,
+    "labor_cost": 18.3,
+    "equipment_cost": null,
+    "total_cost": 33.7
+  },
+  {
+    "item": "4\" x 2\" DWV cast iron no-hub reducing sanitary tee (TY)",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 20.7,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 44.1
+  },
+  {
+    "item": "4\" x 3\" DWV cast iron no-hub reducing sanitary tee (TY)",
+    "unit": "Ea",
+    "labor_hours": 0.65,
+    "equipment_hours": null,
+    "material_cost": 23.8,
+    "labor_cost": 25.4,
+    "equipment_cost": null,
+    "total_cost": 49.2
+  },
+  {
+    "item": "6\" x 2\" DWV cast iron no-hub reducing sanitary tee (TY)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.77,
+    "material_cost": 64.8,
+    "labor_cost": 32.3,
+    "equipment_cost": 0.57,
+    "total_cost": 97.67
+  },
+  {
+    "item": "6\" x 3\" DWV cast iron no-hub reducing sanitary tee (TY)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.77,
+    "material_cost": 61.3,
+    "labor_cost": 32.3,
+    "equipment_cost": 0.57,
+    "total_cost": 94.17
+  },
+  {
+    "item": "6\" x 4\" DWV cast iron no-hub reducing sanitary tee (TY)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.8,
+    "material_cost": 66.4,
+    "labor_cost": 33.5,
+    "equipment_cost": 0.59,
+    "total_cost": 100.49
+  },
+  {
+    "item": "8\" x 3\" DWV cast iron no-hub reducing sanitary tee (TY)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.0,
+    "material_cost": 171.0,
+    "labor_cost": 41.9,
+    "equipment_cost": 0.74,
+    "total_cost": 213.64
+  },
+  {
+    "item": "8\" x 4\" DWV cast iron no-hub reducing sanitary tee (TY)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.0,
+    "material_cost": 166.0,
+    "labor_cost": 41.9,
+    "equipment_cost": 0.74,
+    "total_cost": 208.64
+  },
+  {
+    "item": "8\" x 6\" DWV cast iron no-hub reducing sanitary tee (TY)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.1,
+    "material_cost": 175.0,
+    "labor_cost": 46.1,
+    "equipment_cost": 0.81,
+    "total_cost": 221.91
+  },
+  {
+    "item": "2\" x 1½\" DWV cast iron no-hub tapped sanitary tee (tapped TY)",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 38.1,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 45.91
+  },
+  {
+    "item": "2\" x 2\" DWV cast iron no-hub tapped sanitary tee (tapped TY)",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 38.1,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 47.86
+  },
+  {
+    "item": "3\" x 2\" DWV cast iron no-hub tapped sanitary tee (tapped TY)",
+    "unit": "Ea",
+    "labor_hours": 0.35,
+    "equipment_hours": null,
+    "material_cost": 48.5,
+    "labor_cost": 13.7,
+    "equipment_cost": null,
+    "total_cost": 62.2
+  },
+  {
+    "item": "4\" x 2\" DWV cast iron no-hub tapped sanitary tee (tapped TY)",
+    "unit": "Ea",
+    "labor_hours": 0.425,
+    "equipment_hours": null,
+    "material_cost": 57.4,
+    "labor_cost": 16.6,
+    "equipment_cost": null,
+    "total_cost": 74.0
+  },
+  {
+    "item": "6\" x 2\" DWV cast iron no-hub tapped sanitary tee (tapped TY)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.7,
+    "material_cost": 149.0,
+    "labor_cost": 29.3,
+    "equipment_cost": 0.52,
+    "total_cost": 178.82
+  },
+  {
+    "item": "2\" DWV cast iron no-hub test tee",
+    "unit": "Ea",
+    "labor_hours": 0.37,
+    "equipment_hours": null,
+    "material_cost": 48.2,
+    "labor_cost": 14.4,
+    "equipment_cost": null,
+    "total_cost": 62.6
+  },
+  {
+    "item": "3\" DWV cast iron no-hub test tee",
+    "unit": "Ea",
+    "labor_hours": 0.52,
+    "equipment_hours": null,
+    "material_cost": 68.0,
+    "labor_cost": 20.3,
+    "equipment_cost": null,
+    "total_cost": 88.3
+  },
+  {
+    "item": "4\" DWV cast iron no-hub test tee",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 86.7,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 116.0
+  },
+  {
+    "item": "6\" DWV cast iron no-hub test tee",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.12,
+    "material_cost": 310.0,
+    "labor_cost": 47.0,
+    "equipment_cost": 0.83,
+    "total_cost": 357.83
+  },
+  {
+    "item": "8\" DWV cast iron no-hub test tee",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.25,
+    "material_cost": 563.0,
+    "labor_cost": 52.4,
+    "equipment_cost": 0.92,
+    "total_cost": 616.32
+  },
+  {
+    "item": "2\" DWV cast iron no-hub cross (double TY)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 38.3,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 57.8
+  },
+  {
+    "item": "3\" DWV cast iron no-hub cross (double TY)",
+    "unit": "Ea",
+    "labor_hours": 0.7,
+    "equipment_hours": null,
+    "material_cost": 40.7,
+    "labor_cost": 27.3,
+    "equipment_cost": null,
+    "total_cost": 68.0
+  },
+  {
+    "item": "4\" DWV cast iron no-hub cross (double TY)",
+    "unit": "Ea",
+    "labor_hours": 0.95,
+    "equipment_hours": null,
+    "material_cost": 58.7,
+    "labor_cost": 37.1,
+    "equipment_cost": null,
+    "total_cost": 95.8
+  },
+  {
+    "item": "6\" DWV cast iron no-hub cross (double TY)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.3,
+    "material_cost": 218.0,
+    "labor_cost": 54.5,
+    "equipment_cost": 0.96,
+    "total_cost": 273.46
+  },
+  {
+    "item": "3\" x 2\" DWV cast iron no-hub reducing cross (double TY)",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 36.1,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 59.5
+  },
+  {
+    "item": "4\" x 2\" DWV cast iron no-hub reducing cross (double TY)",
+    "unit": "Ea",
+    "labor_hours": 0.9,
+    "equipment_hours": null,
+    "material_cost": 49.9,
+    "labor_cost": 35.1,
+    "equipment_cost": null,
+    "total_cost": 85.0
+  },
+  {
+    "item": "4\" x 3\" DWV cast iron no-hub reducing cross (double TY)",
+    "unit": "Ea",
+    "labor_hours": 0.9,
+    "equipment_hours": null,
+    "material_cost": 51.0,
+    "labor_cost": 35.1,
+    "equipment_cost": null,
+    "total_cost": 86.1
+  },
+  {
+    "item": "6\" x 4\" DWV cast iron no-hub reducing cross (double TY)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.2,
+    "material_cost": 200.0,
+    "labor_cost": 50.3,
+    "equipment_cost": 0.89,
+    "total_cost": 251.19
+  },
+  {
+    "item": "8\" x 4\" DWV cast iron no-hub reducing cross (double TY)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.5,
+    "material_cost": 503.0,
+    "labor_cost": 62.9,
+    "equipment_cost": 1.11,
+    "total_cost": 567.01
+  },
+  {
+    "item": "2\" DWV cast iron no-hub reducer",
+    "unit": "Ea",
+    "labor_hours": 0.12,
+    "equipment_hours": null,
+    "material_cost": 7.52,
+    "labor_cost": 4.68,
+    "equipment_cost": null,
+    "total_cost": 12.2
+  },
+  {
+    "item": "3\" DWV cast iron no-hub reducer",
+    "unit": "Ea",
+    "labor_hours": 0.13,
+    "equipment_hours": null,
+    "material_cost": 8.11,
+    "labor_cost": 5.07,
+    "equipment_cost": null,
+    "total_cost": 13.18
+  },
+  {
+    "item": "4\" DWV cast iron no-hub reducer",
+    "unit": "Ea",
+    "labor_hours": 0.15,
+    "equipment_hours": null,
+    "material_cost": 12.0,
+    "labor_cost": 5.85,
+    "equipment_cost": null,
+    "total_cost": 17.85
+  },
+  {
+    "item": "6\" DWV cast iron no-hub reducer",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.2,
+    "material_cost": 32.1,
+    "labor_cost": 8.38,
+    "equipment_cost": 0.15,
+    "total_cost": 40.63
+  },
+  {
+    "item": "8\" DWV cast iron no-hub reducer",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.4,
+    "material_cost": 82.5,
+    "labor_cost": 16.8,
+    "equipment_cost": 0.3,
+    "total_cost": 99.6
+  },
+  {
+    "item": "10\" DWV cast iron no-hub reducer",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.65,
+    "material_cost": 128.0,
+    "labor_cost": 27.2,
+    "equipment_cost": 0.48,
+    "total_cost": 155.68
+  },
+  {
+    "item": "2\" DWV cast iron no-hub cap",
+    "unit": "Ea",
+    "labor_hours": 0.125,
+    "equipment_hours": null,
+    "material_cost": 4.59,
+    "labor_cost": 4.88,
+    "equipment_cost": null,
+    "total_cost": 9.47
+  },
+  {
+    "item": "3\" DWV cast iron no-hub cap",
+    "unit": "Ea",
+    "labor_hours": 0.175,
+    "equipment_hours": null,
+    "material_cost": 7.88,
+    "labor_cost": 6.83,
+    "equipment_cost": null,
+    "total_cost": 14.71
+  },
+  {
+    "item": "4\" DWV cast iron no-hub cap",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 10.3,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 20.06
+  },
+  {
+    "item": "6\" DWV cast iron no-hub cap",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.375,
+    "material_cost": 19.5,
+    "labor_cost": 15.7,
+    "equipment_cost": 0.28,
+    "total_cost": 35.48
+  },
+  {
+    "item": "8\" DWV cast iron no-hub cap",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.5,
+    "material_cost": 36.0,
+    "labor_cost": 21.0,
+    "equipment_cost": 0.37,
+    "total_cost": 57.37
+  },
+  {
+    "item": "10\" DWV cast iron no-hub cap",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.75,
+    "material_cost": 55.6,
+    "labor_cost": 31.4,
+    "equipment_cost": 0.55,
+    "total_cost": 87.55
+  },
+  {
+    "item": "2\" MJ (mechanical joint) coupling with gasket",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.0,
+    "material_cost": 9.42,
+    "labor_cost": 0,
+    "equipment_cost": 0,
+    "total_cost": 9.42
+  },
+  {
+    "item": "3\" MJ (mechanical joint) coupling with gasket",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.0,
+    "material_cost": 10.3,
+    "labor_cost": 0,
+    "equipment_cost": 0,
+    "total_cost": 10.3
+  },
+  {
+    "item": "4\" MJ (mechanical joint) coupling with gasket",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.0,
+    "material_cost": 11.0,
+    "labor_cost": 0,
+    "equipment_cost": 0,
+    "total_cost": 11.0
+  },
+  {
+    "item": "6\" MJ (mechanical joint) coupling with gasket",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.0,
+    "material_cost": 30.0,
+    "labor_cost": 0,
+    "equipment_cost": 0,
+    "total_cost": 30.0
+  },
+  {
+    "item": "8\" MJ (mechanical joint) coupling with gasket",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.0,
+    "material_cost": 56.0,
+    "labor_cost": 0,
+    "equipment_cost": 0,
+    "total_cost": 56.0
+  },
+  {
+    "item": "10\" MJ (mechanical joint) coupling with gasket",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.0,
+    "material_cost": 77.7,
+    "labor_cost": 0,
+    "equipment_cost": 0,
+    "total_cost": 77.7
+  },
+  {
+    "item": "2\" Hanger with swivel assembly (Cast Iron, DWV, Service Weight, No-Hub with Coupled Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 7.22,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 22.82
+  },
+  {
+    "item": "3\" Hanger with swivel assembly (Cast Iron, DWV, Service Weight, No-Hub with Coupled Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 9.31,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 26.91
+  },
+  {
+    "item": "4\" Hanger with swivel assembly (Cast Iron, DWV, Service Weight, No-Hub with Coupled Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 11.6,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 29.2
+  },
+  {
+    "item": "5\" Hanger with swivel assembly (Cast Iron, DWV, Service Weight, No-Hub with Coupled Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 17.7,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 37.2
+  },
+  {
+    "item": "6\" Hanger with swivel assembly (Cast Iron, DWV, Service Weight, No-Hub with Coupled Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 20.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 39.5
+  },
+  {
+    "item": "8\" Hanger with swivel assembly (Cast Iron, DWV, Service Weight, No-Hub with Coupled Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.55,
+    "equipment_hours": null,
+    "material_cost": 26.1,
+    "labor_cost": 21.5,
+    "equipment_cost": null,
+    "total_cost": 47.6
+  },
+  {
+    "item": "10\" Hanger with swivel assembly (Cast Iron, DWV, Service Weight, No-Hub with Coupled Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.65,
+    "equipment_hours": null,
+    "material_cost": 34.4,
+    "labor_cost": 25.4,
+    "equipment_cost": null,
+    "total_cost": 59.8
+  },
+  {
+    "item": "2\" Riser clamp (Cast Iron, DWV, Service Weight, No-Hub with Coupled Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.115,
+    "equipment_hours": null,
+    "material_cost": 6.65,
+    "labor_cost": 4.49,
+    "equipment_cost": null,
+    "total_cost": 11.14
+  },
+  {
+    "item": "3\" Riser clamp (Cast Iron, DWV, Service Weight, No-Hub with Coupled Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.12,
+    "equipment_hours": null,
+    "material_cost": 7.59,
+    "labor_cost": 4.68,
+    "equipment_cost": null,
+    "total_cost": 12.27
+  },
+  {
+    "item": "4\" Riser clamp (Cast Iron, DWV, Service Weight, No-Hub with Coupled Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.125,
+    "equipment_hours": null,
+    "material_cost": 9.66,
+    "labor_cost": 4.88,
+    "equipment_cost": null,
+    "total_cost": 14.54
+  },
+  {
+    "item": "5\" Riser clamp (Cast Iron, DWV, Service Weight, No-Hub with Coupled Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.18,
+    "equipment_hours": null,
+    "material_cost": 13.8,
+    "labor_cost": 7.03,
+    "equipment_cost": null,
+    "total_cost": 20.83
+  },
+  {
+    "item": "6\" Riser clamp (Cast Iron, DWV, Service Weight, No-Hub with Coupled Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 16.7,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 24.51
+  },
+  {
+    "item": "8\" Riser clamp (Cast Iron, DWV, Service Weight, No-Hub with Coupled Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 27.3,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 35.11
+  },
+  {
+    "item": "10\" Riser clamp (Cast Iron, DWV, Service Weight, No-Hub with Coupled Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 40.4,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 50.16
+  },
+  {
+    "item": "2\" DWV cast iron pipe, hub and spigot, gasketed joints",
+    "unit": "LF",
+    "labor_hours": 0.06,
+    "equipment_hours": null,
+    "material_cost": 12.7,
+    "labor_cost": 2.34,
+    "equipment_cost": null,
+    "total_cost": 15.04
+  },
+  {
+    "item": "3\" DWV cast iron pipe, hub and spigot, gasketed joints",
+    "unit": "LF",
+    "labor_hours": 0.07,
+    "equipment_hours": null,
+    "material_cost": 14.0,
+    "labor_cost": 2.73,
+    "equipment_cost": null,
+    "total_cost": 16.73
+  },
+  {
+    "item": "4\" DWV cast iron pipe, hub and spigot, gasketed joints",
+    "unit": "LF",
+    "labor_hours": 0.09,
+    "equipment_hours": null,
+    "material_cost": 18.4,
+    "labor_cost": 3.51,
+    "equipment_cost": null,
+    "total_cost": 21.91
+  },
+  {
+    "item": "6\" DWV cast iron pipe, hub and spigot, gasketed joints",
+    "unit": "LF",
+    "labor_hours": null,
+    "equipment_hours": 0.11,
+    "material_cost": 35.1,
+    "labor_cost": 4.61,
+    "equipment_cost": 0.08,
+    "total_cost": 39.79
+  },
+  {
+    "item": "8\" DWV cast iron pipe, hub and spigot, gasketed joints",
+    "unit": "LF",
+    "labor_hours": null,
+    "equipment_hours": 0.14,
+    "material_cost": 58.8,
+    "labor_cost": 5.87,
+    "equipment_cost": 0.1,
+    "total_cost": 64.77
+  },
+  {
+    "item": "10\" DWV cast iron pipe, hub and spigot, gasketed joints",
+    "unit": "LF",
+    "labor_hours": null,
+    "equipment_hours": 0.18,
+    "material_cost": 94.0,
+    "labor_cost": 7.55,
+    "equipment_cost": 0.13,
+    "total_cost": 101.68
+  },
+  {
+    "item": "12\" DWV cast iron pipe, hub and spigot, gasketed joints",
+    "unit": "LF",
+    "labor_hours": null,
+    "equipment_hours": 0.23,
+    "material_cost": 122.0,
+    "labor_cost": 9.64,
+    "equipment_cost": 0.17,
+    "total_cost": 131.81
+  },
+  {
+    "item": "15\" DWV cast iron pipe, hub and spigot, gasketed joints",
+    "unit": "LF",
+    "labor_hours": null,
+    "equipment_hours": 0.28,
+    "material_cost": 183.0,
+    "labor_cost": 11.7,
+    "equipment_cost": 0.21,
+    "total_cost": 194.91
+  },
+  {
+    "item": "2\" DWV cast iron 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 14.9,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 26.6
+  },
+  {
+    "item": "3\" DWV cast iron 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 20.2,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 35.8
+  },
+  {
+    "item": "4\" DWV cast iron 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.55,
+    "equipment_hours": null,
+    "material_cost": 28.4,
+    "labor_cost": 21.5,
+    "equipment_cost": null,
+    "total_cost": 49.9
+  },
+  {
+    "item": "6\" DWV cast iron 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.7,
+    "material_cost": 71.3,
+    "labor_cost": 29.3,
+    "equipment_cost": 0.52,
+    "total_cost": 101.12
+  },
+  {
+    "item": "8\" DWV cast iron 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.15,
+    "material_cost": 169.0,
+    "labor_cost": 48.2,
+    "equipment_cost": 0.85,
+    "total_cost": 218.05
+  },
+  {
+    "item": "10\" DWV cast iron 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.25,
+    "material_cost": 229.0,
+    "labor_cost": 52.4,
+    "equipment_cost": 0.92,
+    "total_cost": 282.32
+  },
+  {
+    "item": "12\" DWV cast iron 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.25,
+    "material_cost": 527.0,
+    "labor_cost": 94.3,
+    "equipment_cost": 1.66,
+    "total_cost": 622.96
+  },
+  {
+    "item": "15\" DWV cast iron 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.5,
+    "material_cost": 883.0,
+    "labor_cost": 105.0,
+    "equipment_cost": 1.85,
+    "total_cost": 989.85
+  },
+  {
+    "item": "2\" DWV cast iron ¼ bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 16.5,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 28.2
+  },
+  {
+    "item": "3\" DWV cast iron ¼ bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 25.3,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 40.9
+  },
+  {
+    "item": "4\" DWV cast iron ¼ bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.55,
+    "equipment_hours": null,
+    "material_cost": 44.6,
+    "labor_cost": 21.5,
+    "equipment_cost": null,
+    "total_cost": 66.1
+  },
+  {
+    "item": "6\" DWV cast iron ¼ bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.9,
+    "material_cost": 84.6,
+    "labor_cost": 37.7,
+    "equipment_cost": 0.66,
+    "total_cost": 122.96
+  },
+  {
+    "item": "8\" DWV cast iron ¼ bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.15,
+    "material_cost": 227.0,
+    "labor_cost": 48.2,
+    "equipment_cost": 0.85,
+    "total_cost": 276.05
+  },
+  {
+    "item": "10\" DWV cast iron ¼ bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.25,
+    "material_cost": 314.0,
+    "labor_cost": 52.4,
+    "equipment_cost": 0.92,
+    "total_cost": 367.32
+  },
+  {
+    "item": "12\" DWV cast iron ¼ bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.25,
+    "material_cost": 657.0,
+    "labor_cost": 94.3,
+    "equipment_cost": 1.66,
+    "total_cost": 752.96
+  },
+  {
+    "item": "15\" DWV cast iron ¼ bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.5,
+    "material_cost": 1320.0,
+    "labor_cost": 105.0,
+    "equipment_cost": 1.85,
+    "total_cost": 1426.85
+  },
+  {
+    "item": "3\" x 2\" DWV cast iron heel inlet ¼ bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.55,
+    "equipment_hours": null,
+    "material_cost": 31.0,
+    "labor_cost": 21.5,
+    "equipment_cost": null,
+    "total_cost": 52.5
+  },
+  {
+    "item": "4\" x 2\" DWV cast iron heel inlet ¼ bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.7,
+    "equipment_hours": null,
+    "material_cost": 37.7,
+    "labor_cost": 27.3,
+    "equipment_cost": null,
+    "total_cost": 65.0
+  },
+  {
+    "item": "2\" DWV cast iron 1/16 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 9.33,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 21.03
+  },
+  {
+    "item": "3\" DWV cast iron 1/16 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 15.8,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 31.4
+  },
+  {
+    "item": "4\" DWV cast iron 1/16 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.55,
+    "equipment_hours": null,
+    "material_cost": 21.8,
+    "labor_cost": 21.5,
+    "equipment_cost": null,
+    "total_cost": 43.3
+  },
+  {
+    "item": "6\" DWV cast iron 1/16 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.7,
+    "material_cost": 36.3,
+    "labor_cost": 29.3,
+    "equipment_cost": 0.52,
+    "total_cost": 66.12
+  },
+  {
+    "item": "8\" DWV cast iron 1/16 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.15,
+    "material_cost": 128.0,
+    "labor_cost": 48.2,
+    "equipment_cost": 0.85,
+    "total_cost": 177.05
+  },
+  {
+    "item": "4\" x 4\" DWV cast iron closet bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 54.2,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 69.8
+  },
+  {
+    "item": "4\" x 2\" DWV cast iron closet flange, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.075,
+    "equipment_hours": null,
+    "material_cost": 17.5,
+    "labor_cost": 2.93,
+    "equipment_cost": null,
+    "total_cost": 20.43
+  },
+  {
+    "item": "4\" x 3\" DWV cast iron closet flange, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.1,
+    "equipment_hours": null,
+    "material_cost": 24.4,
+    "labor_cost": 3.9,
+    "equipment_cost": null,
+    "total_cost": 28.3
+  },
+  {
+    "item": "4\" x 4\" DWV cast iron closet flange, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.125,
+    "equipment_hours": null,
+    "material_cost": 31.4,
+    "labor_cost": 4.88,
+    "equipment_cost": null,
+    "total_cost": 36.28
+  },
+  {
+    "item": "2\" DWV cast iron regular P-trap, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 62.8,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 74.5
+  },
+  {
+    "item": "3\" DWV cast iron regular P-trap, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 87.2,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 102.8
+  },
+  {
+    "item": "4\" DWV cast iron regular P-trap, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.55,
+    "equipment_hours": null,
+    "material_cost": 134.0,
+    "labor_cost": 21.5,
+    "equipment_cost": null,
+    "total_cost": 155.5
+  },
+  {
+    "item": "6\" DWV cast iron regular P-trap, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.7,
+    "material_cost": 296.0,
+    "labor_cost": 29.3,
+    "equipment_cost": 0.52,
+    "total_cost": 325.82
+  },
+  {
+    "item": "8\" DWV cast iron regular P-trap, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.15,
+    "material_cost": 872.0,
+    "labor_cost": 48.2,
+    "equipment_cost": 0.85,
+    "total_cost": 921.05
+  },
+  {
+    "item": "10\" DWV cast iron regular P-trap, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.0,
+    "material_cost": 1200.0,
+    "labor_cost": 83.8,
+    "equipment_cost": 1.48,
+    "total_cost": 1285.28
+  },
+  {
+    "item": "2\" DWV cast iron sanitary tee (TY), hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 30.1,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 45.7
+  },
+  {
+    "item": "3\" DWV cast iron sanitary tee (TY), hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 52.7,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 76.1
+  },
+  {
+    "item": "4\" DWV cast iron sanitary tee (TY), hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 106.0,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 135.3
+  },
+  {
+    "item": "6\" DWV cast iron sanitary tee (TY), hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.9,
+    "material_cost": 244.0,
+    "labor_cost": 37.7,
+    "equipment_cost": 0.66,
+    "total_cost": 282.36
+  },
+  {
+    "item": "8\" DWV cast iron sanitary tee (TY), hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.5,
+    "material_cost": 352.0,
+    "labor_cost": 62.9,
+    "equipment_cost": 1.11,
+    "total_cost": 416.01
+  },
+  {
+    "item": "3\" x 2\" DWV cast iron sanitary reducing tee (TY), hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 42.7,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 58.3
+  },
+  {
+    "item": "4\" x 2\" DWV cast iron sanitary reducing tee (TY), hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.65,
+    "equipment_hours": null,
+    "material_cost": 111.0,
+    "labor_cost": 25.4,
+    "equipment_cost": null,
+    "total_cost": 136.4
+  },
+  {
+    "item": "4\" x 3\" DWV cast iron sanitary reducing tee (TY), hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.7,
+    "equipment_hours": null,
+    "material_cost": 111.0,
+    "labor_cost": 27.3,
+    "equipment_cost": null,
+    "total_cost": 138.3
+  },
+  {
+    "item": "6\" x 2\" DWV cast iron sanitary reducing tee (TY), hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.75,
+    "material_cost": 151.0,
+    "labor_cost": 31.4,
+    "equipment_cost": 0.55,
+    "total_cost": 182.95
+  },
+  {
+    "item": "6\" x 3\" DWV cast iron sanitary reducing tee (TY), hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.8,
+    "material_cost": 151.0,
+    "labor_cost": 33.5,
+    "equipment_cost": 0.59,
+    "total_cost": 185.09
+  },
+  {
+    "item": "6\" x 4\" DWV cast iron sanitary reducing tee (TY), hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.85,
+    "material_cost": 151.0,
+    "labor_cost": 35.6,
+    "equipment_cost": 0.63,
+    "total_cost": 187.23
+  },
+  {
+    "item": "2\" DWV cast iron sanitary tapped tee (tapped TY), hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 25.8,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 37.5
+  },
+  {
+    "item": "3\" DWV cast iron sanitary tapped tee (tapped TY), hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 38.0,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 53.6
+  },
+  {
+    "item": "4\" DWV cast iron sanitary tapped tee (tapped TY), hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.55,
+    "equipment_hours": null,
+    "material_cost": 37.7,
+    "labor_cost": 21.5,
+    "equipment_cost": null,
+    "total_cost": 59.2
+  },
+  {
+    "item": "2\" DWV cast iron combination wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 26.7,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 42.3
+  },
+  {
+    "item": "3\" DWV cast iron combination wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 40.3,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 63.7
+  },
+  {
+    "item": "4\" DWV cast iron combination wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 56.0,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 85.3
+  },
+  {
+    "item": "5\" DWV cast iron combination wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.85,
+    "material_cost": 105.0,
+    "labor_cost": 35.6,
+    "equipment_cost": 0.63,
+    "total_cost": 141.23
+  },
+  {
+    "item": "6\" DWV cast iron combination wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.9,
+    "material_cost": 133.0,
+    "labor_cost": 37.7,
+    "equipment_cost": 0.66,
+    "total_cost": 171.36
+  },
+  {
+    "item": "3\" x 2\" DWV cast iron combination reducing wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.55,
+    "equipment_hours": null,
+    "material_cost": 30.1,
+    "labor_cost": 21.5,
+    "equipment_cost": null,
+    "total_cost": 51.6
+  },
+  {
+    "item": "4\" x 2\" DWV cast iron combination reducing wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.65,
+    "equipment_hours": null,
+    "material_cost": 41.4,
+    "labor_cost": 25.4,
+    "equipment_cost": null,
+    "total_cost": 66.8
+  },
+  {
+    "item": "4\" x 3\" DWV cast iron combination reducing wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.7,
+    "equipment_hours": null,
+    "material_cost": 48.0,
+    "labor_cost": 27.3,
+    "equipment_cost": null,
+    "total_cost": 75.3
+  },
+  {
+    "item": "5\" x 2\" DWV cast iron combination reducing wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.7,
+    "material_cost": 85.1,
+    "labor_cost": 29.3,
+    "equipment_cost": 0.52,
+    "total_cost": 114.92
+  },
+  {
+    "item": "5\" x 4\" DWV cast iron combination reducing wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.8,
+    "material_cost": 101.0,
+    "labor_cost": 33.5,
+    "equipment_cost": 0.59,
+    "total_cost": 135.09
+  },
+  {
+    "item": "6\" x 2\" DWV cast iron combination reducing wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.75,
+    "material_cost": 86.2,
+    "labor_cost": 31.4,
+    "equipment_cost": 0.55,
+    "total_cost": 118.15
+  },
+  {
+    "item": "6\" x 3\" DWV cast iron combination reducing wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.75,
+    "material_cost": 91.6,
+    "labor_cost": 31.4,
+    "equipment_cost": 0.55,
+    "total_cost": 123.55
+  },
+  {
+    "item": "6\" x 4\" DWV cast iron combination reducing wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.8,
+    "material_cost": 96.2,
+    "labor_cost": 33.5,
+    "equipment_cost": 0.59,
+    "total_cost": 130.29
+  },
+  {
+    "item": "2\" DWV cast iron combination double wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 51.1,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 70.6
+  },
+  {
+    "item": "3\" DWV cast iron combination double wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 69.9,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 99.2
+  },
+  {
+    "item": "4\" DWV cast iron combination double wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.95,
+    "equipment_hours": null,
+    "material_cost": 99.4,
+    "labor_cost": 37.1,
+    "equipment_cost": null,
+    "total_cost": 136.5
+  },
+  {
+    "item": "6\" DWV cast iron combination double wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.1,
+    "material_cost": 341.0,
+    "labor_cost": 46.1,
+    "equipment_cost": 0.81,
+    "total_cost": 387.91
+  },
+  {
+    "item": "3\" x 2\" DWV cast iron combination double reducing wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.55,
+    "equipment_hours": null,
+    "material_cost": 56.2,
+    "labor_cost": 21.5,
+    "equipment_cost": null,
+    "total_cost": 77.7
+  },
+  {
+    "item": "4\" x 2\" DWV cast iron combination double reducing wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.65,
+    "equipment_hours": null,
+    "material_cost": 70.7,
+    "labor_cost": 25.4,
+    "equipment_cost": null,
+    "total_cost": 96.1
+  },
+  {
+    "item": "4\" x 3\" DWV cast iron combination double reducing wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.7,
+    "equipment_hours": null,
+    "material_cost": 80.1,
+    "labor_cost": 27.3,
+    "equipment_cost": null,
+    "total_cost": 107.4
+  },
+  {
+    "item": "6\" x 4\" DWV cast iron combination double reducing wye and 1/8 bend, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.8,
+    "material_cost": 226.0,
+    "labor_cost": 33.5,
+    "equipment_cost": 0.59,
+    "total_cost": 260.09
+  },
+  {
+    "item": "2\" DWV cast iron wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 24.7,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 40.3
+  },
+  {
+    "item": "3\" DWV cast iron wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 42.4,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 65.8
+  },
+  {
+    "item": "4\" DWV cast iron wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 56.8,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 86.1
+  },
+  {
+    "item": "6\" DWV cast iron wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.9,
+    "material_cost": 137.0,
+    "labor_cost": 37.7,
+    "equipment_cost": 0.66,
+    "total_cost": 175.36
+  },
+  {
+    "item": "8\" DWV cast iron wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.5,
+    "material_cost": 305.0,
+    "labor_cost": 62.9,
+    "equipment_cost": 1.11,
+    "total_cost": 369.01
+  },
+  {
+    "item": "10\" DWV cast iron wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.0,
+    "material_cost": 511.0,
+    "labor_cost": 83.8,
+    "equipment_cost": 1.48,
+    "total_cost": 596.28
+  },
+  {
+    "item": "12\" DWV cast iron wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.5,
+    "material_cost": 1160.0,
+    "labor_cost": 105.0,
+    "equipment_cost": 1.85,
+    "total_cost": 1266.85
+  },
+  {
+    "item": "15\" DWV cast iron wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 3.0,
+    "material_cost": 2290.0,
+    "labor_cost": 126.0,
+    "equipment_cost": 2.22,
+    "total_cost": 2418.22
+  },
+  {
+    "item": "4\" x 2\" DWV cast iron reducing wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.65,
+    "equipment_hours": null,
+    "material_cost": 42.7,
+    "labor_cost": 25.4,
+    "equipment_cost": null,
+    "total_cost": 68.1
+  },
+  {
+    "item": "4\" x 3\" DWV cast iron reducing wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.7,
+    "equipment_hours": null,
+    "material_cost": 52.4,
+    "labor_cost": 27.3,
+    "equipment_cost": null,
+    "total_cost": 79.7
+  },
+  {
+    "item": "6\" x 2\" DWV cast iron reducing wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.75,
+    "material_cost": 109.0,
+    "labor_cost": 31.4,
+    "equipment_cost": 0.55,
+    "total_cost": 140.95
+  },
+  {
+    "item": "6\" x 3\" DWV cast iron reducing wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.75,
+    "material_cost": 109.0,
+    "labor_cost": 31.4,
+    "equipment_cost": 0.55,
+    "total_cost": 140.95
+  },
+  {
+    "item": "6\" x 4\" DWV cast iron reducing wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.8,
+    "material_cost": 110.0,
+    "labor_cost": 33.5,
+    "equipment_cost": 0.59,
+    "total_cost": 144.09
+  },
+  {
+    "item": "8\" x 4\" DWV cast iron reducing wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.35,
+    "material_cost": 253.0,
+    "labor_cost": 56.6,
+    "equipment_cost": 1.0,
+    "total_cost": 310.6
+  },
+  {
+    "item": "8\" x 6\" DWV cast iron reducing wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.45,
+    "material_cost": 270.0,
+    "labor_cost": 60.8,
+    "equipment_cost": 1.07,
+    "total_cost": 331.87
+  },
+  {
+    "item": "10\" x 4\" DWV cast iron reducing wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.85,
+    "material_cost": 437.0,
+    "labor_cost": 77.6,
+    "equipment_cost": 1.37,
+    "total_cost": 515.97
+  },
+  {
+    "item": "10\" x 6\" DWV cast iron reducing wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.9,
+    "material_cost": 449.0,
+    "labor_cost": 79.6,
+    "equipment_cost": 1.4,
+    "total_cost": 530.0
+  },
+  {
+    "item": "10\" x 8\" DWV cast iron reducing wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.95,
+    "material_cost": 480.0,
+    "labor_cost": 81.7,
+    "equipment_cost": 1.44,
+    "total_cost": 563.14
+  },
+  {
+    "item": "12\" x 6\" DWV cast iron reducing wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.35,
+    "material_cost": 813.0,
+    "labor_cost": 98.5,
+    "equipment_cost": 1.74,
+    "total_cost": 913.24
+  },
+  {
+    "item": "12\" x 8\" DWV cast iron reducing wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.4,
+    "material_cost": 893.0,
+    "labor_cost": 101.0,
+    "equipment_cost": 1.77,
+    "total_cost": 995.77
+  },
+  {
+    "item": "12\" x 10\" DWV cast iron reducing wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.45,
+    "material_cost": 962.0,
+    "labor_cost": 103.0,
+    "equipment_cost": 1.81,
+    "total_cost": 1066.81
+  },
+  {
+    "item": "15\" x 6\" DWV cast iron reducing wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.85,
+    "material_cost": 1310.0,
+    "labor_cost": 119.0,
+    "equipment_cost": 2.11,
+    "total_cost": 1431.11
+  },
+  {
+    "item": "15\" x 8\" DWV cast iron reducing wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.85,
+    "material_cost": 1320.0,
+    "labor_cost": 119.0,
+    "equipment_cost": 2.11,
+    "total_cost": 1441.11
+  },
+  {
+    "item": "15\" x 10\" DWV cast iron reducing wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.9,
+    "material_cost": 1500.0,
+    "labor_cost": 122.0,
+    "equipment_cost": 2.14,
+    "total_cost": 1624.14
+  },
+  {
+    "item": "15\" x 12\" DWV cast iron reducing wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.95,
+    "material_cost": 1510.0,
+    "labor_cost": 124.0,
+    "equipment_cost": 2.18,
+    "total_cost": 1636.18
+  },
+  {
+    "item": "2\" DWV cast iron double wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 32.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 51.5
+  },
+  {
+    "item": "3\" DWV cast iron double wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 55.5,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 84.8
+  },
+  {
+    "item": "4\" DWV cast iron double wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.95,
+    "equipment_hours": null,
+    "material_cost": 77.1,
+    "labor_cost": 37.1,
+    "equipment_cost": null,
+    "total_cost": 114.2
+  },
+  {
+    "item": "6\" DWV cast iron double wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.1,
+    "material_cost": 179.0,
+    "labor_cost": 46.1,
+    "equipment_cost": 0.81,
+    "total_cost": 225.91
+  },
+  {
+    "item": "8\" DWV cast iron double wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.85,
+    "material_cost": 442.0,
+    "labor_cost": 77.6,
+    "equipment_cost": 1.37,
+    "total_cost": 520.97
+  },
+  {
+    "item": "10\" DWV cast iron double wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.5,
+    "material_cost": 617.0,
+    "labor_cost": 105.0,
+    "equipment_cost": 1.85,
+    "total_cost": 723.85
+  },
+  {
+    "item": "12\" DWV cast iron double wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.75,
+    "material_cost": 894.0,
+    "labor_cost": 115.0,
+    "equipment_cost": 2.03,
+    "total_cost": 1011.03
+  },
+  {
+    "item": "15\" DWV cast iron double wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 3.5,
+    "material_cost": 2700.0,
+    "labor_cost": 147.0,
+    "equipment_cost": 2.59,
+    "total_cost": 2849.59
+  },
+  {
+    "item": "3\" x 2\" DWV cast iron reducing double wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.55,
+    "equipment_hours": null,
+    "material_cost": 46.8,
+    "labor_cost": 21.5,
+    "equipment_cost": null,
+    "total_cost": 68.3
+  },
+  {
+    "item": "4\" x 2\" DWV cast iron reducing double wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.65,
+    "equipment_hours": null,
+    "material_cost": 57.3,
+    "labor_cost": 25.4,
+    "equipment_cost": null,
+    "total_cost": 82.7
+  },
+  {
+    "item": "4\" x 3\" DWV cast iron reducing double wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.7,
+    "equipment_hours": null,
+    "material_cost": 63.6,
+    "labor_cost": 27.3,
+    "equipment_cost": null,
+    "total_cost": 90.9
+  },
+  {
+    "item": "6\" x 4\" DWV cast iron reducing double wye, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.8,
+    "material_cost": 134.0,
+    "labor_cost": 33.5,
+    "equipment_cost": 0.59,
+    "total_cost": 168.09
+  },
+  {
+    "item": "3\" DWV cast iron reducer, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.15,
+    "equipment_hours": null,
+    "material_cost": 16.5,
+    "labor_cost": 5.85,
+    "equipment_cost": null,
+    "total_cost": 22.35
+  },
+  {
+    "item": "4\" DWV cast iron reducer, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 42.7,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 50.51
+  },
+  {
+    "item": "6\" DWV cast iron reducer, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.32,
+    "material_cost": 66.8,
+    "labor_cost": 13.4,
+    "equipment_cost": 0.24,
+    "total_cost": 80.44
+  },
+  {
+    "item": "8\" DWV cast iron reducer, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.35,
+    "material_cost": 141.0,
+    "labor_cost": 14.7,
+    "equipment_cost": 0.26,
+    "total_cost": 155.96
+  },
+  {
+    "item": "10\" DWV cast iron reducer, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.57,
+    "material_cost": 298.0,
+    "labor_cost": 23.9,
+    "equipment_cost": 0.42,
+    "total_cost": 322.32
+  },
+  {
+    "item": "12\" DWV cast iron reducer, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.62,
+    "material_cost": 396.0,
+    "labor_cost": 26.0,
+    "equipment_cost": 0.46,
+    "total_cost": 422.46
+  },
+  {
+    "item": "15\" DWV cast iron reducer, hub and spigot, gasketed joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.12,
+    "material_cost": 732.0,
+    "labor_cost": 47.0,
+    "equipment_cost": 0.83,
+    "total_cost": 779.83
+  },
+  {
+    "item": "2\" Gaskets for hub and spigot joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.0,
+    "material_cost": 4.02,
+    "labor_cost": 0,
+    "equipment_cost": 0,
+    "total_cost": 4.02
+  },
+  {
+    "item": "3\" Gaskets for hub and spigot joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.0,
+    "material_cost": 5.32,
+    "labor_cost": 0,
+    "equipment_cost": 0,
+    "total_cost": 5.32
+  },
+  {
+    "item": "4\" Gaskets for hub and spigot joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.0,
+    "material_cost": 6.77,
+    "labor_cost": 0,
+    "equipment_cost": 0,
+    "total_cost": 6.77
+  },
+  {
+    "item": "5\" Gaskets for hub and spigot joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.0,
+    "material_cost": 10.4,
+    "labor_cost": 0,
+    "equipment_cost": 0,
+    "total_cost": 10.4
+  },
+  {
+    "item": "6\" Gaskets for hub and spigot joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.0,
+    "material_cost": 10.9,
+    "labor_cost": 0,
+    "equipment_cost": 0,
+    "total_cost": 10.9
+  },
+  {
+    "item": "8\" Gaskets for hub and spigot joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.0,
+    "material_cost": 23.6,
+    "labor_cost": 0,
+    "equipment_cost": 0,
+    "total_cost": 23.6
+  },
+  {
+    "item": "10\" Gaskets for hub and spigot joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.0,
+    "material_cost": 36.9,
+    "labor_cost": 0,
+    "equipment_cost": 0,
+    "total_cost": 36.9
+  },
+  {
+    "item": "12\" Gaskets for hub and spigot joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.0,
+    "material_cost": 46.9,
+    "labor_cost": 0,
+    "equipment_cost": 0,
+    "total_cost": 46.9
+  },
+  {
+    "item": "15\" Gaskets for hub and spigot joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.0,
+    "material_cost": 56.1,
+    "labor_cost": 0,
+    "equipment_cost": 0,
+    "total_cost": 56.1
+  },
+  {
+    "item": "2\" Hanger with swivel assembly (Cast Iron, DWV, Service Weight, Hub & Spigot with Gasketed Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 7.22,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 22.82
+  },
+  {
+    "item": "3\" Hanger with swivel assembly (Cast Iron, DWV, Service Weight, Hub & Spigot with Gasketed Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 9.31,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 26.91
+  },
+  {
+    "item": "4\" Hanger with swivel assembly (Cast Iron, DWV, Service Weight, Hub & Spigot with Gasketed Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 11.6,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 29.2
+  },
+  {
+    "item": "5\" Hanger with swivel assembly (Cast Iron, DWV, Service Weight, Hub & Spigot with Gasketed Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 17.7,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 37.2
+  },
+  {
+    "item": "6\" Hanger with swivel assembly (Cast Iron, DWV, Service Weight, Hub & Spigot with Gasketed Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 20.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 39.5
+  },
+  {
+    "item": "8\" Hanger with swivel assembly (Cast Iron, DWV, Service Weight, Hub & Spigot with Gasketed Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.55,
+    "equipment_hours": null,
+    "material_cost": 26.1,
+    "labor_cost": 21.5,
+    "equipment_cost": null,
+    "total_cost": 47.6
+  },
+  {
+    "item": "10\" Hanger with swivel assembly (Cast Iron, DWV, Service Weight, Hub & Spigot with Gasketed Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.65,
+    "equipment_hours": null,
+    "material_cost": 34.4,
+    "labor_cost": 25.4,
+    "equipment_cost": null,
+    "total_cost": 59.8
+  },
+  {
+    "item": "12\" Hanger with swivel assembly (Cast Iron, DWV, Service Weight, Hub & Spigot with Gasketed Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 47.4,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 76.7
+  },
+  {
+    "item": "15\" Hanger with swivel assembly (Cast Iron, DWV, Service Weight, Hub & Spigot with Gasketed Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.85,
+    "equipment_hours": null,
+    "material_cost": 62.8,
+    "labor_cost": 33.2,
+    "equipment_cost": null,
+    "total_cost": 96.0
+  },
+  {
+    "item": "2\" Riser clamp (Cast Iron, DWV, Service Weight, Hub & Spigot with Gasketed Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.115,
+    "equipment_hours": null,
+    "material_cost": 6.65,
+    "labor_cost": 4.49,
+    "equipment_cost": null,
+    "total_cost": 11.14
+  },
+  {
+    "item": "3\" Riser clamp (Cast Iron, DWV, Service Weight, Hub & Spigot with Gasketed Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.12,
+    "equipment_hours": null,
+    "material_cost": 7.59,
+    "labor_cost": 4.68,
+    "equipment_cost": null,
+    "total_cost": 12.27
+  },
+  {
+    "item": "4\" Riser clamp (Cast Iron, DWV, Service Weight, Hub & Spigot with Gasketed Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.125,
+    "equipment_hours": null,
+    "material_cost": 9.66,
+    "labor_cost": 4.88,
+    "equipment_cost": null,
+    "total_cost": 14.54
+  },
+  {
+    "item": "5\" Riser clamp (Cast Iron, DWV, Service Weight, Hub & Spigot with Gasketed Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.18,
+    "equipment_hours": null,
+    "material_cost": 13.8,
+    "labor_cost": 7.03,
+    "equipment_cost": null,
+    "total_cost": 20.83
+  },
+  {
+    "item": "6\" Riser clamp (Cast Iron, DWV, Service Weight, Hub & Spigot with Gasketed Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 16.7,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 24.51
+  },
+  {
+    "item": "8\" Riser clamp (Cast Iron, DWV, Service Weight, Hub & Spigot with Gasketed Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 27.3,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 35.11
+  },
+  {
+    "item": "10\" Riser clamp (Cast Iron, DWV, Service Weight, Hub & Spigot with Gasketed Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 40.4,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 50.16
+  },
+  {
+    "item": "12\" Riser clamp (Cast Iron, DWV, Service Weight, Hub & Spigot with Gasketed Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 50.3,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 60.06
+  },
+  {
+    "item": "1¼\" DWV copper pipe assembly, installed horizontally",
+    "unit": "LF",
+    "labor_hours": 0.13,
+    "equipment_hours": null,
+    "material_cost": 11.2,
+    "labor_cost": 5.07,
+    "equipment_cost": null,
+    "total_cost": 16.27
+  },
+  {
+    "item": "1½\" DWV copper pipe assembly, installed horizontally",
+    "unit": "LF",
+    "labor_hours": 0.132,
+    "equipment_hours": null,
+    "material_cost": 11.4,
+    "labor_cost": 5.15,
+    "equipment_cost": null,
+    "total_cost": 16.55
+  },
+  {
+    "item": "2\" DWV copper pipe assembly, installed horizontally",
+    "unit": "LF",
+    "labor_hours": 0.137,
+    "equipment_hours": null,
+    "material_cost": 14.7,
+    "labor_cost": 5.35,
+    "equipment_cost": null,
+    "total_cost": 20.05
+  },
+  {
+    "item": "3\" DWV copper pipe assembly, installed horizontally",
+    "unit": "LF",
+    "labor_hours": 0.179,
+    "equipment_hours": null,
+    "material_cost": 26.4,
+    "labor_cost": 6.99,
+    "equipment_cost": null,
+    "total_cost": 33.39
+  },
+  {
+    "item": "4\" DWV copper pipe assembly, installed horizontally",
+    "unit": "LF",
+    "labor_hours": 0.202,
+    "equipment_hours": null,
+    "material_cost": 49.4,
+    "labor_cost": 7.88,
+    "equipment_cost": null,
+    "total_cost": 57.28
+  },
+  {
+    "item": "1¼\" DWV copper pipe assembly, installed risers",
+    "unit": "LF",
+    "labor_hours": 0.069,
+    "equipment_hours": null,
+    "material_cost": 8.85,
+    "labor_cost": 2.69,
+    "equipment_cost": null,
+    "total_cost": 11.54
+  },
+  {
+    "item": "1½\" DWV copper pipe assembly, installed risers",
+    "unit": "LF",
+    "labor_hours": 0.074,
+    "equipment_hours": null,
+    "material_cost": 9.97,
+    "labor_cost": 2.89,
+    "equipment_cost": null,
+    "total_cost": 12.86
+  },
+  {
+    "item": "2\" DWV copper pipe assembly, installed risers",
+    "unit": "LF",
+    "labor_hours": 0.086,
+    "equipment_hours": null,
+    "material_cost": 13.6,
+    "labor_cost": 3.36,
+    "equipment_cost": null,
+    "total_cost": 16.96
+  },
+  {
+    "item": "3\" DWV copper pipe assembly, installed risers",
+    "unit": "LF",
+    "labor_hours": 0.11,
+    "equipment_hours": null,
+    "material_cost": 26.5,
+    "labor_cost": 4.29,
+    "equipment_cost": null,
+    "total_cost": 30.79
+  },
+  {
+    "item": "4\" DWV copper pipe assembly, installed risers",
+    "unit": "LF",
+    "labor_hours": 0.134,
+    "equipment_hours": null,
+    "material_cost": 44.3,
+    "labor_cost": 5.23,
+    "equipment_cost": null,
+    "total_cost": 49.53
+  },
+  {
+    "item": "1¼\" DWV copper pipe, soft-soldered joints",
+    "unit": "LF",
+    "labor_hours": 0.04,
+    "equipment_hours": null,
+    "material_cost": 4.71,
+    "labor_cost": 1.56,
+    "equipment_cost": null,
+    "total_cost": 6.27
+  },
+  {
+    "item": "1½\" DWV copper pipe, soft-soldered joints",
+    "unit": "LF",
+    "labor_hours": 0.045,
+    "equipment_hours": null,
+    "material_cost": 5.99,
+    "labor_cost": 1.76,
+    "equipment_cost": null,
+    "total_cost": 7.75
+  },
+  {
+    "item": "2\" DWV copper pipe, soft-soldered joints",
+    "unit": "LF",
+    "labor_hours": 0.05,
+    "equipment_hours": null,
+    "material_cost": 7.88,
+    "labor_cost": 1.95,
+    "equipment_cost": null,
+    "total_cost": 9.83
+  },
+  {
+    "item": "3\" DWV copper pipe, soft-soldered joints",
+    "unit": "LF",
+    "labor_hours": 0.06,
+    "equipment_hours": null,
+    "material_cost": 12.4,
+    "labor_cost": 2.34,
+    "equipment_cost": null,
+    "total_cost": 14.74
+  },
+  {
+    "item": "4\" DWV copper pipe, soft-soldered joints",
+    "unit": "LF",
+    "labor_hours": 0.07,
+    "equipment_hours": null,
+    "material_cost": 15.9,
+    "labor_cost": 2.73,
+    "equipment_cost": null,
+    "total_cost": 18.63
+  },
+  {
+    "item": "1¼\" DWV copper 1/8 bend, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.17,
+    "equipment_hours": null,
+    "material_cost": 5.14,
+    "labor_cost": 6.64,
+    "equipment_cost": null,
+    "total_cost": 11.78
+  },
+  {
+    "item": "1½\" DWV copper 1/8 bend, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 4.72,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 12.53
+  },
+  {
+    "item": "2\" DWV copper 1/8 bend, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.27,
+    "equipment_hours": null,
+    "material_cost": 8.55,
+    "labor_cost": 10.5,
+    "equipment_cost": null,
+    "total_cost": 19.05
+  },
+  {
+    "item": "3\" DWV copper 1/8 bend, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 21.1,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 36.7
+  },
+  {
+    "item": "4\" DWV copper 1/8 bend, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.54,
+    "equipment_hours": null,
+    "material_cost": 86.9,
+    "labor_cost": 21.1,
+    "equipment_cost": null,
+    "total_cost": 108.0
+  },
+  {
+    "item": "1¼\" DWV copper ¼ bend, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.17,
+    "equipment_hours": null,
+    "material_cost": 5.77,
+    "labor_cost": 6.64,
+    "equipment_cost": null,
+    "total_cost": 12.41
+  },
+  {
+    "item": "1½\" DWV copper ¼ bend, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 6.59,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 14.4
+  },
+  {
+    "item": "2\" DWV copper ¼ bend, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.27,
+    "equipment_hours": null,
+    "material_cost": 10.6,
+    "labor_cost": 10.5,
+    "equipment_cost": null,
+    "total_cost": 21.1
+  },
+  {
+    "item": "3\" DWV copper ¼ bend, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 27.9,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 43.5
+  },
+  {
+    "item": "4\" DWV copper ¼ bend, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.54,
+    "equipment_hours": null,
+    "material_cost": 135.0,
+    "labor_cost": 21.1,
+    "equipment_cost": null,
+    "total_cost": 156.1
+  },
+  {
+    "item": "4\" x 3\" DWV copper closet flange, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.68,
+    "equipment_hours": null,
+    "material_cost": 27.5,
+    "labor_cost": 26.5,
+    "equipment_cost": null,
+    "total_cost": 54.0
+  },
+  {
+    "item": "4\" x 4\" DWV copper closet flange, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.98,
+    "equipment_hours": null,
+    "material_cost": 33.9,
+    "labor_cost": 38.2,
+    "equipment_cost": null,
+    "total_cost": 72.1
+  },
+  {
+    "item": "1¼\" DWV copper P-trap, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.24,
+    "equipment_hours": null,
+    "material_cost": 39.0,
+    "labor_cost": 9.37,
+    "equipment_cost": null,
+    "total_cost": 48.37
+  },
+  {
+    "item": "1½\" DWV copper P-trap, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.24,
+    "equipment_hours": null,
+    "material_cost": 34.0,
+    "labor_cost": 9.37,
+    "equipment_cost": null,
+    "total_cost": 43.37
+  },
+  {
+    "item": "2\" DWV copper P-trap, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.24,
+    "equipment_hours": null,
+    "material_cost": 51.7,
+    "labor_cost": 9.37,
+    "equipment_cost": null,
+    "total_cost": 61.07
+  },
+  {
+    "item": "3\" DWV copper P-trap, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.32,
+    "equipment_hours": null,
+    "material_cost": 149.0,
+    "labor_cost": 12.5,
+    "equipment_cost": null,
+    "total_cost": 161.5
+  },
+  {
+    "item": "1½\" DWV copper sanitary tee (TY), soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.24,
+    "equipment_hours": null,
+    "material_cost": 12.0,
+    "labor_cost": 9.37,
+    "equipment_cost": null,
+    "total_cost": 21.37
+  },
+  {
+    "item": "2\" DWV copper sanitary tee (TY), soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.32,
+    "equipment_hours": null,
+    "material_cost": 16.4,
+    "labor_cost": 12.5,
+    "equipment_cost": null,
+    "total_cost": 28.9
+  },
+  {
+    "item": "3\" DWV copper sanitary tee (TY), soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.49,
+    "equipment_hours": null,
+    "material_cost": 56.5,
+    "labor_cost": 19.1,
+    "equipment_cost": null,
+    "total_cost": 75.6
+  },
+  {
+    "item": "4\" DWV copper sanitary tee (TY), soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.65,
+    "equipment_hours": null,
+    "material_cost": 143.0,
+    "labor_cost": 25.4,
+    "equipment_cost": null,
+    "total_cost": 168.4
+  },
+  {
+    "item": "1½\" DWV copper sanitary cross, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.64,
+    "equipment_hours": null,
+    "material_cost": 79.5,
+    "labor_cost": 25.0,
+    "equipment_cost": null,
+    "total_cost": 104.5
+  },
+  {
+    "item": "2\" DWV copper sanitary cross, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.9,
+    "equipment_hours": null,
+    "material_cost": 114.0,
+    "labor_cost": 35.1,
+    "equipment_cost": null,
+    "total_cost": 149.1
+  },
+  {
+    "item": "3\" DWV copper sanitary cross, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 1.36,
+    "equipment_hours": null,
+    "material_cost": 324.0,
+    "labor_cost": 53.1,
+    "equipment_cost": null,
+    "total_cost": 377.1
+  },
+  {
+    "item": "1½\" DWV copper combination wye and 1/8 bend, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.24,
+    "equipment_hours": null,
+    "material_cost": 25.3,
+    "labor_cost": 9.37,
+    "equipment_cost": null,
+    "total_cost": 34.67
+  },
+  {
+    "item": "2\" DWV copper combination wye and 1/8 bend, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.32,
+    "equipment_hours": null,
+    "material_cost": 43.1,
+    "labor_cost": 12.5,
+    "equipment_cost": null,
+    "total_cost": 55.6
+  },
+  {
+    "item": "3\" DWV copper combination wye and 1/8 bend, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.49,
+    "equipment_hours": null,
+    "material_cost": 143.0,
+    "labor_cost": 19.1,
+    "equipment_cost": null,
+    "total_cost": 162.1
+  },
+  {
+    "item": "4\" DWV copper combination wye and 1/8 bend, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.65,
+    "equipment_hours": null,
+    "material_cost": 321.0,
+    "labor_cost": 25.4,
+    "equipment_cost": null,
+    "total_cost": 346.4
+  },
+  {
+    "item": "1½\" DWV copper wye, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.24,
+    "equipment_hours": null,
+    "material_cost": 19.7,
+    "labor_cost": 9.37,
+    "equipment_cost": null,
+    "total_cost": 29.07
+  },
+  {
+    "item": "2\" DWV copper wye, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.32,
+    "equipment_hours": null,
+    "material_cost": 28.2,
+    "labor_cost": 12.5,
+    "equipment_cost": null,
+    "total_cost": 40.7
+  },
+  {
+    "item": "3\" DWV copper wye, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.49,
+    "equipment_hours": null,
+    "material_cost": 70.6,
+    "labor_cost": 19.1,
+    "equipment_cost": null,
+    "total_cost": 89.7
+  },
+  {
+    "item": "4\" DWV copper wye, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.65,
+    "equipment_hours": null,
+    "material_cost": 143.0,
+    "labor_cost": 25.4,
+    "equipment_cost": null,
+    "total_cost": 168.4
+  },
+  {
+    "item": "1¼\" DWV copper cleanout with threaded plug",
+    "unit": "Ea",
+    "labor_hours": 0.1,
+    "equipment_hours": null,
+    "material_cost": 10.0,
+    "labor_cost": 3.9,
+    "equipment_cost": null,
+    "total_cost": 13.9
+  },
+  {
+    "item": "1½\" DWV copper cleanout with threaded plug",
+    "unit": "Ea",
+    "labor_hours": 0.16,
+    "equipment_hours": null,
+    "material_cost": 14.9,
+    "labor_cost": 6.24,
+    "equipment_cost": null,
+    "total_cost": 21.14
+  },
+  {
+    "item": "2\" DWV copper cleanout with threaded plug",
+    "unit": "Ea",
+    "labor_hours": 0.23,
+    "equipment_hours": null,
+    "material_cost": 19.4,
+    "labor_cost": 8.98,
+    "equipment_cost": null,
+    "total_cost": 28.38
+  },
+  {
+    "item": "1½\" DWV copper female adapter",
+    "unit": "Ea",
+    "labor_hours": 0.13,
+    "equipment_hours": null,
+    "material_cost": 7.68,
+    "labor_cost": 5.07,
+    "equipment_cost": null,
+    "total_cost": 12.75
+  },
+  {
+    "item": "2\" DWV copper female adapter",
+    "unit": "Ea",
+    "labor_hours": 0.17,
+    "equipment_hours": null,
+    "material_cost": 14.7,
+    "labor_cost": 6.64,
+    "equipment_cost": null,
+    "total_cost": 21.34
+  },
+  {
+    "item": "3\" DWV copper female adapter",
+    "unit": "Ea",
+    "labor_hours": 0.23,
+    "equipment_hours": null,
+    "material_cost": 58.3,
+    "labor_cost": 8.98,
+    "equipment_cost": null,
+    "total_cost": 67.28
+  },
+  {
+    "item": "4\" DWV copper female adapter",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 100.0,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 111.7
+  },
+  {
+    "item": "1½\" DWV copper male adapter",
+    "unit": "Ea",
+    "labor_hours": 0.13,
+    "equipment_hours": null,
+    "material_cost": 8.69,
+    "labor_cost": 5.07,
+    "equipment_cost": null,
+    "total_cost": 13.76
+  },
+  {
+    "item": "2\" DWV copper male adapter",
+    "unit": "Ea",
+    "labor_hours": 0.17,
+    "equipment_hours": null,
+    "material_cost": 10.4,
+    "labor_cost": 6.64,
+    "equipment_cost": null,
+    "total_cost": 17.04
+  },
+  {
+    "item": "3\" DWV copper male adapter",
+    "unit": "Ea",
+    "labor_hours": 0.23,
+    "equipment_hours": null,
+    "material_cost": 51.2,
+    "labor_cost": 8.98,
+    "equipment_cost": null,
+    "total_cost": 60.18
+  },
+  {
+    "item": "4\" DWV copper male adapter",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 85.5,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 97.2
+  },
+  {
+    "item": "2\" DWV copper soil adapter (copper x MJ)",
+    "unit": "Ea",
+    "labor_hours": 0.17,
+    "equipment_hours": null,
+    "material_cost": 12.4,
+    "labor_cost": 6.64,
+    "equipment_cost": null,
+    "total_cost": 19.04
+  },
+  {
+    "item": "3\" DWV copper soil adapter (copper x MJ)",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 25.6,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 35.36
+  },
+  {
+    "item": "4\" DWV copper soil adapter (copper x MJ)",
+    "unit": "Ea",
+    "labor_hours": 0.32,
+    "equipment_hours": null,
+    "material_cost": 47.7,
+    "labor_cost": 12.5,
+    "equipment_cost": null,
+    "total_cost": 60.2
+  },
+  {
+    "item": "1½\" DWV copper test cap, soft-soldered joint",
+    "unit": "Ea",
+    "labor_hours": 0.1,
+    "equipment_hours": null,
+    "material_cost": 0.3,
+    "labor_cost": 3.9,
+    "equipment_cost": null,
+    "total_cost": 4.2
+  },
+  {
+    "item": "2\" DWV copper test cap, soft-soldered joint",
+    "unit": "Ea",
+    "labor_hours": 0.13,
+    "equipment_hours": null,
+    "material_cost": 0.42,
+    "labor_cost": 5.07,
+    "equipment_cost": null,
+    "total_cost": 5.49
+  },
+  {
+    "item": "3\" DWV copper test cap, soft-soldered joint",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 0.54,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 8.35
+  },
+  {
+    "item": "4\" DWV copper test cap, soft-soldered joint",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 1.11,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 10.87
+  },
+  {
+    "item": "1½\" DWV copper test tee, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 28.7,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 36.51
+  },
+  {
+    "item": "2\" DWV copper test tee, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.27,
+    "equipment_hours": null,
+    "material_cost": 37.3,
+    "labor_cost": 10.5,
+    "equipment_cost": null,
+    "total_cost": 47.8
+  },
+  {
+    "item": "3\" DWV copper test tee, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 101.0,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 116.6
+  },
+  {
+    "item": "1½\" DWV copper fitting reducer, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.1,
+    "equipment_hours": null,
+    "material_cost": 4.72,
+    "labor_cost": 3.9,
+    "equipment_cost": null,
+    "total_cost": 8.62
+  },
+  {
+    "item": "2\" DWV copper fitting reducer, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.14,
+    "equipment_hours": null,
+    "material_cost": 6.06,
+    "labor_cost": 5.46,
+    "equipment_cost": null,
+    "total_cost": 11.52
+  },
+  {
+    "item": "3\" DWV copper fitting reducer, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 21.1,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 28.91
+  },
+  {
+    "item": "4\" DWV copper fitting reducer, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.27,
+    "equipment_hours": null,
+    "material_cost": 33.7,
+    "labor_cost": 10.5,
+    "equipment_cost": null,
+    "total_cost": 44.2
+  },
+  {
+    "item": "1¼\" DWV copper coupling, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.17,
+    "equipment_hours": null,
+    "material_cost": 2.53,
+    "labor_cost": 6.64,
+    "equipment_cost": null,
+    "total_cost": 9.17
+  },
+  {
+    "item": "1½\" DWV copper coupling, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 2.91,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 10.72
+  },
+  {
+    "item": "2\" DWV copper coupling, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.27,
+    "equipment_hours": null,
+    "material_cost": 4.14,
+    "labor_cost": 10.5,
+    "equipment_cost": null,
+    "total_cost": 14.64
+  },
+  {
+    "item": "3\" DWV copper coupling, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 7.68,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 23.28
+  },
+  {
+    "item": "4\" DWV copper coupling, soft-soldered joints",
+    "unit": "Ea",
+    "labor_hours": 0.54,
+    "equipment_hours": null,
+    "material_cost": 30.2,
+    "labor_cost": 21.1,
+    "equipment_cost": null,
+    "total_cost": 51.3
+  },
+  {
+    "item": "1¼\" Hanger with swivel assembly (Copper, DWV with Soft-Soldered Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 5.05,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 16.75
+  },
+  {
+    "item": "1½\" Hanger with swivel assembly (Copper, DWV with Soft-Soldered Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 5.43,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 17.13
+  },
+  {
+    "item": "2\" Hanger with swivel assembly (Copper, DWV with Soft-Soldered Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 5.66,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 17.36
+  },
+  {
+    "item": "3\" Hanger with swivel assembly (Copper, DWV with Soft-Soldered Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.35,
+    "equipment_hours": null,
+    "material_cost": 9.53,
+    "labor_cost": 13.7,
+    "equipment_cost": null,
+    "total_cost": 23.23
+  },
+  {
+    "item": "4\" Hanger with swivel assembly (Copper, DWV with Soft-Soldered Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.35,
+    "equipment_hours": null,
+    "material_cost": 10.5,
+    "labor_cost": 13.7,
+    "equipment_cost": null,
+    "total_cost": 24.2
+  },
+  {
+    "item": "1¼\" Riser clamp (Copper, DWV with Soft-Soldered Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.105,
+    "equipment_hours": null,
+    "material_cost": 5.66,
+    "labor_cost": 4.1,
+    "equipment_cost": null,
+    "total_cost": 9.76
+  },
+  {
+    "item": "1½\" Riser clamp (Copper, DWV with Soft-Soldered Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.11,
+    "equipment_hours": null,
+    "material_cost": 5.98,
+    "labor_cost": 4.29,
+    "equipment_cost": null,
+    "total_cost": 10.27
+  },
+  {
+    "item": "2\" Riser clamp (Copper, DWV with Soft-Soldered Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.115,
+    "equipment_hours": null,
+    "material_cost": 6.33,
+    "labor_cost": 4.49,
+    "equipment_cost": null,
+    "total_cost": 10.82
+  },
+  {
+    "item": "3\" Riser clamp (Copper, DWV with Soft-Soldered Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.12,
+    "equipment_hours": null,
+    "material_cost": 7.21,
+    "labor_cost": 4.68,
+    "equipment_cost": null,
+    "total_cost": 11.89
+  },
+  {
+    "item": "4\" Riser clamp (Copper, DWV with Soft-Soldered Joints)",
+    "unit": "Ea",
+    "labor_hours": 0.125,
+    "equipment_hours": null,
+    "material_cost": 8.92,
+    "labor_cost": 4.88,
+    "equipment_cost": null,
+    "total_cost": 13.8
   }
 ]

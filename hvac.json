@@ -3906,7 +3906,7 @@
     "total_cost": 284.5
   },
   {
-    "item": "2\" Class 125 iron body gate valve, flanged joints, Copper, Type K",
+    "item": "2\" Class 125 iron body gate valve, flanged joints, with brazed joints, Copper, Type K",
     "labor_hrs": 0.5,
     "unit": "Ea",
     "material_cost": 365.0,
@@ -3915,7 +3915,7 @@
     "total_cost": 384.5
   },
   {
-    "item": "2½\" Class 125 iron body gate valve, flanged joints, Copper, Type K",
+    "item": "2½\" Class 125 iron body gate valve, flanged joints, with brazed joints, Copper, Type K",
     "labor_hrs": 0.6,
     "unit": "Ea",
     "material_cost": 493.0,
@@ -3924,7 +3924,7 @@
     "total_cost": 516.4
   },
   {
-    "item": "3\" Class 125 iron body gate valve, flanged joints, Copper, Type K",
+    "item": "3\" Class 125 iron body gate valve, flanged joints, with brazed joints, Copper, Type K",
     "labor_hrs": 0.75,
     "unit": "Ea",
     "material_cost": 534.0,
@@ -3933,7 +3933,7 @@
     "total_cost": 563.3
   },
   {
-    "item": "4\" Class 125 iron body gate valve, flanged joints, Copper, Type K",
+    "item": "4\" Class 125 iron body gate valve, flanged joints, with brazed joints, Copper, Type K",
     "labor_hrs": 1.35,
     "unit": "Ea",
     "material_cost": 784.0,
@@ -3942,7 +3942,7 @@
     "total_cost": 836.7
   },
   {
-    "item": "5\" Class 125 iron body gate valve, flanged joints, Copper, Type K",
+    "item": "5\" Class 125 iron body gate valve, flanged joints, with brazed joints, Copper, Type K",
     "labor_hrs": 2.0,
     "unit": "Ea",
     "material_cost": 1500.0,
@@ -3951,7 +3951,7 @@
     "total_cost": 1578.1
   },
   {
-    "item": "6\" Class 125 iron body gate valve, flanged joints, Copper, Type K",
+    "item": "6\" Class 125 iron body gate valve, flanged joints, with brazed joints, Copper, Type K",
     "labor_hrs": 2.5,
     "unit": "Ea",
     "material_cost": 1500.0,
@@ -6291,7 +6291,7 @@
     "total_cost": 273.4
   },
   {
-    "item": "2\" Class 125 iron body gate valve, flanged joints",
+    "item": "2\" Class 125 iron body gate valve, flanged joints , with soft-soldered joints, Copper, Type K",
     "labor_hrs": 0.5,
     "unit": "Ea",
     "material_cost": 365.0,
@@ -6300,7 +6300,7 @@
     "total_cost": 384.5
   },
   {
-    "item": "2½\" Class 125 iron body gate valve, flanged joints",
+    "item": "2½\" Class 125 iron body gate valve, flanged joints, with soft-soldered joints, Copper, Type K",
     "labor_hrs": 0.6,
     "unit": "Ea",
     "material_cost": 493.0,
@@ -6309,7 +6309,7 @@
     "total_cost": 516.4
   },
   {
-    "item": "3\" Class 125 iron body gate valve, flanged joints",
+    "item": "3\" Class 125 iron body gate valve, flanged joints, with soft-soldered joints, Copper, Type K",
     "labor_hrs": 0.75,
     "unit": "Ea",
     "material_cost": 534.0,
@@ -6318,7 +6318,7 @@
     "total_cost": 563.3
   },
   {
-    "item": "4\" Class 125 iron body gate valve, flanged joints",
+    "item": "4\" Class 125 iron body gate valve, flanged joints, with soft-soldered joints, Copper, Type K",
     "labor_hrs": 1.35,
     "unit": "Ea",
     "material_cost": 784.0,
@@ -6327,7 +6327,7 @@
     "total_cost": 836.7
   },
   {
-    "item": "5\" Class 125 iron body gate valve, flanged joints",
+    "item": "5\" Class 125 iron body gate valve, flanged joints, with soft-soldered joints, Copper, Type K",
     "labor_hrs": 2.0,
     "unit": "Ea",
     "material_cost": 1500.0,
@@ -6336,7 +6336,7 @@
     "total_cost": 1578.1
   },
   {
-    "item": "6\" Class 125 iron body gate valve, flanged joints",
+    "item": "6\" Class 125 iron body gate valve, flanged joints, with soft-soldered joints, Copper, Type K",
     "labor_hrs": 2.5,
     "unit": "Ea",
     "material_cost": 1500.0,
@@ -24676,7 +24676,7 @@
     "total_cost": 2.03
   },
   {
-    "item": "1/2\" Pipe clips (nail clips)",
+    "item": "1/2\" Pipe clips (nail clips) with crimped joints",
     "unit": "Ea",
     "labor_hours": 0.03,
     "equipment_hours": null,
@@ -24686,7 +24686,7 @@
     "total_cost": 1.3
   },
   {
-    "item": "5/8\" Pipe clips (nail clips)",
+    "item": "5/8\" Pipe clips (nail clips) with crimped joints",
     "unit": "Ea",
     "labor_hours": 0.03,
     "equipment_hours": null,
@@ -24696,7 +24696,7 @@
     "total_cost": 1.39
   },
   {
-    "item": "1\" Pipe clips (nail clips)",
+    "item": "1\" Pipe clips (nail clips) with crimped joints",
     "unit": "Ea",
     "labor_hours": 0.03,
     "equipment_hours": null,
@@ -25414,5 +25414,4035 @@
     "labor_cost": 1.95,
     "equipment_cost": null,
     "total_cost": 2.03
+  },
+  {
+    "item": "1/2\" Pipe clips (nail clips) with Compression Joints",
+    "unit": "Ea",
+    "labor_hours": 0.03,
+    "equipment_hours": null,
+    "material_cost": 0.13,
+    "labor_cost": 1.17,
+    "equipment_cost": null,
+    "total_cost": 1.3
+  },
+  {
+    "item": "5/8\" Pipe clips (nail clips) with Compression Joints",
+    "unit": "Ea",
+    "labor_hours": 0.03,
+    "equipment_hours": null,
+    "material_cost": 0.22,
+    "labor_cost": 1.17,
+    "equipment_cost": null,
+    "total_cost": 1.39
+  },
+  {
+    "item": "1\" Pipe clips (nail clips) with Compression Joints",
+    "unit": "Ea",
+    "labor_hours": 0.03,
+    "equipment_hours": null,
+    "material_cost": 0.5,
+    "labor_cost": 1.17,
+    "equipment_cost": null,
+    "total_cost": 1.67
+  },
+  {
+    "item": "½\" Water meters, turbine-type",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 175.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 194.5
+  },
+  {
+    "item": "¾\" Water meters, turbine-type",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 284.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 303.5
+  },
+  {
+    "item": "1\" Water meters, turbine-type",
+    "unit": "Ea",
+    "labor_hours": 0.65,
+    "equipment_hours": null,
+    "material_cost": 380.0,
+    "labor_cost": 25.4,
+    "equipment_cost": null,
+    "total_cost": 405.4
+  },
+  {
+    "item": "1½\" Water meters, turbine-type",
+    "unit": "Ea",
+    "labor_hours": 0.7,
+    "equipment_hours": null,
+    "material_cost": 1020.0,
+    "labor_cost": 27.3,
+    "equipment_cost": null,
+    "total_cost": 1047.3
+  },
+  {
+    "item": "2\" Water meters, turbine-type",
+    "unit": "Ea",
+    "labor_hours": 0.8,
+    "equipment_hours": null,
+    "material_cost": 1530.0,
+    "labor_cost": 31.2,
+    "equipment_cost": null,
+    "total_cost": 1561.2
+  },
+  {
+    "item": "3\" Water meters, turbine-type",
+    "unit": "Ea",
+    "labor_hours": 0.9,
+    "equipment_hours": null,
+    "material_cost": 2350.0,
+    "labor_cost": 35.1,
+    "equipment_cost": null,
+    "total_cost": 2385.1
+  },
+  {
+    "item": "4\" Water meters, turbine-type",
+    "unit": "Ea",
+    "labor_hours": 0.975,
+    "equipment_hours": null,
+    "material_cost": 4370.0,
+    "labor_cost": 38.1,
+    "equipment_cost": null,
+    "total_cost": 4408.1
+  },
+  {
+    "item": "2\" Water meters, compound-type",
+    "unit": "Ea",
+    "labor_hours": 0.8,
+    "equipment_hours": null,
+    "material_cost": 3710.0,
+    "labor_cost": 31.2,
+    "equipment_cost": null,
+    "total_cost": 3741.2
+  },
+  {
+    "item": "3\" Water meters, compound-type",
+    "unit": "Ea",
+    "labor_hours": 0.9,
+    "equipment_hours": null,
+    "material_cost": 4830.0,
+    "labor_cost": 35.1,
+    "equipment_cost": null,
+    "total_cost": 4865.1
+  },
+  {
+    "item": "4\" Water meters, compound-type",
+    "unit": "Ea",
+    "labor_hours": 0.975,
+    "equipment_hours": null,
+    "material_cost": 7620.0,
+    "labor_cost": 38.1,
+    "equipment_cost": null,
+    "total_cost": 7658.1
+  },
+  {
+    "item": "½\" Water meter by-pass and connection assembly",
+    "unit": "Ea",
+    "labor_hours": 1.0,
+    "equipment_hours": null,
+    "material_cost": 85.0,
+    "labor_cost": 39.0,
+    "equipment_cost": null,
+    "total_cost": 124.0
+  },
+  {
+    "item": "¾\" Water meter by-pass and connection assembly",
+    "unit": "Ea",
+    "labor_hours": 1.5,
+    "equipment_hours": null,
+    "material_cost": 129.0,
+    "labor_cost": 58.5,
+    "equipment_cost": null,
+    "total_cost": 187.5
+  },
+  {
+    "item": "1\" Water meter by-pass and connection assembly",
+    "unit": "Ea",
+    "labor_hours": 1.95,
+    "equipment_hours": null,
+    "material_cost": 222.0,
+    "labor_cost": 76.1,
+    "equipment_cost": null,
+    "total_cost": 298.1
+  },
+  {
+    "item": "1½\" Water meter by-pass and connection assembly",
+    "unit": "Ea",
+    "labor_hours": 2.45,
+    "equipment_hours": null,
+    "material_cost": 409.0,
+    "labor_cost": 95.6,
+    "equipment_cost": null,
+    "total_cost": 504.6
+  },
+  {
+    "item": "2\" Water meter by-pass and connection assembly",
+    "unit": "Ea",
+    "labor_hours": 3.25,
+    "equipment_hours": null,
+    "material_cost": 602.0,
+    "labor_cost": 127.0,
+    "equipment_cost": null,
+    "total_cost": 729.0
+  },
+  {
+    "item": "3\" Water meter by-pass and connection assembly",
+    "unit": "Ea",
+    "labor_hours": 5.5,
+    "equipment_hours": null,
+    "material_cost": 1800.0,
+    "labor_cost": 215.0,
+    "equipment_cost": null,
+    "total_cost": 2015.0
+  },
+  {
+    "item": "4\" Water meter by-pass and connection assembly",
+    "unit": "Ea",
+    "labor_hours": 6.75,
+    "equipment_hours": null,
+    "material_cost": 3050.0,
+    "labor_cost": 263.0,
+    "equipment_cost": null,
+    "total_cost": 3313.0
+  },
+  {
+    "item": "¾\" Backflow preventers – reduced pressure. Including valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 1.0,
+    "equipment_hours": null,
+    "material_cost": 364.0,
+    "labor_cost": 39.0,
+    "equipment_cost": null,
+    "total_cost": 403.0
+  },
+  {
+    "item": "1\" Backflow preventers – reduced pressure. Including valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 1.25,
+    "equipment_hours": null,
+    "material_cost": 450.0,
+    "labor_cost": 48.8,
+    "equipment_cost": null,
+    "total_cost": 498.8
+  },
+  {
+    "item": "1½\" Backflow preventers – reduced pressure. Including valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 2.0,
+    "equipment_hours": null,
+    "material_cost": 725.0,
+    "labor_cost": 78.1,
+    "equipment_cost": null,
+    "total_cost": 803.1
+  },
+  {
+    "item": "2\" Backflow preventers – reduced pressure. Including valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 2.15,
+    "equipment_hours": null,
+    "material_cost": 900.0,
+    "labor_cost": 83.9,
+    "equipment_cost": null,
+    "total_cost": 983.9
+  },
+  {
+    "item": "2½\" Backflow preventers – reduced pressure. Including valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 4.0,
+    "equipment_hours": null,
+    "material_cost": 3270.0,
+    "labor_cost": 156.0,
+    "equipment_cost": null,
+    "total_cost": 3426.0
+  },
+  {
+    "item": "3\" Backflow preventers – reduced pressure. Including valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 4.75,
+    "equipment_hours": null,
+    "material_cost": 4310.0,
+    "labor_cost": 185.0,
+    "equipment_cost": null,
+    "total_cost": 4495.0
+  },
+  {
+    "item": "4\" Backflow preventers – reduced pressure. Including valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 6.0,
+    "equipment_hours": null,
+    "material_cost": 4900.0,
+    "labor_cost": 234.0,
+    "equipment_cost": null,
+    "total_cost": 5134.0
+  },
+  {
+    "item": "6\" Backflow preventers – reduced pressure. Including valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 7.95,
+    "equipment_hours": null,
+    "material_cost": 5360.0,
+    "labor_cost": 310.0,
+    "equipment_cost": null,
+    "total_cost": 5670.0
+  },
+  {
+    "item": "½\" Backflow preventers – reduced pressure. Including integral ball valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 0.9,
+    "equipment_hours": null,
+    "material_cost": 222.0,
+    "labor_cost": 35.1,
+    "equipment_cost": null,
+    "total_cost": 257.1
+  },
+  {
+    "item": "¾\" Backflow preventers – reduced pressure. Including integral ball valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 1.0,
+    "equipment_hours": null,
+    "material_cost": 261.0,
+    "labor_cost": 39.0,
+    "equipment_cost": null,
+    "total_cost": 300.0
+  },
+  {
+    "item": "1\" Backflow preventers – reduced pressure. Including integral ball valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 1.25,
+    "equipment_hours": null,
+    "material_cost": 328.0,
+    "labor_cost": 48.8,
+    "equipment_cost": null,
+    "total_cost": 376.8
+  },
+  {
+    "item": "1¼\" Backflow preventers – reduced pressure. Including integral ball valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 1.5,
+    "equipment_hours": null,
+    "material_cost": 481.0,
+    "labor_cost": 58.5,
+    "equipment_cost": null,
+    "total_cost": 539.5
+  },
+  {
+    "item": "1½\" Backflow preventers – reduced pressure. Including integral ball valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 2.0,
+    "equipment_hours": null,
+    "material_cost": 523.0,
+    "labor_cost": 78.1,
+    "equipment_cost": null,
+    "total_cost": 601.1
+  },
+  {
+    "item": "2\" Backflow preventers – reduced pressure. Including integral ball valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 2.15,
+    "equipment_hours": null,
+    "material_cost": 588.0,
+    "labor_cost": 83.9,
+    "equipment_cost": null,
+    "total_cost": 671.9
+  },
+  {
+    "item": "½\" Backflow preventers, double-check valve assembly. Including integral ball valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 1.0,
+    "equipment_hours": null,
+    "material_cost": 166.0,
+    "labor_cost": 39.0,
+    "equipment_cost": null,
+    "total_cost": 205.0
+  },
+  {
+    "item": "¾\" Backflow preventers, double-check valve assembly. Including integral ball valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 1.0,
+    "equipment_hours": null,
+    "material_cost": 184.0,
+    "labor_cost": 39.0,
+    "equipment_cost": null,
+    "total_cost": 223.0
+  },
+  {
+    "item": "1\" Backflow preventers, double-check valve assembly. Including integral ball valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 1.25,
+    "equipment_hours": null,
+    "material_cost": 222.0,
+    "labor_cost": 48.8,
+    "equipment_cost": null,
+    "total_cost": 270.8
+  },
+  {
+    "item": "1¼\" Backflow preventers, double-check valve assembly. Including integral ball valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 1.95,
+    "equipment_hours": null,
+    "material_cost": 372.0,
+    "labor_cost": 76.1,
+    "equipment_cost": null,
+    "total_cost": 448.1
+  },
+  {
+    "item": "1½\" Backflow preventers, double-check valve assembly. Including integral ball valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 2.0,
+    "equipment_hours": null,
+    "material_cost": 385.0,
+    "labor_cost": 78.1,
+    "equipment_cost": null,
+    "total_cost": 463.1
+  },
+  {
+    "item": "2\" Backflow preventers, double-check valve assembly. Including integral ball valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 2.15,
+    "equipment_hours": null,
+    "material_cost": 467.0,
+    "labor_cost": 83.9,
+    "equipment_cost": null,
+    "total_cost": 550.9
+  },
+  {
+    "item": "2½\" Backflow preventers, double-check valve assembly. Including integral ball valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 2.95,
+    "equipment_hours": null,
+    "material_cost": 1920.0,
+    "labor_cost": 115.0,
+    "equipment_cost": null,
+    "total_cost": 2035.0
+  },
+  {
+    "item": "3\" Backflow preventers, double-check valve assembly. Including integral ball valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 3.45,
+    "equipment_hours": null,
+    "material_cost": 2460.0,
+    "labor_cost": 135.0,
+    "equipment_cost": null,
+    "total_cost": 2595.0
+  },
+  {
+    "item": "4\" Backflow preventers, double-check valve assembly. Including integral ball valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 3.95,
+    "equipment_hours": null,
+    "material_cost": 3330.0,
+    "labor_cost": 154.0,
+    "equipment_cost": null,
+    "total_cost": 3484.0
+  },
+  {
+    "item": "6\" Backflow preventers, double-check valve assembly. Including integral ball valves and test ports",
+    "unit": "Ea",
+    "labor_hours": 5.75,
+    "equipment_hours": null,
+    "material_cost": 5620.0,
+    "labor_cost": 224.0,
+    "equipment_cost": null,
+    "total_cost": 5844.0
+  },
+  {
+    "item": "¼\" Vacuum breakers, atmospheric. Female pipe thread",
+    "unit": "Ea",
+    "labor_hours": 0.35,
+    "equipment_hours": null,
+    "material_cost": 54.5,
+    "labor_cost": 13.7,
+    "equipment_cost": null,
+    "total_cost": 68.2
+  },
+  {
+    "item": "½\" Vacuum breakers, atmospheric. Female pipe thread",
+    "unit": "Ea",
+    "labor_hours": 0.35,
+    "equipment_hours": null,
+    "material_cost": 76.0,
+    "labor_cost": 13.7,
+    "equipment_cost": null,
+    "total_cost": 89.7
+  },
+  {
+    "item": "¾\" Vacuum breakers, atmospheric. Female pipe thread",
+    "unit": "Ea",
+    "labor_hours": 0.35,
+    "equipment_hours": null,
+    "material_cost": 92.9,
+    "labor_cost": 13.7,
+    "equipment_cost": null,
+    "total_cost": 106.6
+  },
+  {
+    "item": "½\" Vacuum breakers, hose connection. Male/female hose thread, polished brass",
+    "unit": "Ea",
+    "labor_hours": 0.15,
+    "equipment_hours": null,
+    "material_cost": 22.5,
+    "labor_cost": 5.85,
+    "equipment_cost": null,
+    "total_cost": 28.35
+  },
+  {
+    "item": "¾\" Vacuum breakers, hose connection. Male/female hose thread, polished brass",
+    "unit": "Ea",
+    "labor_hours": 0.15,
+    "equipment_hours": null,
+    "material_cost": 27.5,
+    "labor_cost": 5.85,
+    "equipment_cost": null,
+    "total_cost": 33.35
+  },
+  {
+    "item": "2\" Suction diffusers",
+    "unit": "Ea",
+    "labor_hours": 1.25,
+    "equipment_hours": null,
+    "material_cost": 375.0,
+    "labor_cost": 48.8,
+    "equipment_cost": null,
+    "total_cost": 423.8
+  },
+  {
+    "item": "3\" Suction diffusers",
+    "unit": "Ea",
+    "labor_hours": 2.5,
+    "equipment_hours": null,
+    "material_cost": 629.0,
+    "labor_cost": 97.6,
+    "equipment_cost": null,
+    "total_cost": 726.6
+  },
+  {
+    "item": "4\" Suction diffusers",
+    "unit": "Ea",
+    "labor_hours": 3.25,
+    "equipment_hours": null,
+    "material_cost": 800.0,
+    "labor_cost": 127.0,
+    "equipment_cost": null,
+    "total_cost": 927.0
+  },
+  {
+    "item": "6\" Suction diffusers",
+    "unit": "Ea",
+    "labor_hours": 4.8,
+    "equipment_hours": null,
+    "material_cost": 1140.0,
+    "labor_cost": 187.0,
+    "equipment_cost": 12.4,
+    "total_cost": 1339.4
+  },
+  {
+    "item": "8\" Suction diffusers",
+    "unit": "Ea",
+    "labor_hours": 5.95,
+    "equipment_hours": null,
+    "material_cost": 2130.0,
+    "labor_cost": 232.0,
+    "equipment_cost": 15.4,
+    "total_cost": 2377.4
+  },
+  {
+    "item": "10\" Suction diffusers",
+    "unit": "Ea",
+    "labor_hours": 6.75,
+    "equipment_hours": null,
+    "material_cost": 2880.0,
+    "labor_cost": 263.0,
+    "equipment_cost": 17.5,
+    "total_cost": 3160.5
+  },
+  {
+    "item": "2\" Triple-duty valves",
+    "unit": "Ea",
+    "labor_hours": 1.25,
+    "equipment_hours": null,
+    "material_cost": 495.0,
+    "labor_cost": 48.8,
+    "equipment_cost": null,
+    "total_cost": 543.8
+  },
+  {
+    "item": "3\" Triple-duty valves",
+    "unit": "Ea",
+    "labor_hours": 2.5,
+    "equipment_hours": null,
+    "material_cost": 673.0,
+    "labor_cost": 97.6,
+    "equipment_cost": null,
+    "total_cost": 770.6
+  },
+  {
+    "item": "4\" Triple-duty valves",
+    "unit": "Ea",
+    "labor_hours": 3.25,
+    "equipment_hours": null,
+    "material_cost": 1220.0,
+    "labor_cost": 127.0,
+    "equipment_cost": null,
+    "total_cost": 1347.0
+  },
+  {
+    "item": "6\" Triple-duty valves",
+    "unit": "Ea",
+    "labor_hours": 4.8,
+    "equipment_hours": null,
+    "material_cost": 2010.0,
+    "labor_cost": 187.0,
+    "equipment_cost": 12.4,
+    "total_cost": 2209.4
+  },
+  {
+    "item": "8\" Triple-duty valves",
+    "unit": "Ea",
+    "labor_hours": 5.95,
+    "equipment_hours": null,
+    "material_cost": 2940.0,
+    "labor_cost": 232.0,
+    "equipment_cost": 15.4,
+    "total_cost": 3187.4
+  },
+  {
+    "item": "10\" Triple-duty valves",
+    "unit": "Ea",
+    "labor_hours": 6.75,
+    "equipment_hours": null,
+    "material_cost": 4320.0,
+    "labor_cost": 263.0,
+    "equipment_cost": 17.5,
+    "total_cost": 4600.5
+  },
+  {
+    "item": "1/25 HP In-line circulating pump, all bronze. 115 volt, including flange kit",
+    "unit": "Ea",
+    "labor_hours": 1.5,
+    "equipment_hours": null,
+    "material_cost": 475.0,
+    "labor_cost": 58.5,
+    "equipment_cost": null,
+    "total_cost": 533.5
+  },
+  {
+    "item": "1/16 HP In-line circulating pump, all bronze. 115 volt, including flange kit",
+    "unit": "Ea",
+    "labor_hours": 1.55,
+    "equipment_hours": null,
+    "material_cost": 600.0,
+    "labor_cost": 60.5,
+    "equipment_cost": null,
+    "total_cost": 660.5
+  },
+  {
+    "item": "1/12 HP In-line circulating pump, all bronze. 115 volt, including flange kit",
+    "unit": "Ea",
+    "labor_hours": 1.6,
+    "equipment_hours": null,
+    "material_cost": 825.0,
+    "labor_cost": 62.4,
+    "equipment_cost": null,
+    "total_cost": 887.4
+  },
+  {
+    "item": "1/6 HP In-line circulating pump, all bronze. 115 volt, including flange kit",
+    "unit": "Ea",
+    "labor_hours": 1.75,
+    "equipment_hours": null,
+    "material_cost": 1270.0,
+    "labor_cost": 68.3,
+    "equipment_cost": null,
+    "total_cost": 1338.3
+  },
+  {
+    "item": "1/4 HP In-line circulating pump, all bronze. 115 volt, including flange kit",
+    "unit": "Ea",
+    "labor_hours": 1.95,
+    "equipment_hours": null,
+    "material_cost": 2100.0,
+    "labor_cost": 76.1,
+    "equipment_cost": null,
+    "total_cost": 2176.1
+  },
+  {
+    "item": "1 HP In-line circulating pump, all bronze. 115 volt, including flange kit",
+    "unit": "Ea",
+    "labor_hours": 2.25,
+    "equipment_hours": null,
+    "material_cost": 3000.0,
+    "labor_cost": 87.8,
+    "equipment_cost": null,
+    "total_cost": 3087.8
+  },
+  {
+    "item": "1½ HP In-line circulating pump, all bronze. 115 volt, including flange kit",
+    "unit": "Ea",
+    "labor_hours": 2.85,
+    "equipment_hours": null,
+    "material_cost": 3620.0,
+    "labor_cost": 111.0,
+    "equipment_cost": null,
+    "total_cost": 3731.0
+  },
+  {
+    "item": "1/25 HP In-line circulating pump, iron body. 115 volt, including flange kit",
+    "unit": "Ea",
+    "labor_hours": 1.5,
+    "equipment_hours": null,
+    "material_cost": 223.0,
+    "labor_cost": 58.5,
+    "equipment_cost": null,
+    "total_cost": 281.5
+  },
+  {
+    "item": "1/16 HP In-line circulating pump, iron body. 115 volt, including flange kit",
+    "unit": "Ea",
+    "labor_hours": 1.55,
+    "equipment_hours": null,
+    "material_cost": 268.0,
+    "labor_cost": 60.5,
+    "equipment_cost": null,
+    "total_cost": 328.5
+  },
+  {
+    "item": "1/12 HP In-line circulating pump, iron body. 115 volt, including flange kit",
+    "unit": "Ea",
+    "labor_hours": 1.6,
+    "equipment_hours": null,
+    "material_cost": 504.0,
+    "labor_cost": 62.4,
+    "equipment_cost": null,
+    "total_cost": 566.4
+  },
+  {
+    "item": "1/6 HP In-line circulating pump, iron body. 115 volt, including flange kit",
+    "unit": "Ea",
+    "labor_hours": 1.75,
+    "equipment_hours": null,
+    "material_cost": 857.0,
+    "labor_cost": 68.3,
+    "equipment_cost": null,
+    "total_cost": 925.3
+  },
+  {
+    "item": "1/4 HP In-line circulating pump, iron body. 115 volt, including flange kit",
+    "unit": "Ea",
+    "labor_hours": 1.95,
+    "equipment_hours": null,
+    "material_cost": 925.0,
+    "labor_cost": 76.1,
+    "equipment_cost": null,
+    "total_cost": 1001.1
+  },
+  {
+    "item": "1 HP In-line circulating pump, iron body. 115 volt, including flange kit",
+    "unit": "Ea",
+    "labor_hours": 2.25,
+    "equipment_hours": null,
+    "material_cost": 1570.0,
+    "labor_cost": 87.8,
+    "equipment_cost": null,
+    "total_cost": 1657.8
+  },
+  {
+    "item": "1½ HP In-line circulating pump, iron body. 115 volt, including flange kit",
+    "unit": "Ea",
+    "labor_hours": 2.85,
+    "equipment_hours": null,
+    "material_cost": 2060.0,
+    "labor_cost": 111.0,
+    "equipment_cost": null,
+    "total_cost": 2171.0
+  },
+  {
+    "item": "8\" x 8\" Primed steel cam-lock non-fire-rated access doors",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 68.3,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 83.9
+  },
+  {
+    "item": "12\" x 12\" Primed steel cam-lock non-fire-rated access doors",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 78.7,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 98.2
+  },
+  {
+    "item": "16\" x 16\" Primed steel cam-lock non-fire-rated access doors",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 96.8,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 120.2
+  },
+  {
+    "item": "18\" x 18\" Primed steel cam-lock non-fire-rated access doors",
+    "unit": "Ea",
+    "labor_hours": 0.8,
+    "equipment_hours": null,
+    "material_cost": 111.0,
+    "labor_cost": 31.2,
+    "equipment_cost": null,
+    "total_cost": 142.2
+  },
+  {
+    "item": "24\" x 24\" Primed steel cam-lock non-fire-rated access doors",
+    "unit": "Ea",
+    "labor_hours": 1.25,
+    "equipment_hours": null,
+    "material_cost": 165.0,
+    "labor_cost": 48.8,
+    "equipment_cost": null,
+    "total_cost": 213.8
+  },
+  {
+    "item": "36\" x 36\" Primed steel cam-lock non-fire-rated access doors",
+    "unit": "Ea",
+    "labor_hours": 1.6,
+    "equipment_hours": null,
+    "material_cost": 304.0,
+    "labor_cost": 62.4,
+    "equipment_cost": null,
+    "total_cost": 366.4
+  },
+  {
+    "item": "8\" x 8\" Primed steel cam-lock 1½ hour fire-rated access doors",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 252.0,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 267.6
+  },
+  {
+    "item": "12\" x 12\" Primed steel cam-lock 1½ hour fire-rated access doors",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 265.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 284.5
+  },
+  {
+    "item": "16\" x 16\" Primed steel cam-lock 1½ hour fire-rated access doors",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 313.0,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 336.4
+  },
+  {
+    "item": "18\" x 18\" Primed steel cam-lock 1½ hour fire-rated access doors",
+    "unit": "Ea",
+    "labor_hours": 0.8,
+    "equipment_hours": null,
+    "material_cost": 318.0,
+    "labor_cost": 31.2,
+    "equipment_cost": null,
+    "total_cost": 349.2
+  },
+  {
+    "item": "24\" x 24\" Primed steel cam-lock 1½ hour fire-rated access doors",
+    "unit": "Ea",
+    "labor_hours": 1.25,
+    "equipment_hours": null,
+    "material_cost": 446.0,
+    "labor_cost": 48.8,
+    "equipment_cost": null,
+    "total_cost": 494.8
+  },
+  {
+    "item": "24\" x 36\" Primed steel cam-lock 1½ hour fire-rated access doors",
+    "unit": "Ea",
+    "labor_hours": 1.5,
+    "equipment_hours": null,
+    "material_cost": 575.0,
+    "labor_cost": 58.5,
+    "equipment_cost": null,
+    "total_cost": 633.5
+  },
+  {
+    "item": "48\" x 48\" Primed steel cam-lock 1½ hour fire-rated access doors",
+    "unit": "Ea",
+    "labor_hours": 2.0,
+    "equipment_hours": null,
+    "material_cost": 890.0,
+    "labor_cost": 78.1,
+    "equipment_cost": null,
+    "total_cost": 968.1
+  },
+  {
+    "item": "Float type Threaded automatic air vent",
+    "unit": "Ea",
+    "labor_hours": 0.15,
+    "equipment_hours": null,
+    "material_cost": 13.1,
+    "labor_cost": 5.85,
+    "equipment_cost": null,
+    "total_cost": 18.95
+  },
+  {
+    "item": "35 PSIG Threaded automatic air vent",
+    "unit": "Ea",
+    "labor_hours": 0.15,
+    "equipment_hours": null,
+    "material_cost": 83.0,
+    "labor_cost": 5.85,
+    "equipment_cost": null,
+    "total_cost": 88.85
+  },
+  {
+    "item": "150 PSIG Threaded automatic air vent",
+    "unit": "Ea",
+    "labor_hours": 0.15,
+    "equipment_hours": null,
+    "material_cost": 135.0,
+    "labor_cost": 5.85,
+    "equipment_cost": null,
+    "total_cost": 140.85
+  },
+  {
+    "item": "175 PSIG Threaded manual air vent",
+    "unit": "Ea",
+    "labor_hours": 0.15,
+    "equipment_hours": null,
+    "material_cost": 7.87,
+    "labor_cost": 5.85,
+    "equipment_cost": null,
+    "total_cost": 13.72
+  },
+  {
+    "item": "2½\" 150 pound forged steel slip-on companion flange, welding-type",
+    "unit": "Ea",
+    "labor_hours": 0.61,
+    "equipment_hours": null,
+    "material_cost": 41.1,
+    "labor_cost": 23.8,
+    "equipment_cost": null,
+    "total_cost": 64.9
+  },
+  {
+    "item": "3\" 150 pound forged steel slip-on companion flange, welding-type",
+    "unit": "Ea",
+    "labor_hours": 0.73,
+    "equipment_hours": null,
+    "material_cost": 41.1,
+    "labor_cost": 28.5,
+    "equipment_cost": null,
+    "total_cost": 69.6
+  },
+  {
+    "item": "4\" 150 pound forged steel slip-on companion flange, welding-type",
+    "unit": "Ea",
+    "labor_hours": 0.98,
+    "equipment_hours": null,
+    "material_cost": 56.5,
+    "labor_cost": 38.2,
+    "equipment_cost": null,
+    "total_cost": 94.7
+  },
+  {
+    "item": "6\" 150 pound forged steel slip-on companion flange, welding-type",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.47,
+    "material_cost": 74.7,
+    "labor_cost": 61.6,
+    "equipment_cost": 1.09,
+    "total_cost": 137.39
+  },
+  {
+    "item": "8\" 150 pound forged steel slip-on companion flange, welding-type",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.77,
+    "material_cost": 138.0,
+    "labor_cost": 74.2,
+    "equipment_cost": 1.31,
+    "total_cost": 213.51
+  },
+  {
+    "item": "10\" 150 pound forged steel slip-on companion flange, welding-type",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.2,
+    "material_cost": 231.0,
+    "labor_cost": 92.2,
+    "equipment_cost": 1.63,
+    "total_cost": 324.83
+  },
+  {
+    "item": "12\" 150 pound forged steel slip-on companion flange, welding-type",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.64,
+    "material_cost": 345.0,
+    "labor_cost": 111.0,
+    "equipment_cost": 1.95,
+    "total_cost": 457.95
+  },
+  {
+    "item": "2\" 150 pound forged steel companion flange, threaded",
+    "unit": "Ea",
+    "labor_hours": 0.29,
+    "equipment_hours": null,
+    "material_cost": 44.0,
+    "labor_cost": 11.3,
+    "equipment_cost": null,
+    "total_cost": 55.3
+  },
+  {
+    "item": "2½\" 150 pound forged steel companion flange, threaded",
+    "unit": "Ea",
+    "labor_hours": 0.38,
+    "equipment_hours": null,
+    "material_cost": 66.3,
+    "labor_cost": 14.8,
+    "equipment_cost": null,
+    "total_cost": 81.1
+  },
+  {
+    "item": "3\" 150 pound forged steel companion flange, threaded",
+    "unit": "Ea",
+    "labor_hours": 0.46,
+    "equipment_hours": null,
+    "material_cost": 73.6,
+    "labor_cost": 18.0,
+    "equipment_cost": null,
+    "total_cost": 91.6
+  },
+  {
+    "item": "4\" 150 pound forged steel companion flange, threaded",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 98.7,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 122.1
+  },
+  {
+    "item": "6\" 150 pound forged steel companion flange, threaded",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.68,
+    "material_cost": 146.0,
+    "labor_cost": 28.5,
+    "equipment_cost": 0.5,
+    "total_cost": 175.0
+  },
+  {
+    "item": "8\" 150 pound forged steel companion flange, threaded",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.76,
+    "material_cost": 200.0,
+    "labor_cost": 31.9,
+    "equipment_cost": 0.56,
+    "total_cost": 232.46
+  },
+  {
+    "item": "2½\" 300 pound forged steel slip-on companion flange, welding-type",
+    "unit": "Ea",
+    "labor_hours": 0.81,
+    "equipment_hours": null,
+    "material_cost": 47.2,
+    "labor_cost": 31.6,
+    "equipment_cost": null,
+    "total_cost": 78.8
+  },
+  {
+    "item": "3\" 300 pound forged steel slip-on companion flange, welding-type",
+    "unit": "Ea",
+    "labor_hours": 0.98,
+    "equipment_hours": null,
+    "material_cost": 47.2,
+    "labor_cost": 38.2,
+    "equipment_cost": null,
+    "total_cost": 85.4
+  },
+  {
+    "item": "4\" 300 pound forged steel slip-on companion flange, welding-type",
+    "unit": "Ea",
+    "labor_hours": 1.3,
+    "equipment_hours": null,
+    "material_cost": 68.9,
+    "labor_cost": 50.7,
+    "equipment_cost": null,
+    "total_cost": 119.6
+  },
+  {
+    "item": "6\" 300 pound forged steel slip-on companion flange, welding-type",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.95,
+    "material_cost": 126.0,
+    "labor_cost": 81.7,
+    "equipment_cost": 1.44,
+    "total_cost": 209.14
+  },
+  {
+    "item": "8\" 300 pound forged steel slip-on companion flange, welding-type",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.35,
+    "material_cost": 178.0,
+    "labor_cost": 98.5,
+    "equipment_cost": 1.74,
+    "total_cost": 278.24
+  },
+  {
+    "item": "10\" 300 pound forged steel slip-on companion flange, welding-type",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.9,
+    "material_cost": 293.0,
+    "labor_cost": 122.0,
+    "equipment_cost": 2.14,
+    "total_cost": 417.14
+  },
+  {
+    "item": "12\" 300 pound forged steel slip-on companion flange, welding-type",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 3.5,
+    "material_cost": 467.0,
+    "labor_cost": 147.0,
+    "equipment_cost": 2.59,
+    "total_cost": 616.59
+  },
+  {
+    "item": "2\" PVC companion flange (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.14,
+    "equipment_hours": null,
+    "material_cost": 9.94,
+    "labor_cost": 5.46,
+    "equipment_cost": null,
+    "total_cost": 15.4
+  },
+  {
+    "item": "2½\" PVC companion flange (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.18,
+    "equipment_hours": null,
+    "material_cost": 29.9,
+    "labor_cost": 7.03,
+    "equipment_cost": null,
+    "total_cost": 36.93
+  },
+  {
+    "item": "3\" PVC companion flange (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.21,
+    "equipment_hours": null,
+    "material_cost": 31.2,
+    "labor_cost": 8.2,
+    "equipment_cost": null,
+    "total_cost": 39.4
+  },
+  {
+    "item": "4\" PVC companion flange (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.28,
+    "equipment_hours": null,
+    "material_cost": 32.1,
+    "labor_cost": 10.9,
+    "equipment_cost": null,
+    "total_cost": 43.0
+  },
+  {
+    "item": "5\" PVC companion flange (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.31,
+    "equipment_hours": null,
+    "material_cost": 71.9,
+    "labor_cost": 12.1,
+    "equipment_cost": null,
+    "total_cost": 84.0
+  },
+  {
+    "item": "6\" PVC companion flange (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.42,
+    "equipment_hours": null,
+    "material_cost": 71.9,
+    "labor_cost": 16.4,
+    "equipment_cost": null,
+    "total_cost": 88.3
+  },
+  {
+    "item": "8\" PVC companion flange (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.56,
+    "equipment_hours": null,
+    "material_cost": 107.0,
+    "labor_cost": 21.9,
+    "equipment_cost": null,
+    "total_cost": 128.9
+  },
+  {
+    "item": "2\" Bolt and gasket set (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 5.18,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 24.68
+  },
+  {
+    "item": "2½\" Bolt and gasket set (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.65,
+    "equipment_hours": null,
+    "material_cost": 5.99,
+    "labor_cost": 25.4,
+    "equipment_cost": null,
+    "total_cost": 31.39
+  },
+  {
+    "item": "3\" Bolt and gasket set (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 10.2,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 39.5
+  },
+  {
+    "item": "4\" Bolt and gasket set (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.0,
+    "equipment_hours": null,
+    "material_cost": 17.1,
+    "labor_cost": 39.0,
+    "equipment_cost": null,
+    "total_cost": 56.1
+  },
+  {
+    "item": "5\" Bolt and gasket set (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.1,
+    "equipment_hours": null,
+    "material_cost": 19.7,
+    "labor_cost": 42.9,
+    "equipment_cost": null,
+    "total_cost": 62.6
+  },
+  {
+    "item": "6\" Bolt and gasket set (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.2,
+    "equipment_hours": null,
+    "material_cost": 19.7,
+    "labor_cost": 46.8,
+    "equipment_cost": null,
+    "total_cost": 66.5
+  },
+  {
+    "item": "8\" Bolt and gasket set (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.25,
+    "equipment_hours": null,
+    "material_cost": 25.5,
+    "labor_cost": 48.8,
+    "equipment_cost": null,
+    "total_cost": 74.3
+  },
+  {
+    "item": "10\" Bolt and gasket set (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.7,
+    "equipment_hours": null,
+    "material_cost": 30.6,
+    "labor_cost": 66.4,
+    "equipment_cost": null,
+    "total_cost": 97.0
+  },
+  {
+    "item": "12\" Bolt and gasket set (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 2.2,
+    "equipment_hours": null,
+    "material_cost": 41.1,
+    "labor_cost": 85.9,
+    "equipment_cost": null,
+    "total_cost": 127.0
+  },
+  {
+    "item": "1/2\" Dielectric union, brazed joints",
+    "unit": "Ea",
+    "labor_hours": 0.146,
+    "equipment_hours": null,
+    "material_cost": 16.6,
+    "labor_cost": 5.7,
+    "equipment_cost": null,
+    "total_cost": 22.3
+  },
+  {
+    "item": "3/4\" Dielectric union, brazed joints",
+    "unit": "Ea",
+    "labor_hours": 0.205,
+    "equipment_hours": null,
+    "material_cost": 16.6,
+    "labor_cost": 8.0,
+    "equipment_cost": null,
+    "total_cost": 24.6
+  },
+  {
+    "item": "1\" Dielectric union, brazed joints",
+    "unit": "Ea",
+    "labor_hours": 0.263,
+    "equipment_hours": null,
+    "material_cost": 34.5,
+    "labor_cost": 10.3,
+    "equipment_cost": null,
+    "total_cost": 44.8
+  },
+  {
+    "item": "1¼\" Dielectric union, brazed joints",
+    "unit": "Ea",
+    "labor_hours": 0.322,
+    "equipment_hours": null,
+    "material_cost": 59.3,
+    "labor_cost": 12.6,
+    "equipment_cost": null,
+    "total_cost": 71.9
+  },
+  {
+    "item": "1½\" Dielectric union, brazed joints",
+    "unit": "Ea",
+    "labor_hours": 0.38,
+    "equipment_hours": null,
+    "material_cost": 80.7,
+    "labor_cost": 14.8,
+    "equipment_cost": null,
+    "total_cost": 95.5
+  },
+  {
+    "item": "2\" Dielectric union, brazed joints",
+    "unit": "Ea",
+    "labor_hours": 0.507,
+    "equipment_hours": null,
+    "material_cost": 111.0,
+    "labor_cost": 19.8,
+    "equipment_cost": null,
+    "total_cost": 130.8
+  },
+  {
+    "item": "15 gallon 125/150# galvanized ASME expansion tank",
+    "unit": "Ea",
+    "labor_hours": 1.75,
+    "equipment_hours": null,
+    "material_cost": 333.0,
+    "labor_cost": 68.3,
+    "equipment_cost": null,
+    "total_cost": 401.3
+  },
+  {
+    "item": "30 gallon 125/150# galvanized ASME expansion tank",
+    "unit": "Ea",
+    "labor_hours": 2.0,
+    "equipment_hours": null,
+    "material_cost": 600.0,
+    "labor_cost": 78.1,
+    "equipment_cost": null,
+    "total_cost": 678.1
+  },
+  {
+    "item": "40 gallon 125/150# galvanized ASME expansion tank",
+    "unit": "Ea",
+    "labor_hours": 2.35,
+    "equipment_hours": null,
+    "material_cost": 665.0,
+    "labor_cost": 91.7,
+    "equipment_cost": null,
+    "total_cost": 756.7
+  },
+  {
+    "item": "60 gallon 125/150# galvanized ASME expansion tank",
+    "unit": "Ea",
+    "labor_hours": 2.65,
+    "equipment_hours": null,
+    "material_cost": 903.0,
+    "labor_cost": 103.0,
+    "equipment_cost": null,
+    "total_cost": 1006.0
+  },
+  {
+    "item": "80 gallon 125/150# galvanized ASME expansion tank",
+    "unit": "Ea",
+    "labor_hours": 2.95,
+    "equipment_hours": null,
+    "material_cost": 1660.0,
+    "labor_cost": 115.0,
+    "equipment_cost": null,
+    "total_cost": 1775.0
+  },
+  {
+    "item": "100 gallon 125/150# galvanized ASME expansion tank",
+    "unit": "Ea",
+    "labor_hours": 3.25,
+    "equipment_hours": null,
+    "material_cost": 2000.0,
+    "labor_cost": 127.0,
+    "equipment_cost": null,
+    "total_cost": 2127.0
+  },
+  {
+    "item": "120 gallon 125/150# galvanized ASME expansion tank",
+    "unit": "Ea",
+    "labor_hours": 3.5,
+    "equipment_hours": null,
+    "material_cost": 2150.0,
+    "labor_cost": 137.0,
+    "equipment_cost": null,
+    "total_cost": 2287.0
+  },
+  {
+    "item": "¾\" Expansion tank fitting",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 75.3,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 87.0
+  },
+  {
+    "item": "1½\" Lead roof pipe flashing",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 33.5,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 43.26
+  },
+  {
+    "item": "2\" Lead roof pipe flashing",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 44.1,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 53.86
+  },
+  {
+    "item": "3\" Lead roof pipe flashing",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 51.1,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 60.86
+  },
+  {
+    "item": "4\" Lead roof pipe flashing",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 56.3,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 66.06
+  },
+  {
+    "item": "6\" Lead roof pipe flashing",
+    "unit": "Ea",
+    "labor_hours": 0.35,
+    "equipment_hours": null,
+    "material_cost": 72.1,
+    "labor_cost": 13.7,
+    "equipment_cost": null,
+    "total_cost": 85.8
+  },
+  {
+    "item": "8\" Lead roof pipe flashing",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 91.2,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 106.8
+  },
+  {
+    "item": "Pitched roof, neoprene all pipe Roof flashing, 20\" x 20\"",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 20.9,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 32.6
+  },
+  {
+    "item": "Pitched roof, aluminum/neoprene all pipe Roof flashing, 20\" x 20\"",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 22.1,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 33.8
+  },
+  {
+    "item": "Flat roof, aluminum/neoprene all pipe Roof flashing, 20\" x 20\"",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 42.1,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 53.8
+  },
+  {
+    "item": "½\" Braided stainless steel pipe connector, solder ends, brazed joints",
+    "unit": "Ea",
+    "labor_hours": 0.24,
+    "equipment_hours": null,
+    "material_cost": 47.3,
+    "labor_cost": 9.37,
+    "equipment_cost": null,
+    "total_cost": 56.67
+  },
+  {
+    "item": "¾\" Braided stainless steel pipe connector, solder ends, brazed joints",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 62.7,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 74.4
+  },
+  {
+    "item": "1\" Braided stainless steel pipe connector, solder ends, brazed joints",
+    "unit": "Ea",
+    "labor_hours": 0.36,
+    "equipment_hours": null,
+    "material_cost": 93.9,
+    "labor_cost": 14.1,
+    "equipment_cost": null,
+    "total_cost": 108.0
+  },
+  {
+    "item": "1¼\" Braided stainless steel pipe connector, solder ends, brazed joints",
+    "unit": "Ea",
+    "labor_hours": 0.48,
+    "equipment_hours": null,
+    "material_cost": 109.0,
+    "labor_cost": 18.7,
+    "equipment_cost": null,
+    "total_cost": 127.7
+  },
+  {
+    "item": "1½\" Braided stainless steel pipe connector, solder ends, brazed joints",
+    "unit": "Ea",
+    "labor_hours": 0.54,
+    "equipment_hours": null,
+    "material_cost": 125.0,
+    "labor_cost": 21.1,
+    "equipment_cost": null,
+    "total_cost": 146.1
+  },
+  {
+    "item": "2\" Braided stainless steel pipe connector, solder ends, brazed joints",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 182.0,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 205.4
+  },
+  {
+    "item": "½\" Braided stainless steel pipe connector, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.21,
+    "equipment_hours": null,
+    "material_cost": 53.4,
+    "labor_cost": 8.2,
+    "equipment_cost": null,
+    "total_cost": 61.6
+  },
+  {
+    "item": "¾\" Braided stainless steel pipe connector, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 57.7,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 67.46
+  },
+  {
+    "item": "1\" Braided stainless steel pipe connector, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 71.9,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 83.6
+  },
+  {
+    "item": "1¼\" Braided stainless steel pipe connector, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 73.3,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 88.9
+  },
+  {
+    "item": "1½\" Braided stainless steel pipe connector, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 99.5,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 117.1
+  },
+  {
+    "item": "2\" Braided stainless steel pipe connector, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 142.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 161.5
+  },
+  {
+    "item": "2\" Braided stainless steel pipe connector, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 126.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 145.5
+  },
+  {
+    "item": "2½\" Braided stainless steel pipe connector, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 0.63,
+    "equipment_hours": null,
+    "material_cost": 181.0,
+    "labor_cost": 24.6,
+    "equipment_cost": null,
+    "total_cost": 205.6
+  },
+  {
+    "item": "3\" Braided stainless steel pipe connector, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 235.0,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 264.3
+  },
+  {
+    "item": "4\" Braided stainless steel pipe connector, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 1.5,
+    "equipment_hours": null,
+    "material_cost": 307.0,
+    "labor_cost": 58.5,
+    "equipment_cost": null,
+    "total_cost": 365.5
+  },
+  {
+    "item": "6\" Braided stainless steel pipe connector, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 2.5,
+    "equipment_hours": null,
+    "material_cost": 610.0,
+    "labor_cost": 97.6,
+    "equipment_cost": null,
+    "total_cost": 707.6
+  },
+  {
+    "item": "8\" Braided stainless steel pipe connector, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 3.0,
+    "equipment_hours": null,
+    "material_cost": 1370.0,
+    "labor_cost": 117.0,
+    "equipment_cost": null,
+    "total_cost": 1487.0
+  },
+  {
+    "item": "½\" Galvanized steel band pipe hanger",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 2.14,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 11.9
+  },
+  {
+    "item": "¾\" Galvanized steel band pipe hanger",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 2.14,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 11.9
+  },
+  {
+    "item": "1\" Galvanized steel band pipe hanger",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 2.14,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 11.9
+  },
+  {
+    "item": "1¼\" Galvanized steel band pipe hanger",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 2.27,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 13.97
+  },
+  {
+    "item": "1½\" Galvanized steel band pipe hanger",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 2.41,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 14.11
+  },
+  {
+    "item": "2\" Galvanized steel band pipe hanger",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 2.53,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 14.23
+  },
+  {
+    "item": "2½\" Galvanized steel band pipe hanger",
+    "unit": "Ea",
+    "labor_hours": 0.35,
+    "equipment_hours": null,
+    "material_cost": 3.1,
+    "labor_cost": 13.7,
+    "equipment_cost": null,
+    "total_cost": 16.8
+  },
+  {
+    "item": "3\" Galvanized steel band pipe hanger",
+    "unit": "Ea",
+    "labor_hours": 0.35,
+    "equipment_hours": null,
+    "material_cost": 3.56,
+    "labor_cost": 13.7,
+    "equipment_cost": null,
+    "total_cost": 17.26
+  },
+  {
+    "item": "4\" Galvanized steel band pipe hanger",
+    "unit": "Ea",
+    "labor_hours": 0.35,
+    "equipment_hours": null,
+    "material_cost": 4.52,
+    "labor_cost": 13.7,
+    "equipment_cost": null,
+    "total_cost": 18.22
+  },
+  {
+    "item": "6\" Galvanized steel band pipe hanger",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 7.11,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 24.71
+  },
+  {
+    "item": "8\" Galvanized steel band pipe hanger",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 10.6,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 28.2
+  },
+  {
+    "item": "24\" Trapeze pipe hanger",
+    "unit": "Ea",
+    "labor_hours": 1.0,
+    "equipment_hours": null,
+    "material_cost": 48.0,
+    "labor_cost": 39.0,
+    "equipment_cost": null,
+    "total_cost": 87.0
+  },
+  {
+    "item": "36\" Trapeze pipe hanger",
+    "unit": "Ea",
+    "labor_hours": 1.25,
+    "equipment_hours": null,
+    "material_cost": 61.1,
+    "labor_cost": 48.8,
+    "equipment_cost": null,
+    "total_cost": 109.9
+  },
+  {
+    "item": "48\" Trapeze pipe hanger",
+    "unit": "Ea",
+    "labor_hours": 1.5,
+    "equipment_hours": null,
+    "material_cost": 93.0,
+    "labor_cost": 58.5,
+    "equipment_cost": null,
+    "total_cost": 151.5
+  },
+  {
+    "item": "6\" x 6\" Wall bracket support with anchors and bolts",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 22.3,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 45.7
+  },
+  {
+    "item": "8\" x 8\" Wall bracket support with anchors and bolts",
+    "unit": "Ea",
+    "labor_hours": 0.65,
+    "equipment_hours": null,
+    "material_cost": 25.8,
+    "labor_cost": 25.4,
+    "equipment_cost": null,
+    "total_cost": 51.2
+  },
+  {
+    "item": "10\" x 10\" Wall bracket support with anchors and bolts",
+    "unit": "Ea",
+    "labor_hours": 0.7,
+    "equipment_hours": null,
+    "material_cost": 29.1,
+    "labor_cost": 27.3,
+    "equipment_cost": null,
+    "total_cost": 56.4
+  },
+  {
+    "item": "12\" x 12\" Wall bracket support with anchors and bolts",
+    "unit": "Ea",
+    "labor_hours": 0.8,
+    "equipment_hours": null,
+    "material_cost": 35.1,
+    "labor_cost": 31.2,
+    "equipment_cost": null,
+    "total_cost": 66.3
+  },
+  {
+    "item": "15\" x 15\" Wall bracket support with anchors and bolts",
+    "unit": "Ea",
+    "labor_hours": 0.95,
+    "equipment_hours": null,
+    "material_cost": 40.4,
+    "labor_cost": 37.1,
+    "equipment_cost": null,
+    "total_cost": 77.5
+  },
+  {
+    "item": "18\" x 18\" Wall bracket support with anchors and bolts",
+    "unit": "Ea",
+    "labor_hours": 1.1,
+    "equipment_hours": null,
+    "material_cost": 57.1,
+    "labor_cost": 42.9,
+    "equipment_cost": null,
+    "total_cost": 100.0
+  },
+  {
+    "item": "24\" x 24\" Wall bracket support with anchors and bolts",
+    "unit": "Ea",
+    "labor_hours": 1.6,
+    "equipment_hours": null,
+    "material_cost": 82.6,
+    "labor_cost": 62.4,
+    "equipment_cost": null,
+    "total_cost": 145.0
+  },
+  {
+    "item": "½\" Galvanized U-bolts with nuts",
+    "unit": "Ea",
+    "labor_hours": 0.16,
+    "equipment_hours": null,
+    "material_cost": 1.94,
+    "labor_cost": 6.24,
+    "equipment_cost": null,
+    "total_cost": 8.18
+  },
+  {
+    "item": "¾\" Galvanized U-bolts with nuts",
+    "unit": "Ea",
+    "labor_hours": 0.165,
+    "equipment_hours": null,
+    "material_cost": 1.94,
+    "labor_cost": 6.44,
+    "equipment_cost": null,
+    "total_cost": 8.38
+  },
+  {
+    "item": "1\" Galvanized U-bolts with nuts",
+    "unit": "Ea",
+    "labor_hours": 0.17,
+    "equipment_hours": null,
+    "material_cost": 2.11,
+    "labor_cost": 6.64,
+    "equipment_cost": null,
+    "total_cost": 8.75
+  },
+  {
+    "item": "1¼\" Galvanized U-bolts with nuts",
+    "unit": "Ea",
+    "labor_hours": 0.175,
+    "equipment_hours": null,
+    "material_cost": 2.41,
+    "labor_cost": 6.83,
+    "equipment_cost": null,
+    "total_cost": 9.24
+  },
+  {
+    "item": "1½\" Galvanized U-bolts with nuts",
+    "unit": "Ea",
+    "labor_hours": 0.18,
+    "equipment_hours": null,
+    "material_cost": 2.92,
+    "labor_cost": 7.03,
+    "equipment_cost": null,
+    "total_cost": 9.95
+  },
+  {
+    "item": "2\" Galvanized U-bolts with nuts",
+    "unit": "Ea",
+    "labor_hours": 0.19,
+    "equipment_hours": null,
+    "material_cost": 3.12,
+    "labor_cost": 7.42,
+    "equipment_cost": null,
+    "total_cost": 10.54
+  },
+  {
+    "item": "2½\" Galvanized U-bolts with nuts",
+    "unit": "Ea",
+    "labor_hours": 0.21,
+    "equipment_hours": null,
+    "material_cost": 4.82,
+    "labor_cost": 8.2,
+    "equipment_cost": null,
+    "total_cost": 13.02
+  },
+  {
+    "item": "3\" Galvanized U-bolts with nuts",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 5.57,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 15.33
+  },
+  {
+    "item": "4\" Galvanized U-bolts with nuts",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 6.3,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 18.0
+  },
+  {
+    "item": "6\" Galvanized U-bolts with nuts",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 9.86,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 25.46
+  },
+  {
+    "item": "½\" Nail-on wire pipe hooks",
+    "unit": "Ea",
+    "labor_hours": 0.1,
+    "equipment_hours": null,
+    "material_cost": 0.09,
+    "labor_cost": 3.9,
+    "equipment_cost": null,
+    "total_cost": 3.99
+  },
+  {
+    "item": "¾\" Nail-on wire pipe hooks",
+    "unit": "Ea",
+    "labor_hours": 0.1,
+    "equipment_hours": null,
+    "material_cost": 0.11,
+    "labor_cost": 3.9,
+    "equipment_cost": null,
+    "total_cost": 4.01
+  },
+  {
+    "item": "1\" Nail-on wire pipe hooks",
+    "unit": "Ea",
+    "labor_hours": 0.1,
+    "equipment_hours": null,
+    "material_cost": 0.12,
+    "labor_cost": 3.9,
+    "equipment_cost": null,
+    "total_cost": 4.02
+  },
+  {
+    "item": "1\" Galvanized steel pipe sleeves",
+    "unit": "Ea",
+    "labor_hours": 0.12,
+    "equipment_hours": null,
+    "material_cost": 4.52,
+    "labor_cost": 4.68,
+    "equipment_cost": null,
+    "total_cost": 9.2
+  },
+  {
+    "item": "1¼\" Galvanized steel pipe sleeves",
+    "unit": "Ea",
+    "labor_hours": 0.125,
+    "equipment_hours": null,
+    "material_cost": 5.0,
+    "labor_cost": 4.88,
+    "equipment_cost": null,
+    "total_cost": 9.88
+  },
+  {
+    "item": "1½\" Galvanized steel pipe sleeves",
+    "unit": "Ea",
+    "labor_hours": 0.125,
+    "equipment_hours": null,
+    "material_cost": 5.66,
+    "labor_cost": 4.88,
+    "equipment_cost": null,
+    "total_cost": 10.54
+  },
+  {
+    "item": "2\" Galvanized steel pipe sleeves",
+    "unit": "Ea",
+    "labor_hours": 0.13,
+    "equipment_hours": null,
+    "material_cost": 6.11,
+    "labor_cost": 5.07,
+    "equipment_cost": null,
+    "total_cost": 11.18
+  },
+  {
+    "item": "2½\" Galvanized steel pipe sleeves",
+    "unit": "Ea",
+    "labor_hours": 0.15,
+    "equipment_hours": null,
+    "material_cost": 6.2,
+    "labor_cost": 5.85,
+    "equipment_cost": null,
+    "total_cost": 12.05
+  },
+  {
+    "item": "3\" Galvanized steel pipe sleeves",
+    "unit": "Ea",
+    "labor_hours": 0.18,
+    "equipment_hours": null,
+    "material_cost": 6.34,
+    "labor_cost": 7.03,
+    "equipment_cost": null,
+    "total_cost": 13.37
+  },
+  {
+    "item": "4\" Galvanized steel pipe sleeves",
+    "unit": "Ea",
+    "labor_hours": 0.22,
+    "equipment_hours": null,
+    "material_cost": 7.21,
+    "labor_cost": 8.59,
+    "equipment_cost": null,
+    "total_cost": 15.8
+  },
+  {
+    "item": "5\" Galvanized steel pipe sleeves",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 8.99,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 18.75
+  },
+  {
+    "item": "6\" Galvanized steel pipe sleeves",
+    "unit": "Ea",
+    "labor_hours": 0.27,
+    "equipment_hours": null,
+    "material_cost": 9.72,
+    "labor_cost": 10.5,
+    "equipment_cost": null,
+    "total_cost": 20.22
+  },
+  {
+    "item": "8\" Galvanized steel pipe sleeves",
+    "unit": "Ea",
+    "labor_hours": 0.27,
+    "equipment_hours": null,
+    "material_cost": 11.2,
+    "labor_cost": 10.5,
+    "equipment_cost": null,
+    "total_cost": 21.7
+  },
+  {
+    "item": "10\" Galvanized steel pipe sleeves",
+    "unit": "Ea",
+    "labor_hours": 0.29,
+    "equipment_hours": null,
+    "material_cost": 13.0,
+    "labor_cost": 11.3,
+    "equipment_cost": null,
+    "total_cost": 24.3
+  },
+  {
+    "item": "12\" Galvanized steel pipe sleeves",
+    "unit": "Ea",
+    "labor_hours": 0.31,
+    "equipment_hours": null,
+    "material_cost": 17.7,
+    "labor_cost": 12.1,
+    "equipment_cost": null,
+    "total_cost": 29.8
+  },
+  {
+    "item": "14\" Galvanized steel pipe sleeves",
+    "unit": "Ea",
+    "labor_hours": 0.33,
+    "equipment_hours": null,
+    "material_cost": 32.9,
+    "labor_cost": 12.9,
+    "equipment_cost": null,
+    "total_cost": 45.8
+  },
+  {
+    "item": "2½\" Dial-type pressure gauge (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 37.8,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 45.61
+  },
+  {
+    "item": "3½\" Dial-type pressure gauge (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 50.0,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 57.81
+  },
+  {
+    "item": "½\" Riser clamp (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.1,
+    "equipment_hours": null,
+    "material_cost": 3.07,
+    "labor_cost": 3.9,
+    "equipment_cost": null,
+    "total_cost": 6.97
+  },
+  {
+    "item": "¾\" Riser clamp (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.1,
+    "equipment_hours": null,
+    "material_cost": 4.49,
+    "labor_cost": 3.9,
+    "equipment_cost": null,
+    "total_cost": 8.39
+  },
+  {
+    "item": "1\" Riser clamp (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.1,
+    "equipment_hours": null,
+    "material_cost": 4.53,
+    "labor_cost": 3.9,
+    "equipment_cost": null,
+    "total_cost": 8.43
+  },
+  {
+    "item": "1¼\" Riser clamp (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.105,
+    "equipment_hours": null,
+    "material_cost": 5.5,
+    "labor_cost": 4.1,
+    "equipment_cost": null,
+    "total_cost": 9.6
+  },
+  {
+    "item": "1½\" Riser clamp (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.11,
+    "equipment_hours": null,
+    "material_cost": 5.8,
+    "labor_cost": 4.29,
+    "equipment_cost": null,
+    "total_cost": 10.09
+  },
+  {
+    "item": "2\" Riser clamp (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.115,
+    "equipment_hours": null,
+    "material_cost": 6.13,
+    "labor_cost": 4.49,
+    "equipment_cost": null,
+    "total_cost": 10.62
+  },
+  {
+    "item": "2½\" Riser clamp (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.12,
+    "equipment_hours": null,
+    "material_cost": 6.45,
+    "labor_cost": 4.68,
+    "equipment_cost": null,
+    "total_cost": 11.13
+  },
+  {
+    "item": "3\" Riser clamp (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.12,
+    "equipment_hours": null,
+    "material_cost": 7.0,
+    "labor_cost": 4.68,
+    "equipment_cost": null,
+    "total_cost": 11.68
+  },
+  {
+    "item": "4\" Riser clamp (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.125,
+    "equipment_hours": null,
+    "material_cost": 8.89,
+    "labor_cost": 4.88,
+    "equipment_cost": null,
+    "total_cost": 13.77
+  },
+  {
+    "item": "5\" Riser clamp (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.18,
+    "equipment_hours": null,
+    "material_cost": 12.9,
+    "labor_cost": 7.03,
+    "equipment_cost": null,
+    "total_cost": 19.93
+  },
+  {
+    "item": "6\" Riser clamp (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 15.4,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 23.21
+  },
+  {
+    "item": "8\" Riser clamp (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 25.1,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 32.91
+  },
+  {
+    "item": "10\" Riser clamp (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 37.3,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 47.06
+  },
+  {
+    "item": "12\" Riser clamp (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 44.2,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 53.96
+  },
+  {
+    "item": "¾\" 15 PSIG float and thermostatic steam trap, threaded",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 342.0,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 351.76
+  },
+  {
+    "item": "1\" 15 PSIG float and thermostatic steam trap, threaded",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 342.0,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 353.7
+  },
+  {
+    "item": "1¼\" 15 PSIG float and thermostatic steam trap, threaded",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 412.0,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 427.6
+  },
+  {
+    "item": "1½\" 15 PSIG float and thermostatic steam trap, threaded",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 773.0,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 790.6
+  },
+  {
+    "item": "2\" 15 PSIG float and thermostatic steam trap, threaded",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 991.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 1010.5
+  },
+  {
+    "item": "½\" 15 PSIG inverted bucket steam trap, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.21,
+    "equipment_hours": null,
+    "material_cost": 198.0,
+    "labor_cost": 8.2,
+    "equipment_cost": null,
+    "total_cost": 206.2
+  },
+  {
+    "item": "¾\" 15 PSIG inverted bucket steam trap, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 487.0,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 496.76
+  },
+  {
+    "item": "1\" 15 PSIG inverted bucket steam trap, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 697.0,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 708.7
+  },
+  {
+    "item": "1¼\" 15 PSIG inverted bucket steam trap, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 1160.0,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 1175.6
+  },
+  {
+    "item": "1½\" 15 PSIG inverted bucket steam trap, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 1160.0,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 1177.6
+  },
+  {
+    "item": "2\" 15 PSIG inverted bucket steam trap, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 1740.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 1759.5
+  },
+  {
+    "item": "7\" Thermometer with well (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 187.0,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 196.76
+  },
+  {
+    "item": "9\" Thermometer with well (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 192.0,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 201.76
+  },
+  {
+    "item": "½\" Class 125 bronze body 2-piece ball valve, brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.24,
+    "equipment_hours": null,
+    "material_cost": 10.6,
+    "labor_cost": 9.37,
+    "equipment_cost": null,
+    "total_cost": 19.97
+  },
+  {
+    "item": "¾\" Class 125 bronze body 2-piece ball valve, brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 14.1,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 25.8
+  },
+  {
+    "item": "1\" Class 125 bronze body 2-piece ball valve, brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.36,
+    "equipment_hours": null,
+    "material_cost": 24.5,
+    "labor_cost": 14.1,
+    "equipment_cost": null,
+    "total_cost": 38.6
+  },
+  {
+    "item": "1¼\" Class 125 bronze body 2-piece ball valve, brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.48,
+    "equipment_hours": null,
+    "material_cost": 40.8,
+    "labor_cost": 18.7,
+    "equipment_cost": null,
+    "total_cost": 59.5
+  },
+  {
+    "item": "1½\" Class 125 bronze body 2-piece ball valve, brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.54,
+    "equipment_hours": null,
+    "material_cost": 55.2,
+    "labor_cost": 21.1,
+    "equipment_cost": null,
+    "total_cost": 76.3
+  },
+  {
+    "item": "2\" Class 125 bronze body 2-piece ball valve, brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 70.0,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 93.4
+  },
+  {
+    "item": "3\" Class 125 bronze body 2-piece ball valve, brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.5,
+    "equipment_hours": null,
+    "material_cost": 479.0,
+    "labor_cost": 58.5,
+    "equipment_cost": null,
+    "total_cost": 537.5
+  },
+  {
+    "item": "4\" Class 125 bronze body 2-piece ball valve, brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.8,
+    "equipment_hours": null,
+    "material_cost": 626.0,
+    "labor_cost": 70.3,
+    "equipment_cost": null,
+    "total_cost": 696.3
+  },
+  {
+    "item": "½\" Class 125 bronze body 2-piece ball valve, soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 10.6,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 18.41
+  },
+  {
+    "item": "¾\" Class 125 bronze body 2-piece ball valve, soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.249,
+    "equipment_hours": null,
+    "material_cost": 14.1,
+    "labor_cost": 9.72,
+    "equipment_cost": null,
+    "total_cost": 23.82
+  },
+  {
+    "item": "1\" Class 125 bronze body 2-piece ball valve, soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.299,
+    "equipment_hours": null,
+    "material_cost": 24.5,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 36.2
+  },
+  {
+    "item": "1¼\" Class 125 bronze body 2-piece ball valve, soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.308,
+    "equipment_hours": null,
+    "material_cost": 40.8,
+    "labor_cost": 12.0,
+    "equipment_cost": null,
+    "total_cost": 52.8
+  },
+  {
+    "item": "1½\" Class 125 bronze body 2-piece ball valve, soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.498,
+    "equipment_hours": null,
+    "material_cost": 55.2,
+    "labor_cost": 19.4,
+    "equipment_cost": null,
+    "total_cost": 74.6
+  },
+  {
+    "item": "2\" Class 125 bronze body 2-piece ball valve, soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.498,
+    "equipment_hours": null,
+    "material_cost": 70.0,
+    "labor_cost": 19.4,
+    "equipment_cost": null,
+    "total_cost": 89.4
+  },
+  {
+    "item": "3\" Class 125 bronze body 2-piece ball valve, soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.24,
+    "equipment_hours": null,
+    "material_cost": 479.0,
+    "labor_cost": 48.4,
+    "equipment_cost": null,
+    "total_cost": 527.4
+  },
+  {
+    "item": "4\" Class 125 bronze body 2-piece ball valve, soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.45,
+    "equipment_hours": null,
+    "material_cost": 626.0,
+    "labor_cost": 56.6,
+    "equipment_cost": null,
+    "total_cost": 682.6
+  },
+  {
+    "item": "½\" Class 125 bronze body 2-piece ball valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.21,
+    "equipment_hours": null,
+    "material_cost": 10.6,
+    "labor_cost": 8.2,
+    "equipment_cost": null,
+    "total_cost": 18.8
+  },
+  {
+    "item": "¾\" Class 125 bronze body 2-piece ball valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 14.1,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 23.86
+  },
+  {
+    "item": "1\" Class 125 bronze body 2-piece ball valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 24.5,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 36.2
+  },
+  {
+    "item": "1¼\" Class 125 bronze body 2-piece ball valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 40.8,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 56.4
+  },
+  {
+    "item": "1½\" Class 125 bronze body 2-piece ball valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 55.2,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 72.8
+  },
+  {
+    "item": "2\" Class 125 bronze body 2-piece ball valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 70.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 89.5
+  },
+  {
+    "item": "3\" Class 125 bronze body 2-piece ball valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.625,
+    "equipment_hours": null,
+    "material_cost": 479.0,
+    "labor_cost": 24.4,
+    "equipment_cost": null,
+    "total_cost": 503.4
+  },
+  {
+    "item": "4\" Class 125 bronze body 2-piece ball valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.69,
+    "equipment_hours": null,
+    "material_cost": 626.0,
+    "labor_cost": 26.9,
+    "equipment_cost": null,
+    "total_cost": 652.9
+  },
+  {
+    "item": "½\" Class 150, 600 pound W.O.G. bronze body 2-piece ball valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.21,
+    "equipment_hours": null,
+    "material_cost": 17.3,
+    "labor_cost": 8.2,
+    "equipment_cost": null,
+    "total_cost": 25.5
+  },
+  {
+    "item": "¾\" Class 150, 600 pound W.O.G. bronze body 2-piece ball valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 28.5,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 38.26
+  },
+  {
+    "item": "1\" Class 150, 600 pound W.O.G. bronze body 2-piece ball valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 36.1,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 47.8
+  },
+  {
+    "item": "1¼\" Class 150, 600 pound W.O.G. bronze body 2-piece ball valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 45.0,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 60.6
+  },
+  {
+    "item": "1½\" Class 150, 600 pound W.O.G. bronze body 2-piece ball valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 60.5,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 78.1
+  },
+  {
+    "item": "2\" Class 150, 600 pound W.O.G. bronze body 2-piece ball valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 76.6,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 96.1
+  },
+  {
+    "item": "½\" Bronze body circuit balance valve",
+    "unit": "Ea",
+    "labor_hours": 0.21,
+    "equipment_hours": null,
+    "material_cost": 75.8,
+    "labor_cost": 8.2,
+    "equipment_cost": null,
+    "total_cost": 84.0
+  },
+  {
+    "item": "¾\" Bronze body circuit balance valve",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 80.6,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 90.36
+  },
+  {
+    "item": "1\" Bronze body circuit balance valve",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 93.6,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 105.3
+  },
+  {
+    "item": "1¼\" Bronze body circuit balance valve",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 116.0,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 131.6
+  },
+  {
+    "item": "1½\" Bronze body circuit balance valve",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 148.0,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 163.6
+  },
+  {
+    "item": "2\" Bronze body circuit balance valve",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 206.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 225.5
+  },
+  {
+    "item": "2½\" Bronze body circuit balance valve",
+    "unit": "Ea",
+    "labor_hours": 1.75,
+    "equipment_hours": null,
+    "material_cost": 781.0,
+    "labor_cost": 68.3,
+    "equipment_cost": null,
+    "total_cost": 849.3
+  },
+  {
+    "item": "3\" Bronze body circuit balance valve",
+    "unit": "Ea",
+    "labor_hours": 2.5,
+    "equipment_hours": null,
+    "material_cost": 1200.0,
+    "labor_cost": 97.6,
+    "equipment_cost": null,
+    "total_cost": 1297.6
+  },
+  {
+    "item": "4\" Bronze body circuit balance valve",
+    "unit": "Ea",
+    "labor_hours": 3.15,
+    "equipment_hours": null,
+    "material_cost": 2050.0,
+    "labor_cost": 123.0,
+    "equipment_cost": null,
+    "total_cost": 2173.0
+  },
+  {
+    "item": "2\" 200 PSIG iron body butterfly valve, lug-type, lever operated (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 164.0,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 181.6
+  },
+  {
+    "item": "2½\" 200 PSIG iron body butterfly valve, lug-type, lever operated (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 170.0,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 187.6
+  },
+  {
+    "item": "3\" 200 PSIG iron body butterfly valve, lug-type, lever operated (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.55,
+    "equipment_hours": null,
+    "material_cost": 180.0,
+    "labor_cost": 21.5,
+    "equipment_cost": null,
+    "total_cost": 201.5
+  },
+  {
+    "item": "4\" 200 PSIG iron body butterfly valve, lug-type, lever operated (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.505,
+    "equipment_hours": null,
+    "material_cost": 223.0,
+    "labor_cost": 19.7,
+    "equipment_cost": null,
+    "total_cost": 242.7
+  },
+  {
+    "item": "6\" 200 PSIG iron body butterfly valve, lug-type, lever operated (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.8,
+    "material_cost": 359.0,
+    "labor_cost": 33.5,
+    "equipment_cost": 0.59,
+    "total_cost": 393.09
+  },
+  {
+    "item": "8\" 200 PSIG iron body butterfly valve, lug-type, lever operated (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.8,
+    "material_cost": 491.0,
+    "labor_cost": 33.5,
+    "equipment_cost": 0.59,
+    "total_cost": 525.09
+  },
+  {
+    "item": "10\" 200 PSIG iron body butterfly valve, lug-type, lever operated (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.9,
+    "material_cost": 682.0,
+    "labor_cost": 37.7,
+    "equipment_cost": 0.66,
+    "total_cost": 720.36
+  },
+  {
+    "item": "12\" 200 PSIG iron body butterfly valve, lug-type, lever operated (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.0,
+    "material_cost": 893.0,
+    "labor_cost": 41.9,
+    "equipment_cost": 0.74,
+    "total_cost": 935.64
+  },
+  {
+    "item": "2\" 200 PSIG iron body butterfly valve, wafer-type, lever operated (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 150.0,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 167.6
+  },
+  {
+    "item": "2½\" 200 PSIG iron body butterfly valve, wafer-type, lever operated (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 153.0,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 170.6
+  },
+  {
+    "item": "3\" 200 PSIG iron body butterfly valve, wafer-type, lever operated (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.55,
+    "equipment_hours": null,
+    "material_cost": 164.0,
+    "labor_cost": 21.5,
+    "equipment_cost": null,
+    "total_cost": 185.5
+  },
+  {
+    "item": "4\" 200 PSIG iron body butterfly valve, wafer-type, lever operated (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.55,
+    "equipment_hours": null,
+    "material_cost": 199.0,
+    "labor_cost": 21.5,
+    "equipment_cost": null,
+    "total_cost": 220.5
+  },
+  {
+    "item": "6\" 200 PSIG iron body butterfly valve, wafer-type, lever operated (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.8,
+    "material_cost": 333.0,
+    "labor_cost": 33.5,
+    "equipment_cost": 0.59,
+    "total_cost": 367.09
+  },
+  {
+    "item": "8\" 200 PSIG iron body butterfly valve, wafer-type, lever operated (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.8,
+    "material_cost": 461.0,
+    "labor_cost": 33.5,
+    "equipment_cost": 0.59,
+    "total_cost": 495.09
+  },
+  {
+    "item": "10\" 200 PSIG iron body butterfly valve, wafer-type, lever operated (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 0.9,
+    "material_cost": 645.0,
+    "labor_cost": 37.7,
+    "equipment_cost": 0.66,
+    "total_cost": 683.36
+  },
+  {
+    "item": "12\" 200 PSIG iron body butterfly valve, wafer-type, lever operated (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 1.0,
+    "material_cost": 848.0,
+    "labor_cost": 41.9,
+    "equipment_cost": 0.74,
+    "total_cost": 890.64
+  },
+  {
+    "item": "½\" Class 125 bronze body swing check valve, with brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.24,
+    "equipment_hours": null,
+    "material_cost": 21.2,
+    "labor_cost": 9.37,
+    "equipment_cost": null,
+    "total_cost": 30.57
+  },
+  {
+    "item": "¾\" Class 125 bronze body swing check valve, with brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 30.3,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 42.0
+  },
+  {
+    "item": "1\" Class 125 bronze body swing check valve, with brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.36,
+    "equipment_hours": null,
+    "material_cost": 39.6,
+    "labor_cost": 14.1,
+    "equipment_cost": null,
+    "total_cost": 53.7
+  },
+  {
+    "item": "1¼\" Class 125 bronze body swing check valve, with brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.48,
+    "equipment_hours": null,
+    "material_cost": 56.5,
+    "labor_cost": 18.7,
+    "equipment_cost": null,
+    "total_cost": 75.2
+  },
+  {
+    "item": "1½\" Class 125 bronze body swing check valve, with brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.54,
+    "equipment_hours": null,
+    "material_cost": 79.7,
+    "labor_cost": 21.1,
+    "equipment_cost": null,
+    "total_cost": 100.8
+  },
+  {
+    "item": "2\" Class 125 bronze body swing check valve, with brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 132.0,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 155.4
+  },
+  {
+    "item": "2½\" Class 125 bronze body swing check valve, with brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.0,
+    "equipment_hours": null,
+    "material_cost": 266.0,
+    "labor_cost": 39.0,
+    "equipment_cost": null,
+    "total_cost": 305.0
+  },
+  {
+    "item": "3\" Class 125 bronze body swing check valve, with brazed joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.5,
+    "equipment_hours": null,
+    "material_cost": 383.0,
+    "labor_cost": 58.5,
+    "equipment_cost": null,
+    "total_cost": 441.5
+  },
+  {
+    "item": "½\" Class 125 bronze body swing check valve with soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.2,
+    "equipment_hours": null,
+    "material_cost": 21.2,
+    "labor_cost": 7.81,
+    "equipment_cost": null,
+    "total_cost": 29.01
+  },
+  {
+    "item": "¾\" Class 125 bronze body swing check valve with soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.249,
+    "equipment_hours": null,
+    "material_cost": 30.3,
+    "labor_cost": 9.72,
+    "equipment_cost": null,
+    "total_cost": 40.02
+  },
+  {
+    "item": "1\" Class 125 bronze body swing check valve with soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.299,
+    "equipment_hours": null,
+    "material_cost": 39.6,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 51.3
+  },
+  {
+    "item": "1¼\" Class 125 bronze body swing check valve with soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.398,
+    "equipment_hours": null,
+    "material_cost": 56.5,
+    "labor_cost": 15.5,
+    "equipment_cost": null,
+    "total_cost": 72.0
+  },
+  {
+    "item": "1½\" Class 125 bronze body swing check valve with soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.448,
+    "equipment_hours": null,
+    "material_cost": 79.7,
+    "labor_cost": 17.5,
+    "equipment_cost": null,
+    "total_cost": 97.2
+  },
+  {
+    "item": "2\" Class 125 bronze body swing check valve with soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.498,
+    "equipment_hours": null,
+    "material_cost": 132.0,
+    "labor_cost": 19.4,
+    "equipment_cost": null,
+    "total_cost": 151.4
+  },
+  {
+    "item": "2½\" Class 125 bronze body swing check valve with soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.83,
+    "equipment_hours": null,
+    "material_cost": 266.0,
+    "labor_cost": 32.4,
+    "equipment_cost": null,
+    "total_cost": 298.4
+  },
+  {
+    "item": "3\" Class 125 bronze body swing check valve with soft-soldered joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.24,
+    "equipment_hours": null,
+    "material_cost": 383.0,
+    "labor_cost": 48.4,
+    "equipment_cost": null,
+    "total_cost": 431.4
+  },
+  {
+    "item": "½\" Class 125 bronze body swing check valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.21,
+    "equipment_hours": null,
+    "material_cost": 21.2,
+    "labor_cost": 8.2,
+    "equipment_cost": null,
+    "total_cost": 29.4
+  },
+  {
+    "item": "¾\" Class 125 bronze body swing check valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 30.3,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 40.06
+  },
+  {
+    "item": "1\" Class 125 bronze body swing check valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 39.6,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 51.3
+  },
+  {
+    "item": "1¼\" Class 125 bronze body swing check valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 56.5,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 72.1
+  },
+  {
+    "item": "1½\" Class 125 bronze body swing check valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 79.7,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 97.3
+  },
+  {
+    "item": "2\" Class 125 bronze body swing check valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 132.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 151.5
+  },
+  {
+    "item": "½\" Class 300 bronze body swing check valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.21,
+    "equipment_hours": null,
+    "material_cost": 71.5,
+    "labor_cost": 8.2,
+    "equipment_cost": null,
+    "total_cost": 79.7
+  },
+  {
+    "item": "¾\" Class 300 bronze body swing check valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 84.6,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 94.36
+  },
+  {
+    "item": "1\" Class 300 bronze body swing check valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 103.0,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 114.7
+  },
+  {
+    "item": "1¼\" Class 300 bronze body swing check valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 150.0,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 165.6
+  },
+  {
+    "item": "1½\" Class 300 bronze body swing check valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 215.0,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 232.6
+  },
+  {
+    "item": "2\" Class 300 bronze body swing check valve, threaded joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 299.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 318.5
+  },
+  {
+    "item": "2\" Class 125 iron body swing check valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 186.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 205.5
+  },
+  {
+    "item": "2½\" Class 125 iron body swing check valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 235.0,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 258.4
+  },
+  {
+    "item": "3\" Class 125 iron body swing check valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 293.0,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 322.3
+  },
+  {
+    "item": "4\" Class 125 iron body swing check valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.35,
+    "equipment_hours": null,
+    "material_cost": 429.0,
+    "labor_cost": 52.7,
+    "equipment_cost": null,
+    "total_cost": 481.7
+  },
+  {
+    "item": "6\" Class 125 iron body swing check valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.5,
+    "material_cost": 833.0,
+    "labor_cost": 105.0,
+    "equipment_cost": 1.85,
+    "total_cost": 939.85
+  },
+  {
+    "item": "8\" Class 125 iron body swing check valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 3.0,
+    "material_cost": 1500.0,
+    "labor_cost": 126.0,
+    "equipment_cost": 2.22,
+    "total_cost": 1628.22
+  },
+  {
+    "item": "10\" Class 125 iron body swing check valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 4.0,
+    "material_cost": 2440.0,
+    "labor_cost": 168.0,
+    "equipment_cost": 2.95,
+    "total_cost": 2610.95
+  },
+  {
+    "item": "12\" Class 125 iron body swing check valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 4.5,
+    "material_cost": 3350.0,
+    "labor_cost": 189.0,
+    "equipment_cost": 3.32,
+    "total_cost": 3542.32
+  },
+  {
+    "item": "2\" Class 250 iron body swing check valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 478.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 497.5
+  },
+  {
+    "item": "2½\" Class 250 iron body swing check valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 558.0,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 581.4
+  },
+  {
+    "item": "3\" Class 250 iron body swing check valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 693.0,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 722.3
+  },
+  {
+    "item": "4\" Class 250 iron body swing check valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.35,
+    "equipment_hours": null,
+    "material_cost": 850.0,
+    "labor_cost": 52.7,
+    "equipment_cost": null,
+    "total_cost": 902.7
+  },
+  {
+    "item": "6\" Class 250 iron body swing check valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.5,
+    "material_cost": 1630.0,
+    "labor_cost": 105.0,
+    "equipment_cost": 1.85,
+    "total_cost": 1736.85
+  },
+  {
+    "item": "8\" Class 250 iron body swing check valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 3.0,
+    "material_cost": 3030.0,
+    "labor_cost": 126.0,
+    "equipment_cost": 2.22,
+    "total_cost": 3158.22
+  },
+  {
+    "item": "2\" Class 125 iron body silent check valve, wafer-type (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 136.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 155.5
+  },
+  {
+    "item": "2½\" Class 125 iron body silent check valve, wafer-type (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 151.0,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 174.4
+  },
+  {
+    "item": "3\" Class 125 iron body silent check valve, wafer-type (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 173.0,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 202.3
+  },
+  {
+    "item": "4\" Class 125 iron body silent check valve, wafer-type (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.35,
+    "equipment_hours": null,
+    "material_cost": 232.0,
+    "labor_cost": 52.7,
+    "equipment_cost": null,
+    "total_cost": 284.7
+  },
+  {
+    "item": "5\" Class 125 iron body silent check valve, wafer-type (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 2.0,
+    "equipment_hours": null,
+    "material_cost": 355.0,
+    "labor_cost": 78.1,
+    "equipment_cost": null,
+    "total_cost": 433.1
+  },
+  {
+    "item": "6\" Class 125 iron body silent check valve, wafer-type (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 2.5,
+    "equipment_hours": null,
+    "material_cost": 483.0,
+    "labor_cost": 97.6,
+    "equipment_cost": null,
+    "total_cost": 580.6
+  },
+  {
+    "item": "8\" Class 125 iron body silent check valve, wafer-type (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 3.0,
+    "equipment_hours": null,
+    "material_cost": 827.0,
+    "labor_cost": 117.0,
+    "equipment_cost": null,
+    "total_cost": 944.0
+  },
+  {
+    "item": "2\" Class 125 iron body silent check valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 136.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 155.5
+  },
+  {
+    "item": "2½\" Class 125 iron body silent check valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 156.0,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 179.4
+  },
+  {
+    "item": "3\" Class 125 iron body silent check valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 176.0,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 205.3
+  },
+  {
+    "item": "4\" Class 125 iron body silent check valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 1.35,
+    "equipment_hours": null,
+    "material_cost": 231.0,
+    "labor_cost": 52.7,
+    "equipment_cost": null,
+    "total_cost": 283.7
+  },
+  {
+    "item": "6\" Class 125 iron body silent check valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.5,
+    "material_cost": 414.0,
+    "labor_cost": 105.0,
+    "equipment_cost": 1.85,
+    "total_cost": 520.85
+  },
+  {
+    "item": "8\" Class 125 iron body silent check valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 3.0,
+    "material_cost": 747.0,
+    "labor_cost": 126.0,
+    "equipment_cost": 2.22,
+    "total_cost": 875.22
+  },
+  {
+    "item": "10\" Class 125 iron body silent check valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 4.0,
+    "material_cost": 1150.0,
+    "labor_cost": 168.0,
+    "equipment_cost": 2.95,
+    "total_cost": 1320.95
+  },
+  {
+    "item": "2\" Class 250 iron body silent check valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 200.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 219.5
+  },
+  {
+    "item": "2½\" Class 250 iron body silent check valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 231.0,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 254.4
+  },
+  {
+    "item": "3\" Class 250 iron body silent check valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 256.0,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 285.3
+  },
+  {
+    "item": "4\" Class 250 iron body silent check valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": 1.35,
+    "equipment_hours": null,
+    "material_cost": 348.0,
+    "labor_cost": 52.7,
+    "equipment_cost": null,
+    "total_cost": 400.7
+  },
+  {
+    "item": "6\" Class 250 iron body silent check valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.5,
+    "material_cost": 611.0,
+    "labor_cost": 105.0,
+    "equipment_cost": 1.85,
+    "total_cost": 717.85
+  },
+  {
+    "item": "8\" Class 250 iron body silent check valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 3.0,
+    "material_cost": 1110.0,
+    "labor_cost": 126.0,
+    "equipment_cost": 2.22,
+    "total_cost": 1238.22
+  },
+  {
+    "item": "10\" Class 250 iron body silent check valve, flanged joints",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 4.0,
+    "material_cost": 1760.0,
+    "labor_cost": 168.0,
+    "equipment_cost": 2.95,
+    "total_cost": 1930.95
+  },
+  {
+    "item": "½\" Class 125 bronze body gate valve, solder ends",
+    "unit": "Ea",
+    "labor_hours": 0.24,
+    "equipment_hours": null,
+    "material_cost": 19.7,
+    "labor_cost": 9.37,
+    "equipment_cost": null,
+    "total_cost": 29.07
+  },
+  {
+    "item": "¾\" Class 125 bronze body gate valve, solder ends",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 24.6,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 36.3
+  },
+  {
+    "item": "1\" Class 125 bronze body gate valve, solder ends",
+    "unit": "Ea",
+    "labor_hours": 0.36,
+    "equipment_hours": null,
+    "material_cost": 34.6,
+    "labor_cost": 14.1,
+    "equipment_cost": null,
+    "total_cost": 48.7
+  },
+  {
+    "item": "1¼\" Class 125 bronze body gate valve, solder ends",
+    "unit": "Ea",
+    "labor_hours": 0.48,
+    "equipment_hours": null,
+    "material_cost": 43.5,
+    "labor_cost": 18.7,
+    "equipment_cost": null,
+    "total_cost": 62.2
+  },
+  {
+    "item": "1½\" Class 125 bronze body gate valve, solder ends",
+    "unit": "Ea",
+    "labor_hours": 0.54,
+    "equipment_hours": null,
+    "material_cost": 58.5,
+    "labor_cost": 21.1,
+    "equipment_cost": null,
+    "total_cost": 79.6
+  },
+  {
+    "item": "2\" Class 125 bronze body gate valve, solder ends",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 98.0,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 121.4
+  },
+  {
+    "item": "2½\" Class 125 bronze body gate valve, solder ends",
+    "unit": "Ea",
+    "labor_hours": 1.0,
+    "equipment_hours": null,
+    "material_cost": 162.0,
+    "labor_cost": 39.0,
+    "equipment_cost": null,
+    "total_cost": 201.0
+  },
+  {
+    "item": "3\" Class 125 bronze body gate valve, solder ends",
+    "unit": "Ea",
+    "labor_hours": 1.5,
+    "equipment_hours": null,
+    "material_cost": 233.0,
+    "labor_cost": 58.5,
+    "equipment_cost": null,
+    "total_cost": 291.5
+  },
+  {
+    "item": "½\" Class 125 bronze body gate valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.21,
+    "equipment_hours": null,
+    "material_cost": 19.7,
+    "labor_cost": 8.2,
+    "equipment_cost": null,
+    "total_cost": 27.9
+  },
+  {
+    "item": "¾\" Class 125 bronze body gate valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 24.6,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 34.36
+  },
+  {
+    "item": "1\" Class 125 bronze body gate valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 34.6,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 46.3
+  },
+  {
+    "item": "1¼\" Class 125 bronze body gate valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 43.5,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 59.1
+  },
+  {
+    "item": "1½\" Class 125 bronze body gate valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 58.5,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 76.1
+  },
+  {
+    "item": "2\" Class 125 bronze body gate valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 98.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 117.5
+  },
+  {
+    "item": "2½\" Class 125 bronze body gate valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 162.0,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 191.3
+  },
+  {
+    "item": "3\" Class 125 bronze body gate valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.95,
+    "equipment_hours": null,
+    "material_cost": 233.0,
+    "labor_cost": 37.1,
+    "equipment_cost": null,
+    "total_cost": 270.1
+  },
+  {
+    "item": "½\" Class 300 bronze body gate valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.21,
+    "equipment_hours": null,
+    "material_cost": 40.0,
+    "labor_cost": 8.2,
+    "equipment_cost": null,
+    "total_cost": 48.2
+  },
+  {
+    "item": "¾\" Class 300 bronze body gate valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.25,
+    "equipment_hours": null,
+    "material_cost": 52.2,
+    "labor_cost": 9.76,
+    "equipment_cost": null,
+    "total_cost": 61.96
+  },
+  {
+    "item": "1\" Class 300 bronze body gate valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.3,
+    "equipment_hours": null,
+    "material_cost": 63.2,
+    "labor_cost": 11.7,
+    "equipment_cost": null,
+    "total_cost": 74.9
+  },
+  {
+    "item": "1¼\" Class 300 bronze body gate valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.4,
+    "equipment_hours": null,
+    "material_cost": 86.2,
+    "labor_cost": 15.6,
+    "equipment_cost": null,
+    "total_cost": 101.8
+  },
+  {
+    "item": "1½\" Class 300 bronze body gate valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.45,
+    "equipment_hours": null,
+    "material_cost": 109.0,
+    "labor_cost": 17.6,
+    "equipment_cost": null,
+    "total_cost": 126.6
+  },
+  {
+    "item": "2\" Class 300 bronze body gate valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 160.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 179.5
+  },
+  {
+    "item": "2½\" Class 300 bronze body gate valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 326.0,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 355.3
+  },
+  {
+    "item": "3\" Class 300 bronze body gate valve, threaded joints",
+    "unit": "Ea",
+    "labor_hours": 0.95,
+    "equipment_hours": null,
+    "material_cost": 464.0,
+    "labor_cost": 37.1,
+    "equipment_cost": null,
+    "total_cost": 501.1
+  },
+  {
+    "item": "2\" Class 125 iron body gate valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 312.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 331.5
+  },
+  {
+    "item": "2½\" Class 125 iron body gate valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 422.0,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 445.4
+  },
+  {
+    "item": "3\" Class 125 iron body gate valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 458.0,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 487.3
+  },
+  {
+    "item": "4\" Class 125 iron body gate valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.35,
+    "equipment_hours": null,
+    "material_cost": 671.0,
+    "labor_cost": 52.7,
+    "equipment_cost": null,
+    "total_cost": 723.7
+  },
+  {
+    "item": "6\" Class 125 iron body gate valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.5,
+    "material_cost": 1260.0,
+    "labor_cost": 105.0,
+    "equipment_cost": 1.85,
+    "total_cost": 1366.85
+  },
+  {
+    "item": "8\" Class 125 iron body gate valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 3.0,
+    "material_cost": 2100.0,
+    "labor_cost": 126.0,
+    "equipment_cost": 2.22,
+    "total_cost": 2228.22
+  },
+  {
+    "item": "10\" Class 125 iron body gate valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 4.0,
+    "material_cost": 3460.0,
+    "labor_cost": 168.0,
+    "equipment_cost": 2.95,
+    "total_cost": 3630.95
+  },
+  {
+    "item": "12\" Class 125 iron body gate valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 4.5,
+    "material_cost": 4770.0,
+    "labor_cost": 189.0,
+    "equipment_cost": 3.32,
+    "total_cost": 4962.32
+  },
+  {
+    "item": "2\" Class 250 iron body gate valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.5,
+    "equipment_hours": null,
+    "material_cost": 547.0,
+    "labor_cost": 19.5,
+    "equipment_cost": null,
+    "total_cost": 566.5
+  },
+  {
+    "item": "2½\" Class 250 iron body gate valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.6,
+    "equipment_hours": null,
+    "material_cost": 395.0,
+    "labor_cost": 23.4,
+    "equipment_cost": null,
+    "total_cost": 418.4
+  },
+  {
+    "item": "3\" Class 250 iron body gate valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 0.75,
+    "equipment_hours": null,
+    "material_cost": 499.0,
+    "labor_cost": 29.3,
+    "equipment_cost": null,
+    "total_cost": 528.3
+  },
+  {
+    "item": "4\" Class 250 iron body gate valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": 1.35,
+    "equipment_hours": null,
+    "material_cost": 846.0,
+    "labor_cost": 52.7,
+    "equipment_cost": null,
+    "total_cost": 898.7
+  },
+  {
+    "item": "6\" Class 250 iron body gate valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 2.5,
+    "material_cost": 1580.0,
+    "labor_cost": 105.0,
+    "equipment_cost": 1.85,
+    "total_cost": 1686.85
+  },
+  {
+    "item": "8\" Class 250 iron body gate valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 3.0,
+    "material_cost": 2440.0,
+    "labor_cost": 126.0,
+    "equipment_cost": 2.22,
+    "total_cost": 2568.22
+  },
+  {
+    "item": "10\" Class 250 iron body gate valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 4.0,
+    "material_cost": 4340.0,
+    "labor_cost": 168.0,
+    "equipment_cost": 2.95,
+    "total_cost": 4510.95
+  },
+  {
+    "item": "12\" Class 250 iron body gate valve, flanged joints (Plumbing and Piping Specialties)",
+    "unit": "Ea",
+    "labor_hours": null,
+    "equipment_hours": 4.5,
+    "material_cost": 7070.0,
+    "labor_cost": 189.0,
+    "equipment_cost": 3.32,
+    "total_cost": 7262.32
   }
 ]

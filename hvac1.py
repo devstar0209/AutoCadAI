@@ -3,158 +3,92 @@ import json
 import os
 from typing import List, Dict
 
-# ============================
-# Regex Patterns
-# ============================
-
-ONE_LINE_ROW = re.compile(
+# ==============================
+# Flexible OCR line regex
+# ==============================
+ITEM_LINE = re.compile(
     r"""
-    (?P<size>.+?)                   # Everything before P1@
-    \s+P1@(?P<hours>[\d.]+)        # Labor hours
-    \s+(?P<unit>\w+)                # Unit can be Ea, LF, SF, etc.
-    \s+(?P<material>[\d.,]+)       # Material cost
-    \s+(?P<labor>[\d.,]+)          # Labor cost
-    \s+[—-]\s+(?P<total>[\d.,]+)   # Total cost
+    (?P<desc>.+?)                      # Size / description
+    \s+(?P<hour_type>P1|ER|SL|SK|SN|CF|BE|S2)@(?P<hours>[\d.]+)   # Labor or Equipment hours
+    \s+(?P<unit>\w+)                   # Unit
+    (?:\s+(?P<material>[\d.,]+))?      # OPTIONAL Material cost
+    \s*(?:[—-]\s*)?
+    \s+(?P<labor>[\d.,]+)              # Labor cost
+    (?:\s+(?P<equipment>[\d.,]+))?     # OPTIONAL equipment cost
+    \s*(?:[—-]\s*)?                    # OPTIONAL dash
+    (?P<total>[\d.,]+)                 # Total
+    $
     """,
     re.VERBOSE
 )
 
-INLINE_HEATER = re.compile(
-    r"""
-    (?P<capacity>\d+\s+gallon),\s*
-    (?P<kw>\d+\s*kw)
-    \s+P1@(?P<hours>[\d.]+)
-    \s+(?P<unit>\w+)
-    \s+(?P<material>[\d.,]+)
-    \s+(?P<labor>[\d.,]+)
-    \s+[—-]\s+(?P<total>[\d.,]+)
-    """,
-    re.VERBOSE | re.IGNORECASE
-)
-
-SPEC_ROW = re.compile(
-    r"""
-    (?P<spec>\d+(\.\d+)?\s*KW\/\d+V)
-    \s+P1@(?P<hours>[\d.]+)
-    \s+(?P<unit>\w+)
-    \s+(?P<material>[\d.,]+)
-    \s+(?P<labor>[\d.,]+)
-    \s+[—-]\s+(?P<total>[\d.,]+)
-    """,
-    re.VERBOSE | re.IGNORECASE
-)
-
-# ============================
+# ==============================
 # Helpers
-# ============================
-
-def clean_money(val: str) -> float:
+# ==============================
+def clean_money(val: str | None) -> float | None:
+    if val is None:
+        return None
     return float(val.replace(",", ""))
 
-def is_section_header(line: str) -> bool:
-    """Detect section header lines."""
-    if "P1@" in line:
-        return False
-    if re.search(r"\b(Ea|LF|SF|HR)\b", line):
-        return False
-    if re.search(r"[—-]\s*\d", line):
-        return False
-    return len(line.split()) >= 2
-
-# ============================
-# OCR Parser
-# ============================
-
+# ==============================
+# OCR Parsing Logic
+# ==============================
 def parse_ocr_text(ocr_text: str) -> List[Dict]:
     results = []
     current_section = None
-    multi_line_buffer = []
+    item_buffer = []
 
-    for raw_line in ocr_text.splitlines():
-        line = raw_line.strip()
+    for line in ocr_text.splitlines():
+        line = line.strip()
+
         if not line:
+            item_buffer = []
             continue
-        line = line.replace("—", "-")
 
-        # -----------------------------
-        # Section header (first line of a section)
-        # -----------------------------
-        if is_section_header(line):
+        # First non-empty line is section header
+        if current_section is None:
             current_section = line
-            multi_line_buffer = []
             continue
 
-        # -----------------------------
-        # Multi-line description (before P1@)
-        # -----------------------------
-        if 'P1@' not in line:
-            multi_line_buffer.append(line.strip(','))
+        # Accumulate description lines
+        if "@" not in line:
+            item_buffer.append(line)
             continue
 
-        # -----------------------------
-        # Process ONE_LINE_ROW
-        # -----------------------------
-        row = ONE_LINE_ROW.search(line)
-        if row and current_section:
-            # Item name = section + multi-line buffer + size/spec
-            parts = [current_section] + multi_line_buffer + [row.group('size').strip()]
-            full_item_name = ' '.join(parts)
-            multi_line_buffer = []
+        # Combine buffered description + cost line
+        item_text = " ".join(item_buffer + [line])
+        item_buffer = []
 
-            results.append({
-                "item": full_item_name.strip(),
-                "hours": float(row.group("hours")),
-                "unit": row.group("unit"),
-                "material_cost": clean_money(row.group("material")),
-                "labor_cost": clean_money(row.group("labor")),
-                "equipment_cost": 0.0,
-                "total_cost": clean_money(row.group("total")),
-            })
+        match = ITEM_LINE.search(item_text)
+        if not match:
             continue
 
-        # -----------------------------
-        # INLINE_HEATER (e.g., commercial water heaters)
-        # -----------------------------
-        inline = INLINE_HEATER.search(line)
-        if inline and current_section:
-            full_item_name = f"{current_section} {inline.group('capacity')} {inline.group('kw').upper()}"
-            results.append({
-                "item": full_item_name.strip(),
-                "hours": float(inline.group("hours")),
-                "unit": inline.group("unit"),
-                "material_cost": clean_money(inline.group("material")),
-                "labor_cost": clean_money(inline.group("labor")),
-                "equipment_cost": 0.0,
-                "total_cost": clean_money(inline.group("total")),
-            })
-            continue
+        hour_type = match.group("hour_type")
 
-        # -----------------------------
-        # SPEC_ROW (two-line heaters with spec)
-        # -----------------------------
-        spec = SPEC_ROW.search(line)
-        if spec and current_section:
-            parts = [current_section] + multi_line_buffer
-            full_item_name = f"{' '.join(parts)} {spec.group('spec')}"
-            multi_line_buffer = []
+        labor_hours = None
+        equipment_hours = None
 
-            results.append({
-                "item": full_item_name.strip(),
-                "hours": float(spec.group("hours")),
-                "unit": spec.group("unit"),
-                "material_cost": clean_money(spec.group("material")),
-                "labor_cost": clean_money(spec.group("labor")),
-                "equipment_cost": 0.0,
-                "total_cost": clean_money(spec.group("total")),
-            })
-            continue
+        # if hour_type == "P1" or hour_type == "SL" or hour_type == "SK":
+        #     labor_hours = float(match.group("hours"))
+        # elif hour_type == "ER":
+        #     equipment_hours = float(match.group("hours"))
+
+        results.append({
+            "item": f"{current_section}, {match.group('desc').strip()}",
+            "unit": match.group("unit"),
+            "labor_hours": float(match.group("hours")),
+            # "equipment_hours": equipment_hours,
+            "material_cost": clean_money(match.group("material")),
+            "labor_cost": clean_money(match.group("labor")),
+            "equipment_cost": clean_money(match.group("equipment")),
+            "total_cost": clean_money(match.group("total")),
+        })
 
     return results
 
-# ============================
-# JSON Append Logic
-# ============================
-
+# ==============================
+# JSON Helpers
+# ==============================
 def load_existing_json(path: str) -> List[Dict]:
     if not os.path.exists(path):
         return []
@@ -165,6 +99,9 @@ def load_existing_json(path: str) -> List[Dict]:
     except json.JSONDecodeError:
         return []
 
+# ==============================
+# Main
+# ==============================
 def main():
     ocr_file = "hvac.txt"
     output_json = "hvac.json"
@@ -175,7 +112,6 @@ def main():
     new_items = parse_ocr_text(ocr_text)
     existing_items = load_existing_json(output_json)
 
-    # Prevent duplicates
     existing_keys = {i["item"] for i in existing_items}
     new_items = [i for i in new_items if i["item"] not in existing_keys]
 
@@ -187,5 +123,8 @@ def main():
     print(f"Added {len(new_items)} items")
     print(f"Total items: {len(existing_items)}")
 
+# ==============================
+# Entry
+# ==============================
 if __name__ == "__main__":
     main()

@@ -9,9 +9,10 @@ from typing import List, Dict
 ITEM_LINE = re.compile(
     r"""
     (?P<desc>.+?)                      # Size / description
-    \s+(?P<hour_type>P1|ER)@(?P<hours>[\d.]+)   # Labor or Equipment hours
+    \s+(?P<hour_type>P1|ER|SL|SK|SN|CF|BE|S2)@(?P<hours>[\d.]+)   # Labor or Equipment hours
     \s+(?P<unit>\w+)                   # Unit
-    \s+(?P<material>[\d.,]+)           # Material cost
+    (?:\s+(?P<material>[\d.,]+))?      # OPTIONAL Material cost
+    \s*(?:[—-]\s*)?
     \s+(?P<labor>[\d.,]+)              # Labor cost
     (?:\s+(?P<equipment>[\d.,]+))?     # OPTIONAL equipment cost
     \s*(?:[—-]\s*)?                    # OPTIONAL dash
@@ -67,16 +68,16 @@ def parse_ocr_text(ocr_text: str) -> List[Dict]:
         labor_hours = None
         equipment_hours = None
 
-        if hour_type == "P1":
-            labor_hours = float(match.group("hours"))
-        elif hour_type == "ER":
-            equipment_hours = float(match.group("hours"))
+        # if hour_type == "P1" or hour_type == "SL" or hour_type == "SK":
+        #     labor_hours = float(match.group("hours"))
+        # elif hour_type == "ER":
+        #     equipment_hours = float(match.group("hours"))
 
         results.append({
             "item": f"{match.group('desc').strip()} {current_section}",
             "unit": match.group("unit"),
-            "labor_hours": labor_hours,
-            "equipment_hours": equipment_hours,
+            "labor_hours": float(match.group("hours")),
+            # "equipment_hours": equipment_hours,
             "material_cost": clean_money(match.group("material")),
             "labor_cost": clean_money(match.group("labor")),
             "equipment_cost": clean_money(match.group("equipment")),

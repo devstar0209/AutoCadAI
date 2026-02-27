@@ -39,9 +39,9 @@ for line in lines[1:]:
 
     # Speed variant numeric line
     parts = line.split()
-    if len(parts) != 10:
-        print(f"Skipping malformed line: {line}")
-        continue
+    # if len(parts) != 10:
+    #     print(f"Skipping malformed line: {line}")
+    #     continue
 
     speed_label = parts[0]
     new_record = {

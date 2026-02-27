@@ -1,10 +1,16 @@
+import os
+
 import openai
 from openai import OpenAI
 
+from dotenv import load_dotenv
 
-OUTPUT_DATASET = "fine_tune_dataset.jsonl"
-API_KEY = "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"
-client = OpenAI(api_key=API_KEY)
+load_dotenv()
+
+
+OUTPUT_DATASET = "./data/hvac_finetune.jsonl"
+OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 def fine_tune_model(dataset_file):
     print("Uploading dataset...")
@@ -14,7 +20,7 @@ def fine_tune_model(dataset_file):
 
     print("Creating fine-tune job...")
     try:
-        fine_tune = client.fine_tuning.jobs.create(training_file=dataset_id, model="ft:gpt-4o-2024-08-06:global-precisional-services-llc::COFwWu4N")
+        fine_tune = client.fine_tuning.jobs.create(training_file=dataset_id, model="gpt-4o-2024-08-06")
         print(f"🚀 Fine-tune started. ID: {fine_tune.id}")
     except openai.APIConnectionError as e:
         print("The server could not be reached")

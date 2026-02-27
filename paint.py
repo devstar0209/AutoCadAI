@@ -78,5 +78,4 @@ for line in lines[1:]:
 with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
     json.dump(data, f, indent=2)
 
-print(f"✅ JSON file updated: {OUTPUT_JSON}")
 print(f"Total entries now: {len(data)}")

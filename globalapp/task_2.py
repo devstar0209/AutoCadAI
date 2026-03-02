@@ -614,7 +614,13 @@ def clamp_allowed_category(category: str) -> str:
             best_score = score
             best = c
     return best if best_score >= 0.7 else "General Requirements"
-
+def clean_excel_string(s):
+    # Remove non-printable characters (ASCII < 32 except \t, \n, \r)
+    s = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f]', '', s)
+    # Optionally replace problematic characters with safe ones
+    s = s.replace('"', "'")  # replace double quotes with single quotes
+    s = s.replace('>', 'gt') # replace > with 'gt' or just remove
+    return s
 
 # -----------------------------
 # OCR: PDF -> text per page
@@ -842,9 +848,9 @@ def hybrid_chunk_pages(
 # GPT HELPERS
 # -----------------------------
 
-def gpt_json(system_prompt: str, user_prompt: str) -> Any:
+def gpt_json(system_prompt: str, user_prompt: str, model=MODEL) -> Any:
     resp = client.responses.create(
-        model=MODEL,
+        model=model,
         input=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
@@ -1056,12 +1062,12 @@ Estimator instruction (Just filter):
 {user_prompt_extra}
 
 Now extract line items from the referenced text below.
-- Produce a more detailed cost estimate for painting scope of work  to identify individual job activity such as painting to floors, walls, columns, ceilings, roof eaves, rafters, beams, doors, windows, and metal surfaces, etc. Where every there is and opening to a room there must be a door. You must assume there are doors in opening to rooms.
+- Produce a more detailed cost estimate for painting scope of work  to identify individual job activity such as painting to floors, walls, columns, ceilings, roof eaves, rafters, beams, doors, windows, and metal surfaces, etc. Where every there is and opening to a room there must be a door. You must assume there are doors in opening to rooms. And include suitable materials with material base in item description. Separate item by primer and coats per step.
 - Convert measurement values in units to preferred units in Item description. Item description MUST display converted measurement values by preferred units and no need to put explaination of conversion.
 - Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, room, etc should be counted as individual units.
 
 INVALID RULES:
-- INVALID if treat M.H. as Main Panel.
+- INVALID if treat M.H. as Main Panelboard.
 - INVALID if Manhole is in Sanitary Sewer System.
 - INVALID if quanitites is 0.
 - HVAC MUST not be in Electrical System. HVAC items should be classified under HVAC system.
@@ -1118,14 +1124,15 @@ Rules:
 - Follow CSI MasterFormat
 - Assume RSMeans-style unit pricing
 - Provide conceptual market estimates (not licensed data)
-- Labor and equipment are installation costs
 - Apply reginal location factor
 - Output normalized pricing schema
 - Do not explain, output JSON only
 
 COST NORMALIZATION RULE (MANDATORY):
 - material_unit_cost MUST be the cost per ONE unit as defined by `unit`
-- Painting finish scope of works should be priced per SF of surface area.
+- unit_labor_rate MUST be the cost per ONE unit as defined by `unit`
+- unit_equipment_rate MUST be the cost per ONE unit as defined by `unit`
+- Painting finish scope of works should be priced per SF of surface area or LF.
 - NEVER output extended, lot, reel, coil, or total material cost
 - If an item is commonly sold in rolls, reels, or lots (e.g., 500 ft):
     - Divide total package price by total length
@@ -1138,7 +1145,7 @@ COST NORMALIZATION RULE (MANDATORY):
 Schema:
 {
   "items":[
-    {"DIV":"##","CSI":"## ## ##.##","Category":"...allowed...","Item":"...","quantity":number,"unit":"...","labor_hours_per_unit":number,"equipment_hours_per_unit":number,"material_unit_cost":number,"labor_rate":number,"equipment_rate":number}
+    {"DIV":"##","CSI":"## ## ##.##","Category":"...allowed...","Item":"...","quantity":number,"unit":"...","labor_hours_per_unit":number,"equipment_hours_per_unit":number,"material_unit_cost":number,"unit_labor_rate":number,"unit_equipment_rate":number}
   ]
 }
 """
@@ -1163,7 +1170,8 @@ def estimate_costs_for_items(
         print("Estimating costs for system:", system_name)
         data = gpt_json(
             system_prompt=COST_SYSTEM_PROMPT,
-            user_prompt=json.dumps(payload, indent=2)
+            user_prompt=json.dumps(payload, indent=2),
+            model = "ft:gpt-4o-2024-08-06:global-precisional-services-llc::DF0PhAvv"
         )
         items = data.get("items", [])
 
@@ -1174,8 +1182,8 @@ def estimate_costs_for_items(
             item["E.Hrs"] = item.get("equipment_hours_per_unit", 0) * qty
 
             material_unit_cost = item.get("material_unit_cost", 0) if item else 0
-            labor_rate = item.get("labor_rate", 0) if item else 0
-            equipment_rate = item.get("equipment_rate", 0) if item else 0
+            labor_rate = item.get("unit_labor_rate", 0) if item else 0
+            equipment_rate = item.get("unit_equipment_rate", 0) if item else 0
 
                 
             item["M.Cost"] = material_unit_cost
@@ -1379,6 +1387,7 @@ def generate_outputs(
 
         # items
         for it in items:
+            it['Item'] = clean_excel_string(it.get("Item", ""))
             row_total = sum([
                 it.get("T.Mat", 0),
                 it.get("T.Labor", 0),

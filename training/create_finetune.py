@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-OUTPUT_DATASET = "./data/hvac_finetune.jsonl"
+OUTPUT_DATASET = "./data/painting_finetune.jsonl"
 OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=OPENAI_API_KEY)
 

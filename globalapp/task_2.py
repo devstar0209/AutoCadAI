@@ -1056,7 +1056,7 @@ def extract_items_for_system(
 System: {system_name}
 
 Allowed categories (must choose one exactly):
-{json.dumps(allowed_categories, indent=2)}
+{json.dumps(allowed_categories)}
 
 Estimator instruction (Just filter):
 {user_prompt_extra}
@@ -1065,14 +1065,16 @@ Now extract line items from the referenced text below.
 - Produce a more detailed cost estimate for painting scope of work  to identify individual job activity such as painting to floors, walls, columns, ceilings, roof eaves, rafters, beams, doors, windows, and metal surfaces, etc. Where every there is and opening to a room there must be a door. You must assume there are doors in opening to rooms. And include suitable materials with material base in item description. Separate item by primer and coats per step.
 - Convert measurement values in units to preferred units in Item description. Item description MUST display converted measurement values by preferred units and no need to put explaination of conversion.
 - Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, room, etc should be counted as individual units.
+- EXCLUDE notes
 
 INVALID RULES:
-- INVALID if treat M.H. as Main Panelboard.
+- INVALID if there is M.H. MAIN PANEL.
 - INVALID if Manhole is in Sanitary Sewer System.
 - INVALID if quanitites is 0.
 - HVAC MUST not be in Electrical System. HVAC items should be classified under HVAC system.
 - INVALID if Earthwork is in Concrete Structure System. Earthwork items should be classified under Excavation & Earthwork System.
 - DIV MUST match the CSI.
+
 
 Referenced Text:
 {system_text}
@@ -1140,6 +1142,9 @@ COST NORMALIZATION RULE (MANDATORY):
 - Total material cost must ALWAYS equal:
     material_unit_cost × qty
 - If unsure, normalize to the smallest practical install unit (LF, SF, EA)
+
+CURRENCY CONVERSION:
+- Output costs in the specified currency.
 
 
 Schema:
@@ -1608,9 +1613,6 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
         print(f"  Items extracted: {len(items)}")
         for it in items[:5]:
             print(f"   - {it['CSI']} | {it['Category']} | {it['Item']} | {it['quantity']} {it['unit']}")
-
-    with open("system_to_items.json", "w", encoding="utf-8") as f:
-        json.dump(system_to_items, f, indent=2, ensure_ascii=False)
 
     print_step("7) Estimate costs for items (GPT)")
     cost_items = estimate_costs_for_items(system_to_items, location, currency, csi_to_index)

@@ -14,7 +14,7 @@ class PDFProcessingConsumer(AsyncWebsocketConsumer):
 
         # Send a test message when a client connects
         await self.send(text_data=json.dumps({
-            "message": "WebSocket connected successfully! Please close notification to upload PDF cad drawing or Please wait till the autocad ai begins estimating process."
+            "message": "WebSocket connected successfully! Please close notification to upload PDF cad drawing or Please wait until the autocad ai begins estimating process."
         }))
 
     async def disconnect(self, close_code):

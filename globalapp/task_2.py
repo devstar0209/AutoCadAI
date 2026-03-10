@@ -1069,6 +1069,8 @@ Now extract line items from the referenced text below.
 - EXCLUDE notes
 - Produce #12 awg conductor wire and 3/4" condiut for plugs, switches and lights fixtures
 - A room that is about 100 SF must have between 100 to 150 LF of conduit and 110 to 165 wiring running back to a power panel
+- Qty of fan should be matched with qty of fan switches, and qty of light fixtures should be matched with qty of plugs and switches in the same referenced text.
+- Lamp/fan has to be ceiling mounted as default until otherwise specified
 
 INVALID RULES:
 - INVALID if there is M.H. MAIN PANEL.

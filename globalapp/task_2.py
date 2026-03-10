@@ -545,6 +545,9 @@ def normalize_whitespace(s: str) -> str:
     s = re.sub(r"-{2,}", "", s)
     s = s.replace("\n\n", "")
     s = s.replace("  ", "")
+    s = s.replace("MGHT", "LIGHT")
+    s = s.replace("1S50", "1550")
+    s = s.replace("SOmmxSdmm", "5Ommx50mm")
     return s.strip()
 
 def extract_json_from_response(response_text: str):
@@ -1064,6 +1067,8 @@ Now extract line items from the referenced text below.
 - If measure units is not {unit}, Item description MUST display converted measurement values by {unit}.
 - Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, room, etc should be counted as individual units.
 - EXCLUDE notes
+- Produce #12 awg conductor wire and 3/4" condiut for plugs, switches and lights fixtures
+- A room that is about 100 SF must have between 100 to 150 LF of conduit and 110 to 165 wiring running back to a power panel
 
 INVALID RULES:
 - INVALID if there is M.H. MAIN PANEL.
@@ -1071,6 +1076,7 @@ INVALID RULES:
 - INVALID if quanitites is 0.
 - INVALID if HVAC is in Electrical System.
 - INVALID if Earthwork is in Concrete Structure System. Earthwork items should be classified under Excavation & Earthwork System.
+- Don't extract invalid items.
 
 Referenced Text:
 {system_text}

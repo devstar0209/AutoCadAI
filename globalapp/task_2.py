@@ -723,11 +723,8 @@ def ocr_pdf(
 
 def save_ocr_pages_json(
     ocr_pages: List[OCRPage],
-    pdf_path: str,
-    output_name: str = "ocr_pages.json"
+    output_path: str = "ocr_pages.json"
 ):
-    output_dir = os.path.dirname(pdf_path)
-    output_path = os.path.join(output_dir, output_name)
 
     data = [
         {
@@ -1029,9 +1026,9 @@ Produce quantities that are consistent with construction drawings, industry norm
 Never default to "1 EA" for system components that are typically repeated across a space.
 If quantity is missing, choose a reasonable default dimension/quantity assumption.
 Quantities for Reinforcing steel Job Activities must be in LBS, not TON.
-Category: General Requirements MUST be in System: General Conditions.
 Do not invent scope not supported by the text; but you may infer standard components when notes imply them.
 Ensure CSI division and section are plausible.
+Category MUST match with CSI.
 
 Schema:
 {
@@ -1072,9 +1069,8 @@ INVALID RULES:
 - INVALID if there is M.H. MAIN PANEL.
 - INVALID if Manhole is in Sanitary Sewer System.
 - INVALID if quanitites is 0.
-- HVAC MUST not be in Electrical System. HVAC items should be classified under HVAC system.
+- INVALID if HVAC is in Electrical System.
 - INVALID if Earthwork is in Concrete Structure System. Earthwork items should be classified under Excavation & Earthwork System.
-
 
 Referenced Text:
 {system_text}
@@ -1145,7 +1141,7 @@ COST NORMALIZATION RULE (MANDATORY):
 - If you don't know the cost, search for a similar item in the same CSI division and use that as a reference.
 
 CURRENCY CONVERSION:
-- Output costs in the specified currency.
+- Output converted costs in the specified currency.
 
 
 Schema:
@@ -1546,17 +1542,27 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
     print_step("1) OCR PDF")
     ocr_lang = "eng"
     total_pages = get_page_count(pdf_path)
-    ocr_pages = ocr_pdf(
-        pdf_path=pdf_path,
-        dpi=200,
-        poppler_path=None,
-        tesseract_cmd=None,
-        lang=ocr_lang,
-        total_pages=total_pages,
-        session_id=session_id
-    )
-    save_ocr_pages_json(ocr_pages, pdf_path)
-    print(f"Total pages OCR'd: {len(ocr_pages)}")
+
+    pages_output_path = pdf_path.replace(".pdf", ".json")
+    if os.path.exists(pages_output_path):
+        print(f"Found existing OCR JSON at {pages_output_path}. Loading...")
+        with open(pages_output_path, "r", encoding="utf-8") as f:
+            ocr_pages_data = json.load(f)
+            ocr_pages = [OCRPage(**p) for p in ocr_pages_data]
+        print(f"Loaded OCR data for {len(ocr_pages)} pages.")
+    else:
+        ocr_pages = ocr_pdf(
+            pdf_path=pdf_path,
+            dpi=200,
+            poppler_path=None,
+            tesseract_cmd=None,
+            lang=ocr_lang,
+            total_pages=total_pages,
+            session_id=session_id
+        )
+
+        save_ocr_pages_json(ocr_pages, pages_output_path)
+        print(f"Total pages OCR'd: {len(ocr_pages)}")
 
     print_step("2) Hybrid chunking (page + token)")
     chunks = hybrid_chunk_pages(ocr_pages, max_tokens=1400, hard_max_tokens=1800, min_tokens=350)

@@ -1036,7 +1036,7 @@ Ensure CSI division and section are plausible.
 Schema:
 {
   "items":[
-    {"DIV":"##","CSI":"## ## ##.##","Category":"...allowed...","Item":"...","quantity":number,"unit":"...","labor_hours_per_unit":number,"equipment_hours_per_unit":number}
+    {"CSI":"## ## ##.##","Category":"...allowed...","Item":"...","quantity":number,"unit":"...","labor_hours_per_unit":number,"equipment_hours_per_unit":number}
   ]
 }
 """
@@ -1050,10 +1050,11 @@ def extract_items_for_system(
     user_prompt_extra: str
 ) -> List[Dict[str, Any]]:
 
-    # region_instruction = build_region_instruction(region, unit)
+    region_instruction = build_region_instruction(region, unit)
 
     user = f"""
 System: {system_name}
+{region_instruction}
 
 Allowed categories (must choose one exactly):
 {json.dumps(allowed_categories)}
@@ -1063,7 +1064,7 @@ Estimator instruction (Just filter):
 
 Now extract line items from the referenced text below.
 - Produce a more detailed cost estimate for painting scope of work  to identify individual job activity such as painting to floors, walls, columns, ceilings, roof eaves, rafters, beams, doors, windows, and metal surfaces, etc. Where every there is and opening to a room there must be a door. You must assume there are doors in opening to rooms. And include suitable materials with material base in item description. Separate item by primer and coats per step.
-- Convert measurement values in units to preferred units in Item description. Item description MUST display converted measurement values by preferred units and no need to put explaination of conversion.
+- If measure units is not {unit}, Item description MUST display converted measurement values by {unit}.
 - Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, room, etc should be counted as individual units.
 - EXCLUDE notes
 
@@ -1073,7 +1074,6 @@ INVALID RULES:
 - INVALID if quanitites is 0.
 - HVAC MUST not be in Electrical System. HVAC items should be classified under HVAC system.
 - INVALID if Earthwork is in Concrete Structure System. Earthwork items should be classified under Excavation & Earthwork System.
-- DIV MUST match the CSI.
 
 
 Referenced Text:
@@ -1086,8 +1086,8 @@ Referenced Text:
     items = data.get("items", [])
     cleaned = []
     for it in items:
-        div = str(it.get("DIV", "")).strip()
         csi = str(it.get("CSI", "")).strip()
+        div = csi.split()[0] if csi else ""
         cat = clamp_allowed_category(str(it.get("Category", "")).strip())
         item = str(it.get("Item", "")).strip()
         qty = it.get("quantity", None)
@@ -1140,8 +1140,9 @@ COST NORMALIZATION RULE (MANDATORY):
     - Divide total package price by total length
     - Output cost per 1 LF (or per 1 EA if unit = EA)
 - Total material cost must ALWAYS equal:
-    material_unit_cost × qty
+    material_unit_cost X qty
 - If unsure, normalize to the smallest practical install unit (LF, SF, EA)
+- If you don't know the cost, search for a similar item in the same CSI division and use that as a reference.
 
 CURRENCY CONVERSION:
 - Output costs in the specified currency.

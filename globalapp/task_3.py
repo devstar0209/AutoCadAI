@@ -148,7 +148,7 @@ SYSTEM_ONTOLOGY = {
         "tpo", "epdm", "bur", "flashing", "roof insulation"
     ],
 
-    "Exterior Envelope System": [
+    "Exterior Envelope&Finishes System": [
         "exterior wall", "facade", "cladding",
         "curtain wall", "eifs", "siding", "air barrier"
     ],
@@ -919,7 +919,7 @@ Rules:
 - M.H / M.H. is manhole and manhole MUST belongs to Manhole and Structure system, not to Sanitary Sewer System. Means M.H is not related to Sanitary Sewer System.
 - Electronic Safety & Security system includes fire alarm, cctv, access control, and security systems, etc. Do not classify these items under Electrical System.
 - General Conditions system includes existing and general requirements.
-- Painting Finish is belongs to Interior Finishes System and Assign them to referenced_text when the OCR CHUNK refers to: room, window, floor, walls, bedroom, gypsum board, drywall, plaster, columns, beams, ceilings, slabs, curbs, door, roof, baseboards, trim, moldings, rafters, roof eaves, boxed eaves, fascia boards, blocking boards, metal handrails, wooden handrails, railings, exposed steel, exposed metal, exposed wood.
+- Finishes System also includes painting room, window, floor, walls, bedroom, gypsum board, drywall, plaster, columns, beams, ceilings, slabs, curbs, door, roof, baseboards, trim, moldings, rafters, roof eaves, boxed eaves, fascia boards, blocking boards, metal handrails, wooden handrails, railings, exposed steel, exposed metal, exposed wood and etc.
 
 For each system include:
   - system_name (brief)
@@ -1011,7 +1011,7 @@ def build_system_chunks(merged_system_refs: Dict[str, List[Tuple[str, str]]]) ->
 # -----------------------------
 
 FILTER_SYS = """You are a classifier that selects which system names to process.
-Given a user filter sentence and a list of system names, choose which systems match.
+Given a Estimator instruction and a list of system names, choose which systems match.
 Return JSON only: {"selected_systems":[...]}.
 """
 
@@ -1020,7 +1020,7 @@ def filter_systems_with_gpt(
     system_names: List[str]
 ) -> List[str]:
     user = f"""
-User filter sentence:
+Estimator instruction (Just filter):
 {filter_sentence}
 
 System names:
@@ -1089,7 +1089,8 @@ Estimator instruction (Just filter):
 {user_prompt_extra}
 
 Now extract line items from the referenced text below.
-- Produce a more detailed cost estimate for painting scope of work to like painting elements such as floors, walls, columns, ceilings, roof eaves, rafters, fascia board, beams, doors, windows, and metal surfaces, etc. Where every there is and opening to a room there must be a door. You must assume there are doors in opening to rooms. Separate item by primer and coats per step.
+- Produce a more detailed cost estimate for painting scope of work. Separate item by primer and coats per step.
+    MUST add painting elements such as floors, walls, columns, ceilings, roof eaves, rafters, fascia board, beams, doors, windows, and metal surfaces, etc.
 - If measure units is not {unit}, Item description MUST display converted measurement values by {unit}.
 - Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, room, etc should be counted as individual units. so if M.H#8 is mentioned, quantity should be 8.
 - EXCLUDE notes
@@ -1097,7 +1098,8 @@ Now extract line items from the referenced text below.
 - A room that is about 100 SF must have between 100 to 150 LF of conduit and 110 to 165 wiring running back to a power panel
 - Qty of fan should be matched with qty of fan switches, and qty of light fixtures should be matched with qty of plugs and switches in the same referenced text.
 - FAN/LIGHT (or Lamp/fan) has to be ceiling mounted as default until otherwise specified
-- MUST ADD Water Closet if a BATH ROOM (or BATHROOM) is mentioned in Plumbing system.
+- Where every there is and opening to a room there must be a door. You must assume there are doors in opening to rooms.
+- Where every there is a BATH ROOM there must be a Water Closet. You must assume there is a Water Closet in BATH ROOM.
 
 Don't return invalid items.
 INVALID RULES:
@@ -1194,46 +1196,56 @@ def estimate_costs_for_items(
 
     cost_items = {}
 
+    BATCH_SIZE = 30
+
     for system_name, items in system_to_items.items():
         enriched = []
 
-        payload = {
-            "standard": "CSI",
-            "location": "U.S",
-            "currency": "USD",
-            "items": items
-        }
         print("Estimating costs for system:", system_name)
-        data = gpt_json(
-            system_prompt=COST_SYSTEM_PROMPT,
-            user_prompt=json.dumps(payload, indent=2),
-            model = "ft:gpt-4o-2024-08-06:global-precisional-services-llc::DF0PhAvv"
-        )
-        items = data.get("items", [])
 
-        for item in items:
-            qty = item.get("quantity", 0)
+        # split items into batches of 30
+        for i in range(0, len(items), BATCH_SIZE):
+            batch = items[i:i + BATCH_SIZE]
 
-            item["L.Hrs"] = item.get("labor_hours_per_unit", 0) * qty
-            item["E.Hrs"] = item.get("equipment_hours_per_unit", 0) * qty
+            payload = {
+                "standard": "CSI",
+                "location": "U.S",
+                "currency": "USD",
+                "items": batch
+            }
 
-            material_unit_cost = item.get("material_unit_cost", 0) if item else 0
-            labor_rate = item.get("unit_labor_rate", 0) if item else 0
-            equipment_rate = item.get("unit_equipment_rate", 0) if item else 0
-            material_unit_cost = material_unit_cost * CURRENCY_CONVERSION_RATES.get(currency.upper(), 1)
-            labor_rate = labor_rate * CURRENCY_CONVERSION_RATES.get(currency.upper(), 1)
-            equipment_rate = equipment_rate * CURRENCY_CONVERSION_RATES.get(currency.upper(), 1)
+            data = gpt_json(
+                system_prompt=COST_SYSTEM_PROMPT,
+                user_prompt=json.dumps(payload, indent=2),
+                model="ft:gpt-4o-2024-08-06:global-precisional-services-llc::DF0PhAvv"
+            )
 
-            item["M.Cost"] = material_unit_cost
-            item["T.Mat"] = material_unit_cost * qty
+            batch_items = data.get("items", [])
 
-            item["L.Rate"] = labor_rate
-            item["T.Labor"] = labor_rate * item["L.Hrs"]
+            for item in batch_items:
+                qty = item.get("quantity", 0)
 
-            item["E.Rate"] = equipment_rate
-            item["T.Equip"] = equipment_rate * item["E.Hrs"]
+                item["L.Hrs"] = item.get("labor_hours_per_unit", 0) * qty
+                item["E.Hrs"] = item.get("equipment_hours_per_unit", 0) * qty
 
-            enriched.append(item)
+                material_unit_cost = item.get("material_unit_cost", 0)
+                labor_rate = item.get("unit_labor_rate", 0)
+                equipment_rate = item.get("unit_equipment_rate", 0)
+
+                material_unit_cost *= CURRENCY_CONVERSION_RATES.get(currency.upper(), 1)
+                labor_rate *= CURRENCY_CONVERSION_RATES.get(currency.upper(), 1)
+                equipment_rate *= CURRENCY_CONVERSION_RATES.get(currency.upper(), 1)
+
+                item["M.Cost"] = material_unit_cost
+                item["T.Mat"] = material_unit_cost * qty
+
+                item["L.Rate"] = labor_rate
+                item["T.Labor"] = labor_rate * item["L.Hrs"]
+
+                item["E.Rate"] = equipment_rate
+                item["T.Equip"] = equipment_rate * item["E.Hrs"]
+
+                enriched.append(item)
 
         cost_items[system_name] = enriched
 
@@ -1631,7 +1643,7 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
         per_chunk_systems[ch.chunk_id] = systems
         print(f"  Systems found: {len(systems)}")
         for s in systems[:6]:
-            print(f"   - {s['system_name']}: {s['referenced_text'][:90]}")
+            print(f"   - {s['system_name']}: {s['referenced_text']}")
 
     print_step("5) Merge similar systems across chunks")
     merged_system_refs = merge_systems_across_chunks(per_chunk_systems)

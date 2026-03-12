@@ -557,7 +557,8 @@ def normalize_whitespace(s: str) -> str:
     s = s.replace("  ", "")
     s = s.replace("MGHT", "LIGHT")
     s = s.replace("1S50", "1550")
-    s = s.replace("SOmmxSdmm", "5Ommx50mm")
+    s = s.replace("SOmm", "5Ommx")
+    s = s.replace("Sdmm", "50mm")
     s = s.replace("GOmm", "5Omm")
     s = s.replace("5omm", "5Omm")
     s = s.replace("]QOmm", "10Omm")
@@ -1050,7 +1051,7 @@ Classify the construction item and generate a standardized description for cost 
 Follow these rules:
 -Identify the primary material that determines the cost (material base).
 -Identify the item type or component category (pipe, beam, slab, door, fitting, etc.).
--Identify the intended usage location or area of the item (living room, kitchen, bathroom, bar area, etc.).
+-Identify the intended usage location or area of the item (only in living room, kitchen, bathroom, bar area, etc., not general, category).
 -Extract key specifications if available (size,color, thickness, grade, rating, finish, standard).
 -Rewrite the description so it starts with the Usage area.
 
@@ -1088,16 +1089,17 @@ Estimator instruction (Just filter):
 {user_prompt_extra}
 
 Now extract line items from the referenced text below.
-- Produce a more detailed cost estimate for painting scope of work  to identify individual job activity such as painting to floors, walls, columns, ceilings, roof eaves, rafters, beams, doors, windows, and metal surfaces, etc. Where every there is and opening to a room there must be a door. You must assume there are doors in opening to rooms. Separate item by primer and coats per step.
+- Produce a more detailed cost estimate for painting scope of work to like painting elements such as floors, walls, columns, ceilings, roof eaves, rafters, fascia board, beams, doors, windows, and metal surfaces, etc. Where every there is and opening to a room there must be a door. You must assume there are doors in opening to rooms. Separate item by primer and coats per step.
 - If measure units is not {unit}, Item description MUST display converted measurement values by {unit}.
 - Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, room, etc should be counted as individual units. so if M.H#8 is mentioned, quantity should be 8.
 - EXCLUDE notes
 - Produce #12 awg conductor wire and 3/4" condiut for plugs, switches and lights fixtures
 - A room that is about 100 SF must have between 100 to 150 LF of conduit and 110 to 165 wiring running back to a power panel
 - Qty of fan should be matched with qty of fan switches, and qty of light fixtures should be matched with qty of plugs and switches in the same referenced text.
-- Lamp/fan has to be ceiling mounted as default until otherwise specified
-- MUST ADD Water Closet if a BATH ROOM (or BATHROOM) is mentioned.
+- FAN/LIGHT (or Lamp/fan) has to be ceiling mounted as default until otherwise specified
+- MUST ADD Water Closet if a BATH ROOM (or BATHROOM) is mentioned in Plumbing system.
 
+Don't return invalid items.
 INVALID RULES:
 - INVALID if there is M.H. MAIN PANEL.
 - INVALID if Manhole is in Sanitary Sewer System.
@@ -1105,7 +1107,8 @@ INVALID RULES:
 - INVALID if HVAC is in Electrical System.
 - INVALID if Earthwork is in Concrete Structure System. Earthwork items should be classified under Excavation & Earthwork System.
 - INVALID if Category is not match with CSI.
-- Don't extract invalid items.
+- INVALID if item description is not match with Estimator instruction (Just filter).
+
 
 Referenced Text:
 {system_text}
@@ -1217,9 +1220,9 @@ def estimate_costs_for_items(
             material_unit_cost = item.get("material_unit_cost", 0) if item else 0
             labor_rate = item.get("unit_labor_rate", 0) if item else 0
             equipment_rate = item.get("unit_equipment_rate", 0) if item else 0
-            material_unit_cost = material_unit_cost * CURRENCY_CONVERSION.get(currency.upper(), 1)
-            labor_rate = labor_rate * CURRENCY_CONVERSION.get(currency.upper(), 1)
-            equipment_rate = equipment_rate * CURRENCY_CONVERSION.get(currency.upper(), 1)
+            material_unit_cost = material_unit_cost * CURRENCY_CONVERSION_RATES.get(currency.upper(), 1)
+            labor_rate = labor_rate * CURRENCY_CONVERSION_RATES.get(currency.upper(), 1)
+            equipment_rate = equipment_rate * CURRENCY_CONVERSION_RATES.get(currency.upper(), 1)
 
             item["M.Cost"] = material_unit_cost
             item["T.Mat"] = material_unit_cost * qty

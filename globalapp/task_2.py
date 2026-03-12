@@ -551,6 +551,7 @@ def normalize_whitespace(s: str) -> str:
     s = s.replace("GOmm", "5Omm")
     s = s.replace("5omm", "5Omm")
     s = s.replace("]QOmm", "10Omm")
+    s = s.replace("\"1B", "")
     return s.strip()
 
 def extract_json_from_response(response_text: str):
@@ -1032,8 +1033,20 @@ Produce quantities that are consistent with construction drawings, industry norm
 Never default to "1 EA" for system components that are typically repeated across a space.
 If quantity is missing, choose a reasonable default dimension/quantity assumption.
 Quantities for Reinforcing steel Job Activities must be in LBS, not TON.
-Do not invent scope not supported by the text; but you may infer standard components when notes imply them.
 Ensure CSI division and section are plausible.
+
+Classify the construction item and generate a standardized description for cost estimation.
+
+Follow these rules:
+-Identify the primary material that determines the cost (material base).
+-Identify the item type or component category (pipe, beam, slab, door, fitting, etc.).
+-Identify the intended usage location or area of the item (living room, kitchen, bathroom, bar area, etc.).
+-Extract key specifications if available (size,color, thickness, grade, rating, finish, standard).
+-Rewrite the description so it starts with the Usage area.
+
+Use the format: Usage area, Material,  Item Type - Key Specification
+
+Ensure the description is clear, concise, and suitable for construction cost databases.
 
 Schema:
 {
@@ -1065,7 +1078,7 @@ Estimator instruction (Just filter):
 {user_prompt_extra}
 
 Now extract line items from the referenced text below.
-- Produce a more detailed cost estimate for painting scope of work  to identify individual job activity such as painting to floors, walls, columns, ceilings, roof eaves, rafters, beams, doors, windows, and metal surfaces, etc. Where every there is and opening to a room there must be a door. You must assume there are doors in opening to rooms. And include suitable materials with material base in item description. Separate item by primer and coats per step.
+- Produce a more detailed cost estimate for painting scope of work  to identify individual job activity such as painting to floors, walls, columns, ceilings, roof eaves, rafters, beams, doors, windows, and metal surfaces, etc. Where every there is and opening to a room there must be a door. You must assume there are doors in opening to rooms. Separate item by primer and coats per step.
 - If measure units is not {unit}, Item description MUST display converted measurement values by {unit}.
 - Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, room, etc should be counted as individual units. so if M.H#8 is mentioned, quantity should be 8.
 - EXCLUDE notes
@@ -1073,6 +1086,7 @@ Now extract line items from the referenced text below.
 - A room that is about 100 SF must have between 100 to 150 LF of conduit and 110 to 165 wiring running back to a power panel
 - Qty of fan should be matched with qty of fan switches, and qty of light fixtures should be matched with qty of plugs and switches in the same referenced text.
 - Lamp/fan has to be ceiling mounted as default until otherwise specified
+- ADD Water Closet if a BATH ROOM (or BATHROOM) is mentioned.
 
 INVALID RULES:
 - INVALID if there is M.H. MAIN PANEL.
@@ -1152,7 +1166,8 @@ COST NORMALIZATION RULE (MANDATORY):
 - If you don't know the cost, search for a similar item in the same CSI division and use that as a reference.
 
 CURRENCY CONVERSION:
-- Output converted costs in the specified currency.
+- If unsure proper cost based on location market benchmark, convert cost of U.S market to the specified currency. 
+- If you don't know the exact conversion, use a reasonable estimate based on recent exchange rates.
 
 
 Schema:

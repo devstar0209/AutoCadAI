@@ -44,23 +44,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-
 # -----------------------------
 # USER CONFIG
 # -----------------------------
 OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=OPENAI_API_KEY)
 MODEL = "gpt-5.2"
-
-BASE_DIR = settings.BASE_DIR
-CACHE_DIR = os.path.join(BASE_DIR, "cache-fassi")
-os.makedirs(CACHE_DIR, exist_ok=True)
-CANDIDATES_JSON = os.path.join(CACHE_DIR, "csi_candidates.json")
-FAISS_PKL = os.path.join(CACHE_DIR, "csi_faiss.pkl")
-RESOURCE_JSON = os.path.join(BASE_DIR, "resources_csi.json")
-
-FAISS_THRESHOLD = 0.3
-TOP_K = 3
 
 pdf_total_pages = 0
 drawing_date=""
@@ -256,205 +245,6 @@ class SystemChunk:
     system_name: str
     referenced_text: str
 
-# ============================================================
-# Cache Builders
-# ============================================================
-
-def build_csi_candidates(resouce_data: List[Dict[str, Any]]) -> Dict[str, Dict[str, List]]:
-    csi_map: Dict[str, Dict[str, List]] = {}
-
-    for p in resouce_data:
-        csi = p.get("CSI", "").strip()
-        text = p.get("item", "").strip()
-        if not csi or not text:
-            continue
-
-        if csi not in csi_map:
-            csi_map[csi] = []
-
-        csi_map[csi].append(p)
-
-    return csi_map
-
-
-def build_faiss_indices(csi_to_candidates: Dict[str, list]) -> Dict[str, Dict[str, Any]]:
-    csi_to_index: Dict[str, Dict[str, Any]] = {}
-
-    for csi, items in csi_to_candidates.items():
-        if not items:
-            continue
-
-        texts = [p["item"] for p in items]
-        embeddings = MATCH_MODEL.encode(texts).astype("float32")
-        faiss.normalize_L2(embeddings)
-
-        index = faiss.IndexFlatIP(embeddings.shape[1])
-        index.add(embeddings)
-
-        # Store index + items for this CSI
-        csi_to_index[csi] = {
-            "index": index,
-            "items": items
-        }
-
-    return csi_to_index
-
-def load_or_build_cache() -> Tuple[Dict, Dict]:
-
-    for curr in currencies:
-        file_path = os.path.join(BASE_DIR, f"resources_priced_{curr.lower()}.json")
-        with open(file_path, "r", encoding="utf-8") as f:
-            price_candidates[curr] = json.load(f)
-
-    if os.path.exists(CANDIDATES_JSON) and os.path.exists(FAISS_PKL):
-        try:
-            print("🔍 Loading cache...")
-            with open(CANDIDATES_JSON, "r", encoding="utf-8") as f:
-                csi_to_candidates = json.load(f)
-
-            with open(FAISS_PKL, "rb") as f:
-                csi_to_index = pickle.load(f)
-
-            return csi_to_candidates, csi_to_index
-        except Exception:
-            print("⚠️ Cache corrupted. Rebuilding...")
-
-    print("⚙️ Building cache...")
-    with open(RESOURCE_JSON, "r", encoding="utf-8") as f:
-        resouce_data = json.load(f)
-
-    csi_to_candidates = build_csi_candidates(resouce_data)
-    csi_to_index = build_faiss_indices(csi_to_candidates)
-
-    with open(CANDIDATES_JSON, "w", encoding="utf-8") as f:
-        json.dump(csi_to_candidates, f)
-
-    with open(FAISS_PKL, "wb") as f:
-        pickle.dump(csi_to_index, f, protocol=pickle.HIGHEST_PROTOCOL)
-
-
-    return csi_to_candidates, csi_to_index
-
-# ============================================================
-# Matching Logic
-# ============================================================
-
-def faiss_match(
-    query: str,
-    csi: str,
-    csi_to_index: Dict
-) -> Tuple[Any, float, List[Any]]:
-
-    # bucket = csi_to_index.get(csi, {})
-    # Normalize and extract first 5 chars of CSI (e.g. "09 30")
-    csi_prefix = csi.strip()[:5]
-
-    matching_buckets = [
-        bucket
-        for key, bucket in csi_to_index.items()
-        if key.startswith(csi_prefix)
-    ]
-
-    if not matching_buckets:
-        return None, 0.0, []
-
-    q_emb = MATCH_MODEL.encode([query]).astype("float32")
-    faiss.normalize_L2(q_emb)
-
-    candidates = []
-    final_scores = []
-
-    for bucket in matching_buckets:
-        scores, idxs = bucket["index"].search(q_emb, TOP_K)
-        scores = scores[0]
-        idxs = idxs[0]
-
-        for rank, idx in enumerate(idxs):
-            item = bucket["items"][idx]
-            kw = keyword_similarity(query, item["item"])
-            score = 0.8 * scores[rank] + 0.2 * kw
-
-            candidates.append(item)
-            final_scores.append(score)
-
-            # print(
-            #     f"[{rank}] "
-            #     f"SEM={scores[rank]:.3f} "
-            #     f"KW={kw:.3f} "
-            #     f"SCORE={score:.3f} | "
-            #     f"{item['item']}"
-            # )
-
-    if not final_scores:
-        return None, 0.0, []
-
-    best_idx = int(np.argmax(final_scores))
-    best_score = float(final_scores[best_idx])
-    best_item = candidates[best_idx]
-
-    # print("-" * 80)
-    # print(
-    #     f"✅ BEST (FAISS) → "
-    #     f"SCORE={best_score:.3f} | "
-    #     f"{best_item['item']}"
-    # )
-    # print("=" * 80)
-    return best_item, best_score, candidates
-
-
-def llm_fallback(
-    query: str,
-    csi: str,
-    candidates: List[Dict[str, Any]]
-) -> Tuple[Any, float]:
-
-    # print("⚠️ FAISS CONFIDENCE LOW → LLM FALLBACK")
-    # print(f"Query: {query}")
-    # print("Candidates sent to LLM:")
-    # for i, c in enumerate(candidates):
-    #     print(f"  [{i}] {c['item']}")
-
-    options = [{"id": i, "item": c["item"]} for i, c in enumerate(candidates)]
-
-    prompt = f"""
-You are a construction estimator.
-
-CSI: {csi}
-Job Activity: "{query}"
-
-Choose the BEST matching item.
-Return JSON only.
-
-Options:
-{json.dumps(options, indent=2)}
-
-{{"id": number, "confidence": number}}
-"""
-
-    resp = client.chat.completions.create(
-        model="gpt-4.1-mini",
-        temperature=0,
-        messages=[{"role": "user", "content": prompt}]
-    )
-
-    try:
-        data = json.loads(resp.choices[0].message.content)
-        idx = int(data.get("id", -1))
-        conf = float(data.get("confidence", 0))
-        if idx < 0 or idx >= len(candidates):
-            return None, conf
-
-        # print(
-        #     f"🤖 LLM SELECTED → "
-        #     f"[{idx}] {candidates[idx]['item']} "
-        #     f"(confidence={conf:.2f})"
-        # )
-
-        return candidates[idx], conf
-    except Exception:
-        # print("❌ LLM FAILED TO SELECT")
-        return None, 0.0
-        
 # ===============================
 # UTILS
 # ===============================
@@ -1190,8 +980,7 @@ Schema:
 def estimate_costs_for_items(
     system_to_items: Dict[str, List[Dict[str, Any]]],
     region: str,
-    currency: str,
-    csi_to_index: Dict
+    currency: str
 ) -> Dict[str, List[Dict[str, Any]]]:
 
     cost_items = {}
@@ -1577,12 +1366,6 @@ def generate_outputs(
 
 def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, currency, session_id, cad_title, unit, user_filter_sentence):
 
-    # --------------------------------------------------
-    # Preprocess: group by CSI and pre-embed items
-    # --------------------------------------------------
-
-    csi_to_candidates, csi_to_index = load_or_build_cache()
-
 
     # --------------------------------------------------
     # Preprocess: OCR + Chunking + System Classification + Merging
@@ -1670,7 +1453,7 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
             print(f"   - {it['CSI']} | {it['Category']} | {it['Item']} | {it['quantity']} {it['unit']}")
 
     print_step("7) Estimate costs for items (GPT)")
-    cost_items = estimate_costs_for_items(system_to_items, location, currency, csi_to_index)
+    cost_items = estimate_costs_for_items(system_to_items, location, currency)
 
     print_step("8) Export to Excel (one sheet, system name as merged row)")
     generate_outputs(cost_items, cad_title, currency, output_excel, output_pdf)

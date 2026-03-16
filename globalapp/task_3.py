@@ -882,7 +882,7 @@ Now extract line items from the referenced text below.
 - Produce a more detailed cost estimate for painting scope of work. Separate item by primer and coats per step.
     MUST add painting elements such as floors, walls, columns, ceilings, roof eaves, rafters, fascia board, beams, doors, windows, and metal surfaces, etc.
 - If measure units is not {unit}, Item description MUST display converted measurement values by {unit}.
-- Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, room, etc should be counted as individual units. so if M.H#8 is mentioned, quantity should be 8.
+- Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, room, etc should be counted as individual units.
 - EXCLUDE notes
 - Produce #12 awg conductor wire and 3/4" condiut for plugs, switches and lights fixtures
 - A room that is about 100 SF must have between 100 to 150 LF of conduit and 110 to 165 wiring running back to a power panel
@@ -890,6 +890,9 @@ Now extract line items from the referenced text below.
 - FAN/LIGHT (or Lamp/fan) has to be ceiling mounted as default until otherwise specified
 - Where every there is and opening to a room there must be a door. You must assume there are doors in opening to rooms.
 - Where every there is a BATH ROOM there must be a Water Closet. You must assume there is a Water Closet in BATH ROOM.
+- MUST add pipe for cold and hot water distribution and drain pipe for fixtures for sink fixtures, water closet, jacuzzi bath and standard bath. Hot and Cold water distribution for residential is 1/2" pipe and not 3/4"..for commercial it is 3/4" for hot and 1/2" for cold water pipe.
+- Existing conditions items MUST be DIV 01, not other items.
+- The manhole belongs to the external plumbing or sewer drainage system, not the internal plumbing fixtures. and if M.H #8 is mentioned, it is order of the manhole and MUST add all 8 manholes. Produce in more details about installation, I mean separately, not complete(e.x. excavation, frame and cover (only Cast Iron), etc.) if M.H is mentioned. Batch M.H together if there are multiple M.H mentioned.
 
 Don't return invalid items.
 INVALID RULES:
@@ -900,6 +903,7 @@ INVALID RULES:
 - INVALID if Earthwork is in Concrete Structure System. Earthwork items should be classified under Excavation & Earthwork System.
 - INVALID if Category is not match with CSI.
 - INVALID if item description is not match with Estimator instruction (Just filter).
+- INVALID if M.H#12 is exist.
 
 
 Referenced Text:
@@ -954,6 +958,7 @@ Rules:
 - Provide conceptual market estimates (not licensed data)
 - Apply location factor
 - Output normalized pricing schema
+- MUST same cost for same items.
 - Do not explain, output JSON only
 
 COST NORMALIZATION RULE (MANDATORY):

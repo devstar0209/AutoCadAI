@@ -893,6 +893,7 @@ Now extract line items from the referenced text below.
 - MUST add pipe for cold and hot water distribution and drain pipe for fixtures for sink fixtures, water closet, jacuzzi bath and standard bath. Hot and Cold water distribution for residential is 1/2" pipe and not 3/4"..for commercial it is 3/4" for hot and 1/2" for cold water pipe.
 - Existing conditions items MUST be DIV 01, not other items.
 - The manhole belongs to the external plumbing or sewer drainage system, not the internal plumbing fixtures. and if M.H #8 is mentioned, it is order of the manhole and MUST add all 8 manholes. Produce in more details about installation, I mean separately, not complete(e.x. excavation, frame and cover (only Cast Iron), etc.) if M.H is mentioned. Batch M.H together if there are multiple M.H mentioned.
+- No need Asphalt-saturated felt underlayment in Roofing System.
 
 Don't return invalid items.
 INVALID RULES:

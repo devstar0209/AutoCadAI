@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-OUTPUT_DATASET = "./data/painting_finetune.jsonl"
+OUTPUT_DATASET = "./data/neca_finetune.jsonl"
 OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=OPENAI_API_KEY)
 
@@ -20,7 +20,7 @@ def fine_tune_model(dataset_file):
 
     print("Creating fine-tune job...")
     try:
-        fine_tune = client.fine_tuning.jobs.create(training_file=dataset_id, model="ft:gpt-4o-2024-08-06:global-precisional-services-llc::DDjkPdOP")
+        fine_tune = client.fine_tuning.jobs.create(training_file=dataset_id, model="ft:gpt-4o-2024-08-06:global-precisional-services-llc::DF0PhAvv")
         print(f"🚀 Fine-tune started. ID: {fine_tune.id}")
     except openai.APIConnectionError as e:
         print("The server could not be reached")

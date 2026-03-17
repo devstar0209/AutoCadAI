@@ -1012,7 +1012,7 @@ def estimate_costs_for_items(
             data = gpt_json(
                 system_prompt=COST_SYSTEM_PROMPT,
                 user_prompt=json.dumps(payload, indent=2),
-                model="ft:gpt-4o-2024-08-06:global-precisional-services-llc::DF0PhAvv"
+                model="ft:gpt-4o-2024-08-06:global-precisional-services-llc::DKSaTMnc"
             )
 
             batch_items = data.get("items", [])

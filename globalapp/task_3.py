@@ -883,14 +883,16 @@ Now extract line items from the referenced text below.
     MUST add painting elements such as floors, walls, columns, ceilings, roof eaves, rafters, fascia board, beams, doors, windows, and metal surfaces, etc.
 - If measure units is not {unit}, Item description MUST display converted measurement values by {unit}.
 - Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, room, etc should be counted as individual units.
-- EXCLUDE notes
-- Produce #12 awg conductor wire and 3/4" condiut for plugs, switches and lights fixtures
+- EXCLUDE notes.
+- MUST add Breaker Panel and circuit breakers for Electrical System.
+- MUST add #12 awg conductor wire and 3/4" conduit for receptacles/plugs, switches and lights fixtures. A rule of thumb is that a fixture should have an average of 37.5 ft per device and fixture for conduit, and about 41.25 ft for wiring.
 - A room that is about 100 SF must have between 100 to 150 LF of conduit and 110 to 165 wiring running back to a power panel
 - Qty of fan should be matched with qty of fan switches, and qty of light fixtures should be matched with qty of plugs and switches in the same referenced text.
 - FAN/LIGHT (or Lamp/fan) has to be ceiling mounted as default until otherwise specified
 - Where every there is and opening to a room there must be a door. You must assume there are doors in opening to rooms.
-- Where every there is a BATH ROOM there must be a Water Closet. You must assume there is a Water Closet in BATH ROOM.
-- MUST add pipe for cold and hot water distribution and drain pipe for fixtures for sink fixtures, water closet, jacuzzi bath and standard bath. Hot and Cold water distribution for residential is 1/2" pipe and not 3/4"..for commercial it is 3/4" for hot and 1/2" for cold water pipe.
+- Where every there is a BATH ROOM there must be a Water Closet. You must Add Water Closet in BATH ROOM.
+- MUST add pipe and pressure relief valves, gate valves and water hammer arrestors for cold and hot water distribution, and drain pipe for fixtures for sink fixtures, water closet, jacuzzi bath and standard bath. Hot and Cold water distribution for residential is 1/2" pipe and not 3/4"..for commercial it is 3/4" for hot and 1/2" for cold water pipe.
+- MUST add angle valves/shut valves for plumbing fixtures, such as sinks and water closets.
 - Existing conditions items MUST be DIV 01, not other items.
 - The manhole belongs to the external plumbing or sewer drainage system, not the internal plumbing fixtures. and if M.H #8 is mentioned, it is order of the manhole and MUST add all 8 manholes. Produce in more details about installation, I mean separately, not complete(e.x. excavation, frame and cover (only Cast Iron), etc.) if M.H is mentioned. Batch M.H together if there are multiple M.H mentioned.
 - No need Asphalt-saturated felt underlayment in Roofing System.
@@ -905,6 +907,7 @@ INVALID RULES:
 - INVALID if Category is not match with CSI.
 - INVALID if item description is not match with Estimator instruction (Just filter).
 - INVALID if M.H#12 is exist.
+- INVALID if there is Eletrical room in item description.
 
 
 Referenced Text:
@@ -1012,7 +1015,7 @@ def estimate_costs_for_items(
             data = gpt_json(
                 system_prompt=COST_SYSTEM_PROMPT,
                 user_prompt=json.dumps(payload, indent=2),
-                model="ft:gpt-4o-2024-08-06:global-precisional-services-llc::DKSaTMnc"
+                model="ft:gpt-4o-2024-08-06:global-precisional-services-llc::DF0PhAvv"
             )
 
             batch_items = data.get("items", [])

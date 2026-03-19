@@ -56,11 +56,6 @@ drawing_date=""
 price_candidates={}
 currencies = ["USD", "BBD", "BZD", "ECD", "JMD", "KYD", "TTD"]
 
-# -------------------------------
-# MODELS
-# -------------------------------
-MATCH_MODEL = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2", cache_folder="../models")
-
 
 ALLOWED_CATEGORIES = [
     "General Requirements",
@@ -885,7 +880,7 @@ Now extract line items from the referenced text below.
 - Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, room, etc should be counted as individual units.
 - EXCLUDE notes.
 - MUST add Breaker Panel and circuit breakers for Electrical System.
-- MUST add #12 awg conductor wire and 3/4" conduit for receptacles/plugs, switches and lights fixtures. A rule of thumb is that a fixture should have an average of 37.5 ft per device and fixture for conduit, and about 41.25 ft for wiring.
+- MUST add #12 awg conductor wire and 3/4" conduit for receptacles/plugs, switches and lights fixtures. A rule of thumb is that a power device and a light fixture should have an average of 37.5 ft of conduit per device or fixture, and about 41.25 ft of wiring.
 - A room that is about 100 SF must have between 100 to 150 LF of conduit and 110 to 165 wiring running back to a power panel
 - Qty of fan should be matched with qty of fan switches, and qty of light fixtures should be matched with qty of plugs and switches in the same referenced text.
 - FAN/LIGHT (or Lamp/fan) has to be ceiling mounted as default until otherwise specified
@@ -896,6 +891,7 @@ Now extract line items from the referenced text below.
 - Existing conditions items MUST be DIV 01, not other items.
 - The manhole belongs to the external plumbing or sewer drainage system, not the internal plumbing fixtures. and if M.H #8 is mentioned, it is order of the manhole and MUST add all 8 manholes. Produce in more details about installation, I mean separately, not complete(e.x. excavation, frame and cover (only Cast Iron), etc.) if M.H is mentioned. Batch M.H together if there are multiple M.H mentioned.
 - No need Asphalt-saturated felt underlayment in Roofing System.
+- Chemical treatment MUST be also under slab-on-grade.
 
 Don't return invalid items.
 INVALID RULES:

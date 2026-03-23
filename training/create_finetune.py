@@ -15,7 +15,7 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 def fine_tune_model(dataset_file):
     print("Uploading dataset...")
     prep_file = client.files.create(file=open(dataset_file, "rb"), purpose='fine-tune')
-    dataset_id = prep_file.id
+    dataset_id = 'file-MUUbHhpRb19u4ySFheFZRB' #prep_file.id
     print(f"✅ Dataset uploaded. File ID: {dataset_id}")
 
     print("Creating fine-tune job...")

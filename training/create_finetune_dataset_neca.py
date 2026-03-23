@@ -19,6 +19,8 @@ def build_chat_entry(record):
     assistant_content = {
         "unit": record.get("unit"),
         "DIV": record.get("DIV", 0),
+        "unit_material_cost": None,
+        "unit_equipment_rate": None,
         "unit_labor_rate": record.get("labor_productivity_rate", 0.0),
         "year": "2021-2022",
         "location": "United States",

@@ -18,6 +18,7 @@ from datetime import datetime
 # OCR / PDF
 import cv2
 from pdf2image import convert_from_path
+from pdf2image import pdfinfo_from_path
 from PyPDF2 import PdfReader
 import pytesseract
 from channels.layers import get_channel_layer
@@ -506,21 +507,31 @@ def ocr_pdf(
     if tesseract_cmd:
         pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
 
-    images = convert_from_path(pdf_path, dpi=dpi, poppler_path=poppler_path)
     pages: List[OCRPage] = []
     directory = os.path.dirname(pdf_path)
 
-    for i, img in enumerate(images, start=1):
-        notify_frontend(total_pages, i, "PDF Processing is in progress...", "", "", session_id)
+    for page_num in range(1, total_pages + 1):
+        # Convert only this single page
+        images = convert_from_path(
+            pdf_path,
+            dpi=dpi,
+            poppler_path=poppler_path,
+            first_page=page_num,
+            last_page=page_num
+        )
+
+        img = images[0]
+        
+        print(f"Processing page {page_num}/{total_pages}...")
+        notify_frontend(total_pages, page_num, "PDF Processing is in progress...", "", "", session_id)
         text = pytesseract.image_to_string(img, lang=lang)
 
-        # image_path = os.path.join(directory, f"page_{i}.png")
-        # img.save(image_path, "PNG")
-        # text = extract_text_from_image(image_path)
-
         text = normalize_whitespace(text)
-        pages.append(OCRPage(page_num=i, text=text))
-        print(f"OCR page {i}/{len(images)}: {len(text)} chars")
+        pages.append(OCRPage(page_num=page_num, text=text))
+        print(f"OCR page {page_num}/{total_pages}: {len(text)} chars")
+        
+        # Free memory by deleting the list
+        del images
 
     return pages
 

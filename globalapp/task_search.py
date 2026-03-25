@@ -14,6 +14,7 @@ import numpy as np
 from functools import lru_cache
 import faiss
 from datetime import datetime
+import pycountry
 
 # OCR / PDF
 import cv2
@@ -826,8 +827,10 @@ Estimator instruction (Just filter):
 System names:
 {json.dumps(system_names, indent=2)}
 
-Select only the systems that should be processed based on the Estimator instruction.
+MUST Select only the systems that should be processed based on the filter sentence.
 Ignore Exisiting Conditions/General Requirements system if the instruction is not mentioned it.
+Building subconstructure doesn't include Masonry System.
+Avoid systems if repeat same scope. For example, if the instruction is about Manhole Installation, It will only include Manhole and Structure system, but not Sanitary Sewer System, even though manhole is related to sewer drainage, because the instruction is about manhole installation, not sewer drainage. So it is more likely to be classified under Manhole and Structure system. 
 """
     data = gpt_json(FILTER_SYS, user)
     selected = data.get("selected_systems", [])
@@ -1017,7 +1020,7 @@ def search_material_cost(
                         "type": "web_search_preview",
                         "user_location": {
                             "type": "approximate",
-                            "country": region
+                            "country": pycountry.countries.get(name=region).alpha_2
                         }
                     }
                 ],
@@ -1131,8 +1134,13 @@ def estimate_costs_for_items(
                 labor_rate *= CURRENCY_CONVERSION_RATES.get(currency.upper(), 1)
                 equipment_rate *= CURRENCY_CONVERSION_RATES.get(currency.upper(), 1)
 
-                item["M.Cost"] = material_unit_cost
-                item["T.Mat"] = material_unit_cost * qty
+                
+                try:
+                    item["T.Mat"] = float(material_unit_cost) * float(qty)
+                    item["M.Cost"] = float(material_unit_cost)
+                except (TypeError, ValueError):
+                    item["T.Mat"] = 0.0
+                    item["M.Cost"] = 0.0
 
                 item["L.Rate"] = labor_rate
                 item["T.Labor"] = labor_rate * item["L.Hrs"]
@@ -1555,7 +1563,7 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
         )
         system_to_items[sc.system_name] = items
         print(f"  Items extracted: {len(items)}")
-        for it in items:
+        for it in items[:5]:
             print(f"   - {it['CSI']} | {it['Category']} | {it['Item']} | {it['quantity']} {it['unit']} | {it['labor_hours_per_unit']} L.Hrs/unit | {it['equipment_hours_per_unit']} E.Hrs/unit")
 
     print_step("7) Search material costs for items (GPT)")

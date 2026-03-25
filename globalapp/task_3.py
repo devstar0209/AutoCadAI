@@ -726,6 +726,10 @@ For each system include:
     - EXCLUDE unrelated notes, boilerplate, legends, code citations, or instructions for other systems.
     - Do NOT summarize or paraphrase.
 
+INVALID:
+- INVALID system_name: Anything not in the canonical list above.
+- INVALID referenced_text: Any text that is not directly relevant to the system, or text that belongs to another system.
+
 OCR CHUNK {chunk.chunk_id}:
 {chunk.text}
 """
@@ -1442,7 +1446,7 @@ def start_pdf_processing(pdf_path: str, output_excel, output_pdf, location, curr
         per_chunk_systems[ch.chunk_id] = systems
         print(f"  Systems found: {len(systems)}")
         for s in systems[:6]:
-            print(f"   - {s['system_name']}: {s['referenced_text']}")
+            print(f"   - {s['system_name']}: {s['referenced_text'][:100]}...")
 
     print_step("5) Merge similar systems across chunks")
     merged_system_refs = merge_systems_across_chunks(per_chunk_systems)

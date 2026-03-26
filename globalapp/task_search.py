@@ -14,7 +14,6 @@ import numpy as np
 from functools import lru_cache
 import faiss
 from datetime import datetime
-import pycountry
 
 # OCR / PDF
 import cv2
@@ -1009,7 +1008,7 @@ def search_material_cost(
                     {{
                     "Item": "item name",
                     "unit": "unit of measure",
-                    "material_unit_cost": "material cost per unit in {currency}",
+                    "material_unit_cost": "material cost per unit in USD",
                     }}
                 ]
                 
@@ -1020,7 +1019,7 @@ def search_material_cost(
                         "type": "web_search_preview",
                         "user_location": {
                             "type": "approximate",
-                            "country": pycountry.countries.get(name=region).alpha_2
+                            "country": "US"
                         }
                     }
                 ],
@@ -1126,18 +1125,18 @@ def estimate_costs_for_items(
                 item["L.Hrs"] = item.get("labor_hours_per_unit", 0) * qty
                 item["E.Hrs"] = item.get("equipment_hours_per_unit", 0) * qty
 
-                material_unit_cost = item.get("material_unit_cost", 0)
+                material_unit_cost = float(item.get("material_unit_cost", 0))
                 labor_rate = returned_items[idx].get("unit_labor_rate", 0)
                 equipment_rate = returned_items[idx].get("unit_equipment_rate", 0)
 
-                # material_unit_cost *= CURRENCY_CONVERSION_RATES.get(currency.upper(), 1)
+                material_unit_cost *= CURRENCY_CONVERSION_RATES.get(currency.upper(), 1)
                 labor_rate *= CURRENCY_CONVERSION_RATES.get(currency.upper(), 1)
                 equipment_rate *= CURRENCY_CONVERSION_RATES.get(currency.upper(), 1)
 
                 
                 try:
-                    item["T.Mat"] = float(material_unit_cost) * float(qty)
-                    item["M.Cost"] = float(material_unit_cost)
+                    item["T.Mat"] = material_unit_cost * qty
+                    item["M.Cost"] = material_unit_cost
                 except (TypeError, ValueError):
                     item["T.Mat"] = 0.0
                     item["M.Cost"] = 0.0

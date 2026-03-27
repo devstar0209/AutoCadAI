@@ -56,6 +56,7 @@ pdf_total_pages = 0
 drawing_date=""
 price_candidates={}
 currencies = ["USD", "BBD", "BZD", "ECD", "JMD", "KYD", "TTD"]
+commonwealth_countries = ["Jamaica", "Barbados", "Belize", "Grenada", "Saint Lucia", "Saint Vincent and the Grenadines", "Antigua and Barbuda", "Dominica", "Trinidad and Tobago"]
 
 
 ALLOWED_CATEGORIES = [
@@ -845,7 +846,7 @@ Extract estimatable line items from system text, aligned to MasterFormat/CSI and
 Output JSON only. Use the allowed categories exactly.
 Produce quantities that are consistent with construction drawings, industry norms, and code-based density rules. 
 Never default to "1 EA" for system components that are typically repeated across a space.
-If quantity is missing, choose a reasonable default dimension/quantity assumption.
+If quantity is missing, scale measurements from drawings to produce quantity.
 Quantities for Reinforcing steel Job Activities must be in LBS, not TON.
 Quantities for Painting finish scope of works must be in SF.
 Ensure CSI division and section are plausible.
@@ -973,6 +974,9 @@ def search_material_cost(
     currency: str
 ) -> Dict[str, List[Dict[str, Any]]]:
 
+    if region in commonwealth_countries:
+        region = "Alabama"
+
     BATCH_SIZE = 30
 
     for system_name, items in system_to_items.items():
@@ -1019,7 +1023,8 @@ def search_material_cost(
                         "type": "web_search_preview",
                         "user_location": {
                             "type": "approximate",
-                            "country": "US"
+                            "country": "US",
+                            "region": region,
                         }
                     }
                 ],

@@ -430,6 +430,41 @@ def clean_excel_string(s):
 # -----------------------------
 # OCR: PDF -> text per page
 # -----------------------------
+def preprocess_for_ocr(image_path):
+    img = cv2.imread(image_path)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray = cv2.bilateralFilter(gray, 9, 75, 75)  # edge-preserving denoise
+    enhanced = cv2.convertScaleAbs(gray, alpha=1.5, beta=30)
+    
+    # Resize (optional)
+    # width = 2000
+    # height = int(gray.shape[0] * (width / gray.shape[1]))
+    # resized = cv2.resize(gray, (width, height), interpolation=cv2.INTER_CUBIC)
+    
+    # Denoise
+    # blurred = cv2.GaussianBlur(resized, (3,3), 0)
+    
+    # Adaptive threshold
+    thresh = cv2.adaptiveThreshold(enhanced, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                   cv2.THRESH_BINARY, 11, 2)
+    
+    # Invert if needed (assuming dark text on light background)
+    # thresh = cv2.bitwise_not(thresh)
+    
+    # Define a kernel for removing horizontal lines
+    # horizontal_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (40,1))
+    # remove_horizontal = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, horizontal_kernel, iterations=1)
+
+    # Similarly for vertical lines
+    # vertical_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1,40))
+    # remove_vertical = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, vertical_kernel, iterations=1)
+
+    # Subtract lines from original thresholded image
+    # thresh = cv2.subtract(thresh, remove_horizontal)
+    # thresh = cv2.subtract(thresh, remove_vertical)
+    
+    return thresh
+
 def extract_text_from_image(image_path: str) -> str:
     # print(f"Entered OCR function: {image_path}")
     min_confidence = 40
@@ -525,7 +560,17 @@ def ocr_pdf(
         
         print(f"Processing page {page_num}/{total_pages}...")
         notify_frontend(total_pages, page_num, "PDF Processing is in progress...", "", "", session_id)
-        text = pytesseract.image_to_string(img, lang=lang)
+        
+
+
+        image_path = os.path.join(directory, f"page_{page_num}.png")
+        img.save(image_path, "PNG")
+
+        thresh = preprocess_for_ocr(image_path)
+        text = pytesseract.image_to_string(thresh, lang=lang)
+
+
+        # text = extract_text_from_image(image_path)
 
         text = normalize_whitespace(text)
         pages.append(OCRPage(page_num=page_num, text=text))
@@ -667,6 +712,9 @@ def gpt_json(system_prompt: str, user_prompt: str, model=MODEL) -> Any:
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
         ],
+        temperature=0,
+        top_p=0.00001,
+        store=False,
         # Responses API: ask for JSON
         text={"format": {"type": "json_object"}},
     )
@@ -840,29 +888,96 @@ Avoid systems if repeat same scope. For example, if the instruction is about Man
 # -----------------------------
 # LINE ITEM EXTRACTION (CSI + category + qty + unit)
 # -----------------------------
-
 ITEM_EXTRACTOR_SYS = """You are a construction cost estimator.
 Extract estimatable line items from system text, aligned to MasterFormat/CSI and estimate labor productivity in labor-hours per unit and equipment productivity in hours per unit.
-Output JSON only. Use the allowed categories exactly.
-Produce quantities that are consistent with construction drawings, industry norms, and code-based density rules. 
-Never default to "1 EA" for system components that are typically repeated across a space.
-If quantity is missing, scale measurements from drawings to produce quantity.
-Quantities for Reinforcing steel Job Activities must be in LBS, not TON.
-Quantities for Painting finish scope of works must be in SF.
-Ensure CSI division and section are plausible.
+Use the allowed categories exactly.
 
 Classify the construction item and generate a standardized description for cost estimation.
 
 Follow these rules:
--Identify the primary material that determines the cost (material base).
--Identify the item type or component category (pipe, beam, slab, door, fitting, etc.).
--Identify the intended usage location or area of the item (only in living room, kitchen, bathroom, bar area, etc., not general, category).
--Extract key specifications if available (size,color, thickness, grade, rating, finish, standard).
--Rewrite the description so it starts with the Usage area.
+- Ensure CSI division and section are plausible.
+- Identify the item type or component category (pipe, beam, slab, door, fitting, etc.).
+- **Identify the usage area as one of these allowed spaces:** 
+  bathroom, kitchen, living room, dining room, bedroom, hallway, staircase, lobby, balcony, patio, garage, finished basement, laundry room, closet, pantry.
+- **Special rule for distribution items** (conduit, wire, cable, pipe, duct, trunk line): 
+  ALWAYS use "General Distribution" as the usage area. Do not assign specific room names or "General Interior".
+- **DO NOT use:** electrical room, mechanical room, equipment room, or any service/utility space.
+- Identify the primary material that determines the cost (material base).
+- Extract key specifications if available (size, color, thickness, grade, rating, finish, standard).
 
-Use the format: Usage area, Material,  Item Type - Key Specification
+Item Description:
+- Use the format: Usage area, Material, Item Type - Key Specification. if unspecified material, just Usage area and Item Type - Key Specification.
+- Ensure the description is clear, concise, and suitable for construction cost databases.
 
-Ensure the description is clear, concise, and suitable for construction cost databases.
+Quantities:
+- Produce quantities that are consistent with construction drawings, industry norms, and code-based density rules.
+- Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, room, etc should be counted as individual units.
+- If quantity is missing, infer a reasonable default based on standard construction practices learned from your training data.
+- Never default to "1 EA" for system components that are typically repeated across a space.
+- Quantities for Reinforcing steel Job Activities must be in LBS, not TON.
+- Quantities for Painting finish scope of works must be in SF.
+
+**MANDATORY ADDITIONS & DEFAULT ASSUMPTIONS (apply to all extractions unless explicitly overridden in the user prompt):**
+
+Electrical System:
+    Power Panel:
+    - Add ONE Power Panel per building. (If the text specifies multiple buildings or units, add one panel per building/unit.)
+    - For the panel feeder, add:
+    * 1-1/2" conduit: 10 ft
+    * #4 AWG conductor wire: 16 ft per wire (3 wires: hot, neutral, ground) - total wire length = 48 ft
+    * The panel is assumed to be located in the kitchen or utility room unless the text specifies otherwise.
+    - Circuit breakers: Add 20 circuit breakers for the panel (fixed default). If the text specifies a different number, use that number.
+
+    Branch Circuits (conduit and wiring for receptacles/outlets, fans, light fixtures):
+    - For every receptacle/plug, fans, and light fixture, add #12 AWG conductor wire and 3/4" conduit.
+    - When conduit or wiring length is missing, estimate using the actual count of devices and fixtures:
+    * Conduit length (ft) = (total receptacles/outlets + total light fixtures + total fans) * 37.5
+    * Wiring length (ft) = (total receptacles/outlets + total light fixtures + total fans) * 41.25
+    - The total device counts used in the calculation must be explicitly stated in the item description. (Example: #12 AWG wire, 3/4" conduit - serves 5 receptacles, 4 light fixtures, 2 fans - living room)
+
+    Quantity Matching Rules:
+    - qty of ceiling fans = qty of fan switches.
+    - qty of light fixtures = qty of plugs AND switches in the same referenced text.
+
+    FAN/LIGHT units:
+    - Default to ceiling mounted unless the text specifies otherwise.
+    - Usage area: assign based on the text (e.g., living room, bedroom). Do not force all to "living room".
+
+Doors:
+- Every opening to a room implies a door. MUST add a door for each room opening.
+
+Plumbing (Residential vs Commercial):
+- For every BATH ROOM, MUST add a Water Closet.
+- For sink fixtures, water closet, jacuzzi bath, standard bath, MUST add:
+  * Pipe, pressure relief valves, gate valves, water hammer arrestors for hot/cold water distribution.
+  * Drain pipe for each fixture.
+  * Angle valves/shut valves for sinks and water closets.
+- Pipe size rules:
+  * Residential: Hot and cold water distribution = 1/2" pipe (not 3/4").
+  * Commercial: Hot water = 3/4", Cold water = 1/2".
+
+Manholes (External Plumbing):
+- Manholes belong to external plumbing/sewer drainage (not internal fixtures).
+- If “M.H #8” is mentioned, it indicates the 8th manhole in a sequence. MUST add all 8 manholes (M.H. #1 through #8).
+- Produce manhole installation items separately (not as a single line): e.g., excavation, frame and cover (Cast Iron only), etc.
+- Batch multiple manholes together in the output if they are listed together.
+
+Existing Conditions:
+- Any item marked as “existing” or “existing conditions” MUST be assigned to Division 01 (CSI 01 00 00). Do not use other divisions.
+
+Roofing:
+- DO NOT add Asphalt-saturated felt underlayment.
+
+Slab-on-Grade:
+- ALWAYS add Chemical treatment under slab-on-grade.
+
+If any of these rules conflict with explicit information in the PDF text, the text takes precedence.
+
+CRITICAL FOR CONSISTENCY:
+- For the same input text, produce the exact same output every time.
+- Do not introduce variability. Use deterministic reasoning.
+
+Output JSON only.
 
 Schema:
 {
@@ -870,6 +985,19 @@ Schema:
     {"CSI":"## ## ##.##","Category":"...allowed...","Item":"...","quantity":number,"unit":"...","labor_hours_per_unit":number,"equipment_hours_per_unit":number}
   ]
 }
+
+INVALIDATION RULES - DO NOT output any item that matches ANY of the following:
+
+1. INVALID if the item description contains "M.H. MAIN PANEL" (case-insensitive).
+2. INVALID if the item is a Manhole that belongs to a Sanitary Sewer System.
+3. INVALID if the calculated or extracted quantity equals 0 (zero).
+4. INVALID if an HVAC component is classified under Electrical System category.
+5. INVALID if an Earthwork item is classified under Concrete Structure System. Earthwork must be under Excavation & Earthwork System.
+6. INVALID if the Category does not match the CSI division (e.g., Category "General Requirements" must have CSI division 01).
+7. INVALID if the item description does not follow the required format: "Usage area, Material, Item Type - Key Specification". Filter out malformed descriptions.
+8. INVALID if the text explicitly mentions "M.H#12" (Manhole #12) - skip any item referencing it.
+
+If an item matches any of the above, completely omit it from the "items" array. Do not include it with a null or placeholder.
 """
 
 def extract_items_for_system(
@@ -899,34 +1027,7 @@ Now extract line items from the referenced text below.
 - Produce a more detailed cost estimate for painting scope of work. Separate item by primer and coats per step.
     MUST add painting elements such as floors, walls, columns, ceilings, roof eaves, rafters, fascia board, beams, doors, windows, and metal surfaces, etc.
 - If measure units is not {unit}, Item description MUST display converted measurement values by {unit}.
-- Quantity of elements like manhole (M.H, M.H.#1), cleanout, valve, room, etc should be counted as individual units.
 - EXCLUDE notes.
-- MUST add Breaker Panel and circuit breakers for Electrical System.
-- MUST add #12 awg conductor wire and 3/4" conduit for receptacles/plugs, switches and lights fixtures. A rule of thumb is that a power device and a light fixture should have an average of 37.5 ft of conduit per device or fixture, and about 41.25 ft of wiring.
-- A room that is about 100 SF must have between 100 to 150 LF of conduit and 110 to 165 wiring running back to a power panel
-- Qty of fan should be matched with qty of fan switches, and qty of light fixtures should be matched with qty of plugs and switches in the same referenced text.
-- FAN/LIGHT (or Lamp/fan) has to be ceiling mounted as default until otherwise specified
-- Where every there is and opening to a room there must be a door. You must assume there are doors in opening to rooms.
-- Where every there is a BATH ROOM there must be a Water Closet. You must Add Water Closet in BATH ROOM.
-- MUST add pipe and pressure relief valves, gate valves and water hammer arrestors for cold and hot water distribution, and drain pipe for fixtures for sink fixtures, water closet, jacuzzi bath and standard bath. Hot and Cold water distribution for residential is 1/2" pipe and not 3/4"..for commercial it is 3/4" for hot and 1/2" for cold water pipe.
-- MUST add angle valves/shut valves for plumbing fixtures, such as sinks and water closets.
-- Existing conditions items MUST be DIV 01, not other items.
-- The manhole belongs to the external plumbing or sewer drainage system, not the internal plumbing fixtures. and if M.H #8 is mentioned, it is order of the manhole and MUST add all 8 manholes. Produce in more details about installation, I mean separately, not complete(e.x. excavation, frame and cover (only Cast Iron), etc.) if M.H is mentioned. Batch M.H together if there are multiple M.H mentioned.
-- No need Asphalt-saturated felt underlayment in Roofing System.
-- Chemical treatment MUST be also under slab-on-grade.
-
-Don't return invalid items.
-INVALID RULES:
-- INVALID if there is M.H. MAIN PANEL.
-- INVALID if Manhole is in Sanitary Sewer System.
-- INVALID if quanitites is 0.
-- INVALID if HVAC is in Electrical System.
-- INVALID if Earthwork is in Concrete Structure System. Earthwork items should be classified under Excavation & Earthwork System.
-- INVALID if Category is not match with CSI.
-- INVALID if item description is not match with Estimator instruction (Just filter).
-- INVALID if M.H#12 is exist.
-- INVALID if there is strange area (for example Electrical area) in item description.
-
 
 Referenced Text:
 {system_text}
